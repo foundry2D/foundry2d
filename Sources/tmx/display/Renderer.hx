@@ -1,4 +1,4 @@
-package coin.tmx.display;
+package tmx.display;
 
 import kha.Canvas;
 import kha.graphics2.Graphics;

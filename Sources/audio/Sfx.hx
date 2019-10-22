@@ -1,9 +1,9 @@
-package coin.audio;
+package audio;
 
 import kha.Assets;
 import kha.audio1.Audio;
 
-import coin.tool.Util;
+import tool.Util;
 
 class Sfx {
   public static function play(name:String, ?volume:Float = 0.3){

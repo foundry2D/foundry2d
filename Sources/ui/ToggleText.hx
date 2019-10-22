@@ -1,11 +1,11 @@
-package coin.ui;
+package ui;
 
 import kha.Canvas;
 import kha.Color;
 import kha.math.Vector2;
 
-import coin.Entity;
-import coin.ui.Text;
+import Entity;
+import ui.Text;
 
 class ToggleText extends Entity {
   public var offset:Vector2 = new Vector2(12, 8);

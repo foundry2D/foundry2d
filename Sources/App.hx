@@ -1,4 +1,4 @@
-package coin;
+package ;
 
 import kha.Canvas;
 import kha.graphics2.ImageScaleQuality;
@@ -12,13 +12,13 @@ import kha.System;
 import kha.Scaler;
 import kha.ScreenCanvas;
 
-import coin.State;
+import State;
 
 class App {
   private var _imageQuality:ImageScaleQuality;
 
 	public function new(){
-		coin.backbuffer = Image.createRenderTarget(coin.BUFFERWIDTH, coin.BUFFERHEIGHT);
+		Coin.backbuffer = Image.createRenderTarget(Coin.BUFFERWIDTH, Coin.BUFFERHEIGHT);
 
     _imageQuality = Coin.smooth ? ImageScaleQuality.High:ImageScaleQuality.Low;
 
@@ -37,17 +37,17 @@ class App {
 	}
 
 	public function render(canvas:Canvas):Void {
-		coin.backbuffer.g2.begin();
-    canvas.g2.color = coin.backgroundcolor;
-    canvas.g2.fillRect(0, 0, coin.backbuffer.width, coin.backbuffer.height);
+		Coin.backbuffer.g2.begin();
+    canvas.g2.color = Coin.backgroundcolor;
+    canvas.g2.fillRect(0, 0, Coin.backbuffer.width, Coin.backbuffer.height);
 		if (State.activeState != null){
-			State.activeState.render(coin.backbuffer);
+			State.activeState.render(Coin.backbuffer);
 		}
-		coin.backbuffer.g2.end();
+		Coin.backbuffer.g2.end();
 
 		canvas.g2.begin();
     canvas.g2.imageScaleQuality = _imageQuality;
-		Scaler.scale(coin.backbuffer, canvas, System.screenRotation);
+		Scaler.scale(Coin.backbuffer, canvas, System.screenRotation);
 		canvas.g2.end();
   }
 
@@ -64,26 +64,26 @@ class App {
 	}
 
 	public function onMouseDown(button:Int, x:Int, y:Int):Void {
-		coin.mouseX = Scaler.transformX(x, y, coin.backbuffer, ScreenCanvas.the, System.screenRotation);
-		coin.mouseY = Scaler.transformY(x, y, coin.backbuffer, ScreenCanvas.the, System.screenRotation);
+		Coin.mouseX = Scaler.transformX(x, y, Coin.backbuffer, ScreenCanvas.the, System.screenRotation);
+		Coin.mouseY = Scaler.transformY(x, y, Coin.backbuffer, ScreenCanvas.the, System.screenRotation);
 		if (State.activeState != null){
-			State.activeState.onMouseDown(button, coin.mouseX, coin.mouseY);
+			State.activeState.onMouseDown(button, Coin.mouseX, Coin.mouseY);
 		}
 	}
 
 	public function onMouseUp(button:Int, x:Int, y:Int):Void {
-		coin.mouseX = Scaler.transformX(x, y, coin.backbuffer, ScreenCanvas.the, System.screenRotation);
-		coin.mouseY = Scaler.transformY(x, y, coin.backbuffer, ScreenCanvas.the, System.screenRotation);
+		Coin.mouseX = Scaler.transformX(x, y, Coin.backbuffer, ScreenCanvas.the, System.screenRotation);
+		Coin.mouseY = Scaler.transformY(x, y, Coin.backbuffer, ScreenCanvas.the, System.screenRotation);
 		if (State.activeState != null){
-			State.activeState.onMouseUp(button, coin.mouseX, coin.mouseY);
+			State.activeState.onMouseUp(button, Coin.mouseX, Coin.mouseY);
 		}
 	}
 
 	public function onMouseMove(x:Int, y:Int, cx:Int, cy:Int):Void {
-		coin.mouseX = Scaler.transformX(x, y, coin.backbuffer, ScreenCanvas.the, System.screenRotation);
-		coin.mouseY = Scaler.transformY(x, y, coin.backbuffer, ScreenCanvas.the, System.screenRotation);
+		Coin.mouseX = Scaler.transformX(x, y, Coin.backbuffer, ScreenCanvas.the, System.screenRotation);
+		Coin.mouseY = Scaler.transformY(x, y, Coin.backbuffer, ScreenCanvas.the, System.screenRotation);
 		if (State.activeState != null){
-			State.activeState.onMouseMove(coin.mouseX, coin.mouseY, cx, cy);
+			State.activeState.onMouseMove(Coin.mouseX, Coin.mouseY, cx, cy);
 		}
 	}
 

@@ -1,4 +1,4 @@
-package coin.tmx;
+package tmx;
 
 class Rectangle {
 	public var x:Float;

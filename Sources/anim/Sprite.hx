@@ -1,4 +1,4 @@
-package coin.anim;
+package anim;
 
 /*
 Originally coded & created by Robert Konrad
@@ -16,9 +16,9 @@ import kha.graphics2.Graphics;
 import kha.Image;
 import kha.Assets;
 
-import coin.anim.Animation;
-import coin.Entity;
-import coin.math.Vector2B;
+import anim.Animation;
+import Entity;
+import math.Vector2B;
 
 class Sprite extends Entity {
 	private var _image: Image;

@@ -23,7 +23,7 @@
 // This file contains code from the HaxePunk project
 // Link to HaxePunk: <http://haxepunk.com>
 // Link to related file: <https://github.com/HaxePunk/tiled/blob/master/com/haxepunk/tmx/TmxLayer.hx>
-package coin.tmx;
+package tmx;
 
 class Layer {
 	/** The name of this layer */

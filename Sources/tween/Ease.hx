@@ -1,4 +1,4 @@
-package coin.tween;
+package tween;
 
 class Back {
   // Modeled after the overshooting cubic y = x^3-x*sin(x*pi)

@@ -1,4 +1,4 @@
-package coin.tool;
+package tool;
 
 class Direction {
 	public inline static var UP = 1;

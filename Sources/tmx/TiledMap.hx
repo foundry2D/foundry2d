@@ -1,10 +1,10 @@
-package coin.tmx;
+package tmx;
 
 import haxe.xml.Access;
 import kha.Canvas;
 import kha.graphics2.Graphics;
-import coin.tmx.display.KhaRenderer;
-import coin.tmx.display.Renderer;
+import tmx.display.KhaRenderer;
+import tmx.display.Renderer;
 import kha.Color;
 
 /**

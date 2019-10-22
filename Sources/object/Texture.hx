@@ -1,4 +1,4 @@
-package coin;
+package object;
 
 import kha.Canvas;
 using kha.graphics2.GraphicsExtension;
@@ -6,8 +6,8 @@ import kha.Color;
 import kha.Assets;
 import kha.Image;
 
-import coin.Entity;
-import coin.tool.Util;
+import object.Entity;
+import tool.Util;
 
 class Texture extends Entity {
   public var image:Image;

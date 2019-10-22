@@ -1,4 +1,4 @@
-package coin.math;
+package math;
 
 class Vector2B {
   public var x:Bool;

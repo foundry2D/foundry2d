@@ -1,4 +1,4 @@
-package coin.tool;
+package tool;
 
 class Loop {
 	private var _start:Int;

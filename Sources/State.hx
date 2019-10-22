@@ -1,8 +1,8 @@
-package coin;
+package ;
 
 import kha.Canvas;
 import kha.input.KeyCode;
-import coin.Scene;
+import Scene;
 
 class State extends Scene {
 	public static var activeState:State;

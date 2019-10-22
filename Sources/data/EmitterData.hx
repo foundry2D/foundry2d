@@ -1,4 +1,4 @@
-package coin.data;
+package data;
 
 class EmitterData {
     static var uidCounter = 0;

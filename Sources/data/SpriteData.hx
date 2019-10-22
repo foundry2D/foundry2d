@@ -1,6 +1,6 @@
-package coin.data;
+package data;
 
-import coin.data.SceneFormat;
+import data.SceneFormat;
 
 class SpriteData {
     static var uidCounter = 0;

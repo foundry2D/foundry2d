@@ -1,9 +1,9 @@
-package coin;
+package object;
 
 import kha.math.Vector2;
 
-import coin.collide.Rectangle;
-import coin.tool.Direction;
+import collide.Rectangle;
+import tool.Direction;
 
 class Entity extends Rectangle {
 	public function new(x:Float, y:Float, ?width:Float, ?height:Float){

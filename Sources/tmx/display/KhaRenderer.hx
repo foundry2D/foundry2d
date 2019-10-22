@@ -1,10 +1,10 @@
-package coin.tmx.display;
+package tmx.display;
 
 import kha.Canvas;
-import coin.tmx.Rectangle;
-import coin.tmx.Layer;
-import coin.tmx.TiledMap;
-import coin.tmx.Tileset;
+import tmx.Rectangle;
+import tmx.Layer;
+import tmx.TiledMap;
+import tmx.Tileset;
 import kha.graphics2.Graphics;
 
 /**

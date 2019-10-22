@@ -1,6 +1,6 @@
-package coin.tool;
+package tool;
 
-import coin.Entity;
+import Entity;
 
 class Runner {
 	public var speed = 0.6;

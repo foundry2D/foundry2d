@@ -1,8 +1,8 @@
-package coin.collide;
+package collide;
 
 import kha.math.Vector2;
-import coin.Object;
-import coin.tool.Direction;
+import Object;
+import tool.Direction;
 
 class Rectangle extends Object {
 	public var onGround = false;

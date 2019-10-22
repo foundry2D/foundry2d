@@ -1,11 +1,11 @@
-package coin.tool;
+package tool;
 
 import kha.Canvas;
 using kha.graphics2.GraphicsExtension;
 import kha.Color;
 import kha.Assets;
 
-import coin.Object;
+import Object;
 
 class Pool<O:Object> extends Object {
 	public var entity:Array<O>;

@@ -1,4 +1,4 @@
-package coin;
+package object;
 
 import kha.Canvas;
 import kha.math.Vector2;

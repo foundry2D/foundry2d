@@ -1,14 +1,14 @@
-package coin.particle;
+package particle;
 
 import kha.Canvas;
 using kha.graphics2.GraphicsExtension;
 import kha.Color;
 import kha.Assets;
 
-import coin.Raccoon;
-import coin.Entity;
-import coin.particle.Particle;
-import coin.tool.Util;
+import Coin;
+import Entity;
+import particle.Particle;
+import tool.Util;
 
 class Emitter extends Entity {
 	public var arParticle:Array<Particle>;
@@ -28,7 +28,7 @@ class Emitter extends Entity {
 		var p = arParticle.length;
 		while (p --> 0){
 			arParticle[p].update();
-			if (arParticle[p].position.x <= 0 || arParticle[p].position.x >= Raccoon.BUFFERWIDTH || arParticle[p].position.y <= 0 || arParticle[p].position.y >= Raccoon.BUFFERHEIGHT){
+			if (arParticle[p].position.x <= 0 || arParticle[p].position.x >= Coin.BUFFERWIDTH || arParticle[p].position.y <= 0 || arParticle[p].position.y >= Coin.BUFFERHEIGHT){
 				arParticle.splice(p, 1);
 			}
 		}

@@ -1,4 +1,4 @@
-package coin.anim;
+package anim;
 
 /*
 Originally coded & created by Robert Konrad

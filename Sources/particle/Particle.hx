@@ -1,9 +1,9 @@
-package coin.particle;
+package particle;
 
 import kha.Canvas;
 import kha.Color;
 
-import coin.Entity;
+import Entity;
 
 class Particle extends Entity {
 	

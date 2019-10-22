@@ -1,8 +1,8 @@
-package coin.tmx;
+package tmx;
 
 import haxe.xml.Fast;
 import kha.math.Vector2;
-import coin.tmx.Rectangle;
+import tmx.Rectangle;
 import haxe.io.Path;
 
 class Tileset {

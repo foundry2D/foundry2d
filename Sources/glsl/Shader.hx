@@ -1,4 +1,4 @@
-package coin.glsl;
+package glsl;
 
 import kha.Canvas;
 import kha.Scheduler;
@@ -10,7 +10,7 @@ import kha.graphics4.VertexStructure;
 import kha.graphics4.PipelineState;
 import kha.graphics4.FragmentShader;
 
-import coin.Object;
+import Object;
 
 class Shader extends Object {
   private var _pipeline:PipelineState;

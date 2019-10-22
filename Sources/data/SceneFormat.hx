@@ -1,4 +1,4 @@
-package coin.data;
+package data;
 
 import kha.FastFloat;
 import kha.math.Vector2;
@@ -27,7 +27,7 @@ typedef TObj = {
     public var type:String; // object, mesh_object, light_object, camera_object, speaker_object, decal_object
 	public var name:String;
     public var position:Vector2;
-    public var rotation:Float = 0;
+    public var rotation:Float;
     @:optional public var velocity:Vector2;
 	public var width:FastFloat;
 	public var height:FastFloat;

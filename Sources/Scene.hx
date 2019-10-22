@@ -1,8 +1,8 @@
-package coin;
+package ;
 
 import haxe.ds.ArraySort;
 import kha.Canvas;
-import coin.Object;
+import object.Object;
 
 class Scene {
   public var countEntities(get, null):Int;

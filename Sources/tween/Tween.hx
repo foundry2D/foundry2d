@@ -1,4 +1,4 @@
-package coin.tween;
+package tween;
 
 class Tween {
   private var _from:Float;

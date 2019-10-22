@@ -1,4 +1,4 @@
-package coin;
+package ;
 
 import kha.Framebuffer;
 import kha.Scheduler;
@@ -32,7 +32,7 @@ class Coin {
 
   private static var _fps:Float;
 
-  public static function setup(config:coinConfig){
+  public static function setup(config:CoinConfig){
     if (config.width == null) config.width = WIDTH;
     if (config.height == null) config.height = HEIGHT;
     if (config.bufferwidth == null) config.bufferwidth = WIDTH;

@@ -1,4 +1,4 @@
-package coin.ui;
+package ui;
 
 import kha.Canvas;
 using kha.graphics2.GraphicsExtension;
@@ -6,7 +6,7 @@ import kha.Color;
 import kha.Assets;
 import kha.Font;
 
-import coin.Entity;
+import Entity;
 
 class Text extends Entity {
 	public var font:Font;

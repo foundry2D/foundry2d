@@ -1,4 +1,4 @@
-package coin.tool;
+package tool;
 
 class Util {
 	public static function randomInt(value:Int):Int {

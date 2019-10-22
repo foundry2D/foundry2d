@@ -1,6 +1,6 @@
 package tool;
 
-import Entity;
+import object.Entity;
 
 class Follower {
 	public var speed = 0.6;

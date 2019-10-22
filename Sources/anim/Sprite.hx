@@ -12,13 +12,13 @@ https://github.com/lewislepton/kha-tutorial-series
 
 import kha.Canvas;
 import kha.Color;
-import kha.graphics2.Graphics;
+import kha.math.Vector2;
 import kha.Image;
 import kha.Assets;
 
 import anim.Animation;
-import Entity;
-import math.Vector2B;
+import object.Entity;
+import tool.Util;
 
 class Sprite extends Entity {
 	private var _image: Image;
@@ -27,7 +27,7 @@ class Sprite extends Entity {
 	private var _w: Float;
 	private var _h: Float;
 
-	public var flip:Vector2B;
+	public var flip:Vector2;
 	
 	public function new(imagename: String, x:Float = 0, y:Float = 0, width: Int = 0, height: Int = 0){
 		super(x, y, width, height);
@@ -38,7 +38,7 @@ class Sprite extends Entity {
 		if (this.height == 0 && _image != null) this.height = _image.height;
 		_animation = Animation.create(0);
 
-		flip = new Vector2B();
+		flip = new Vector2();
 	}
 	
 	public function setAnimation(animation: Animation): Void {
@@ -55,7 +55,8 @@ class Sprite extends Entity {
 		if (_image != null) {
 			canvas.g2.color = Color.White;
 			canvas.g2.pushTranslation(position.x, position.y);
-			canvas.g2.drawScaledSubImage(_image, Std.int(_animation.get() * _w) % _image.width, Math.floor(_animation.get() * _w / _image.width) * _h, _w, _h, (flip.x ? width:0), (flip.y ? height:0), flip.x ? -width:width, flip.y ? -height:height);
+			canvas.g2.rotate(Util.degToRad(rotation), position.x + width / 2, position.y + height / 2);
+			canvas.g2.drawScaledSubImage(_image, Std.int(_animation.get() * _w) % _image.width, Math.floor(_animation.get() * _w / _image.width) * _h, _w, _h, (flip.x > 0.0 ? width:0), (flip.y > 0.0 ? height:0), flip.x > 0.0 ? -width:width, flip.y > 0.0 ? -height:height);
 			canvas.g2.popTransformation();
 		}
 	}

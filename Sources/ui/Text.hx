@@ -6,7 +6,7 @@ import kha.Color;
 import kha.Assets;
 import kha.Font;
 
-import Entity;
+import object.Entity;
 
 class Text extends Entity {
 	public var font:Font;

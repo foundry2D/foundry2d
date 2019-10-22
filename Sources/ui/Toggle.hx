@@ -5,7 +5,7 @@ using kha.graphics2.GraphicsExtension;
 import kha.Color;
 import kha.Assets;
 
-import Entity;
+import object.Entity;
 
 class Toggle extends Entity {
 	public var isOn:Bool;

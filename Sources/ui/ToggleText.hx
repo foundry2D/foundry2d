@@ -4,7 +4,7 @@ import kha.Canvas;
 import kha.Color;
 import kha.math.Vector2;
 
-import Entity;
+import object.Entity;
 import ui.Text;
 
 class ToggleText extends Entity {

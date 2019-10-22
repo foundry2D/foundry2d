@@ -5,7 +5,7 @@ using kha.graphics2.GraphicsExtension;
 import kha.Color;
 import kha.Assets;
 
-import Entity;
+import object.Entity;
 
 class Button extends Entity {
 	public var onClick:Void -> Void;

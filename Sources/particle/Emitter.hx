@@ -6,7 +6,7 @@ import kha.Color;
 import kha.Assets;
 
 import Coin;
-import Entity;
+import object.Entity;
 import particle.Particle;
 import tool.Util;
 

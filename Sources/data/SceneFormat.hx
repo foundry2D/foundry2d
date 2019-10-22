@@ -6,6 +6,19 @@ import kha.arrays.Float32Array;
 import kha.arrays.Uint32Array;
 import kha.arrays.Int16Array;
 
+class SceneFormat{
+
+    public static function getData(t:Dynamic):Dynamic{
+        var  o= {};
+        for(f in Reflect.fields(t)){
+            Reflect.setField(o,f,Reflect.field(t,f));
+        }
+        for(fi in Reflect.fields(o)){
+            trace(fi,Reflect.getProperty(o,fi));
+        }
+        return o;
+    }
+}
 
 #if js
 typedef TSceneFormat = {
@@ -24,8 +37,8 @@ typedef TObj = {
 #else
 @:structInit class TObj {
 #end
+    public var name:String;
     public var type:String; // object, mesh_object, light_object, camera_object, speaker_object, decal_object
-	public var name:String;
     public var position:Vector2;
     public var rotation:Float;
     @:optional public var velocity:Vector2;
@@ -45,6 +58,9 @@ typedef TRectData = {
 @:structInit class TRectData {
 #end
     >TObj,
+    public var c_width:FastFloat;
+	public var c_height:FastFloat;
+    public var c_center:Vector2;
     public var shape:String;
 }
 
@@ -58,6 +74,15 @@ typedef TSpriteData = {
     public var flip:Vector2;
     @:optional public var _animPath: String;
     @:optional public var anim:TAnimation;
+}
+
+#if js
+typedef TEmitterData = {
+#else
+@:structInit class TEmitterData {
+#end
+    >TObj,
+    public var amount:Int;
 }
 
 #if js

@@ -1,7 +1,7 @@
 {
 	"name": "coin",
 	"classPath": "Sources",
-	"tags": ["2coin", "engine", "game"],
-	"url" : "https://github.com/mundusnine/2coin",
+	"tags": ["coin", "engine", "game"],
+	"url" : "https://github.com/mundusnine/coin",
 	"contributors": ["mundusnine"]
 }

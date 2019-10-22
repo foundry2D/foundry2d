@@ -10,7 +10,7 @@ import kha.graphics4.VertexStructure;
 import kha.graphics4.PipelineState;
 import kha.graphics4.FragmentShader;
 
-import Object;
+import object.Object;
 
 class Shader extends Object {
   private var _pipeline:PipelineState;

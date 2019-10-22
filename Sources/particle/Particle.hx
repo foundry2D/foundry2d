@@ -3,7 +3,7 @@ package particle;
 import kha.Canvas;
 import kha.Color;
 
-import Entity;
+import object.Entity;
 
 class Particle extends Entity {
 	

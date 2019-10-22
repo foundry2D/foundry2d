@@ -2,13 +2,22 @@ package object;
 
 import kha.Canvas;
 import kha.math.Vector2;
+import data.SceneFormat;
 
 class Object {
+	#if debug
+	public var name:String;
+	#end
+	static var uidCounter = 0;
+	public var uid:Int;
+	public var raw:TObj = null;
+
+	public var active(default, set):Bool = true;
 	public var position:Vector2;
 	public var width:Float;
 	public var height:Float;
 	public var center:Vector2;
-	public var active(default, set):Bool = true;
+	public var rotation:Float = 0;
 
 	public var velocity:Vector2 = new Vector2();
 	public var speed = 3.0;
@@ -23,18 +32,19 @@ class Object {
 	public var invincibleTimerMax = 3.0;
 	public var invincibleTimer:Float;
 	public var invincibleTimerSpeed = 0.05;
-	
-	public var rotation:Float = 0;
+
+	public var traits:Array<Trait> = [];
 
 	public function new(?x:Float, ?y:Float, ?width:Float, ?height:Float){
+		uid = uidCounter++;
 		position = new Vector2(x, y);
 
 		this.width = width;
 		this.height = height;
 
 		center = new Vector2(width / 2, height / 2);
-
-		depth = position.y + height;
+		if(depth == null)
+			depth = position.y + height;
 
 		invincibleTimer = invincibleTimerMax;
 
@@ -73,5 +83,61 @@ class Object {
 
 	function set_active(value:Bool):Bool {
 		return active = value;
+	}
+
+	@:access(Trait)
+	public function addTrait(t:Trait) {
+		traits.push(t);
+		t.object = this;
+
+		if (t._add != null) {
+			for (f in t._add) f();
+			t._add = null;
+		}
+	}
+
+	/**
+	 * Remove the Trait from the Object. 
+	 *
+	 * @param	t The Trait to be removed from the game Object.
+	 */
+	@:access(Trait)
+	public function removeTrait(t:Trait) {
+		if (t._init != null) {
+			for (f in t._init) App.removeInit(f);
+			t._init = null;
+		}
+		if (t._update != null) {
+			for (f in t._update) App.removeUpdate(f);
+			t._update = null;
+		}
+		if (t._lateUpdate != null) {
+			for (f in t._lateUpdate) App.removeLateUpdate(f);
+			t._lateUpdate = null;
+		}
+		if (t._render != null) {
+			for (f in t._render) App.removeRender(f);
+			t._render = null;
+		}
+		if (t._render2D != null) {
+			for (f in t._render2D) App.removeRender2D(f);
+			t._render2D = null;
+		}
+		if (t._remove != null) {
+			for (f in t._remove) f();
+			t._remove = null;
+		}
+		traits.remove(t);
+	}
+
+	/**
+	 * Get the Trait instance that is attached to this game Object. 
+	 *
+	 * @param	c The class of type Trait to attempt to retrieve.
+	 * @return	Trait or null
+	 */
+	public function getTrait<T:Trait>(c:Class<T>):T {
+		for (t in traits) if (Type.getClass(t) == cast c) return cast t;
+		return null;
 	}
 }

@@ -49,7 +49,7 @@ class Data {
 		cachedRects = new Map();
 		cachedSceneRaws = new Map();
 		// cachedLights = new Map();
-		cachedCameras = new Map();
+		// cachedCameras = new Map();
 		cachedEmitters = new Map();
 		
 
@@ -90,7 +90,7 @@ class Data {
 			var parsed:TSceneFormat = null;
 			if (isJson) {
 				var s = b.toString();
-				parsed = s.charAt(0) == "{" ? Json.parse(s) : ArmPack.decode(b.toBytes());
+				parsed = /*s.charAt(0) == "{" ? */Json.parse(s) /*: ArmPack.decode(b.toBytes())*/;
 			}
 			else {
 				// parsed = ArmPack.decode(b.toBytes());

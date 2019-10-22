@@ -1,4 +1,4 @@
-package ;
+package;
 
 import kha.Framebuffer;
 import kha.Scheduler;

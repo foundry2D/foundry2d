@@ -22,7 +22,7 @@
 package tmx;
 
 import kha.math.Vector2;
-import Entity;
+import object.Entity;
 
 class TiledObject extends Entity {
 	/** The objectgroup this object belongs to */

@@ -1,0 +1,5 @@
+package data;
+
+class RectData{
+    
+}

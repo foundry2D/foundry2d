@@ -1,15 +1,18 @@
 package ;
 
+import data.SceneFormat.TSceneFormat;
+import data.Data;
 import kha.Canvas;
 import kha.input.KeyCode;
 import Scene;
 
 class State extends Scene {
 	public static var activeState:State;
-	private static var _states:Map<String, State>;
+	private static var _states:Map<String, String>;
 
-	public function new(){
-		super();
+	public function new(raw:TSceneFormat){
+		super(raw);
+		
 	}
 
 	override public function update(){
@@ -41,10 +44,10 @@ class State extends Scene {
 	public function onGamepadButton(button:Int, value:Float){}
 
 	public static function setup(){
-		_states = new Map<String, State>();
+		_states = new Map<String, String>();
 	}
 
-	public static function addState(name:String, state:State):State {
+	public static function addState(name:String, state:String):String {
 		_states.set(name, state);
 		return state;
 	}
@@ -54,6 +57,24 @@ class State extends Scene {
 	}
 
 	public static function set(name:String){
-		activeState = _states.get(name);
+		Scene.ready = false;
+		var file = _states.get(name);
+		Data.getSceneRaw(file,loadState);
+	}
+	private static function loadState(raw:TSceneFormat){
+		activeState = new State(raw);
+	}
+	// Hooks
+	public function notifyOnInit(f:Void->Void) {
+		if (Scene.ready) f(); // Scene already running
+		else traitInits.push(f);
+	}
+
+	public function removeInit(f:Void->Void) {
+		traitInits.remove(f);
+	}
+
+	public function notifyOnRemove(f:Void->Void) {
+		traitRemoves.push(f);
 	}
 }

@@ -1,6 +1,6 @@
 package tool;
 
-import Entity;
+import object.Entity;
 
 class Runner {
 	public var speed = 0.6;

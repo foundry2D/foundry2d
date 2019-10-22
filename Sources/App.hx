@@ -15,12 +15,23 @@ import kha.ScreenCanvas;
 import State;
 
 class App {
-  private var _imageQuality:ImageScaleQuality;
 
-	public function new(){
+  	private var _imageQuality:ImageScaleQuality;
+	static var traitInits:Array<Void->Void> = [];
+	static var traitUpdates:Array<Void->Void> = [];
+	static var traitLateUpdates:Array<Void->Void> = [];
+	static var traitRenders:Array<kha.graphics4.Graphics->Void> = [];
+	static var traitRenders2D:Array<kha.graphics2.Graphics->Void> = [];
+
+	public static function init(_appReady:Void->Void) {
+		new App(_appReady);
+	}
+
+	public function new(_appReady:Void->Void){
+		_appReady();
 		Coin.backbuffer = Image.createRenderTarget(Coin.BUFFERWIDTH, Coin.BUFFERHEIGHT);
 
-    _imageQuality = Coin.smooth ? ImageScaleQuality.High:ImageScaleQuality.Low;
+    	_imageQuality = Coin.smooth ? ImageScaleQuality.High:ImageScaleQuality.Low;
 
 		State.setup();
 
@@ -28,6 +39,14 @@ class App {
 		Mouse.get().notify(onMouseDown, onMouseUp, onMouseMove, null);
 		Gamepad.get().notify(onGamepadAxis, onGamepadButton);
 		Surface.get().notify(onTouchDown, onTouchUp, onTouchMove);
+	}
+
+	public static function reset() {
+		traitInits = [];
+		traitUpdates = [];
+		traitLateUpdates = [];
+		traitRenders = [];
+		traitRenders2D = [];
 	}
 
 	public function update():Void {
@@ -38,15 +57,15 @@ class App {
 
 	public function render(canvas:Canvas):Void {
 		Coin.backbuffer.g2.begin();
-    canvas.g2.color = Coin.backgroundcolor;
-    canvas.g2.fillRect(0, 0, Coin.backbuffer.width, Coin.backbuffer.height);
+		canvas.g2.color = Coin.backgroundcolor;
+		canvas.g2.fillRect(0, 0, Coin.backbuffer.width, Coin.backbuffer.height);
 		if (State.activeState != null){
 			State.activeState.render(Coin.backbuffer);
 		}
 		Coin.backbuffer.g2.end();
 
 		canvas.g2.begin();
-    canvas.g2.imageScaleQuality = _imageQuality;
+    	canvas.g2.imageScaleQuality = _imageQuality;
 		Scaler.scale(Coin.backbuffer, canvas, System.screenRotation);
 		canvas.g2.end();
   }
@@ -116,4 +135,63 @@ class App {
 			State.activeState.onGamepadButton(button, value);
 		}
 	}
+
+	// Hooks
+	public static function notifyOnInit(f:Void->Void) {
+		traitInits.push(f);
+	}
+
+	public static function removeInit(f:Void->Void) {
+		traitInits.remove(f);
+	}
+
+	public static function notifyOnUpdate(f:Void->Void) {
+		traitUpdates.push(f);
+	}
+
+	public static function removeUpdate(f:Void->Void) {
+		traitUpdates.remove(f);
+	}
+	
+	public static function notifyOnLateUpdate(f:Void->Void) {
+		traitLateUpdates.push(f);
+	}
+
+	public static function removeLateUpdate(f:Void->Void) {
+		traitLateUpdates.remove(f);
+	}
+
+	public static function notifyOnRender(f:kha.graphics4.Graphics->Void) {
+		traitRenders.push(f);
+	}
+
+	public static function removeRender(f:kha.graphics4.Graphics->Void) {
+		traitRenders.remove(f);
+	}
+
+	public static function notifyOnRender2D(f:kha.graphics2.Graphics->Void) {
+		traitRenders2D.push(f);
+	}
+
+	public static function removeRender2D(f:kha.graphics2.Graphics->Void) {
+		traitRenders2D.remove(f);
+	}
+
+	// public static function notifyOnReset(f:Void->Void) {
+	// 	if (onResets == null) onResets = [];
+	// 	onResets.push(f);
+	// }
+
+	// public static function removeReset(f:Void->Void) {
+	// 	onResets.remove(f);
+	// }
+
+	// public static function notifyOnEndFrame(f:Void->Void) {
+	// 	if (onEndFrames == null) onEndFrames = [];
+	// 	onEndFrames.push(f);
+	// }
+
+	// public static function removeEndFrame(f:Void->Void) {
+	// 	onEndFrames.remove(f);
+	// }
 }

@@ -5,7 +5,7 @@ using kha.graphics2.GraphicsExtension;
 import kha.Color;
 import kha.Assets;
 
-import Object;
+import object.Object;
 
 class Pool<O:Object> extends Object {
 	public var entity:Array<O>;

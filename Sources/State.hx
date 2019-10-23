@@ -8,6 +8,7 @@ import Scene;
 
 class State extends Scene {
 	public static var activeState:State;
+	private static var loadingState:State;
 	private static var _states:Map<String, String>;
 
 	public function new(raw:TSceneFormat){
@@ -43,8 +44,12 @@ class State extends Scene {
 
 	public function onGamepadButton(button:Int, value:Float){}
 
-	public static function setup(){
+	static var defaultLoading = "";
+	public static function setup(?loadingPath:String = ""){
 		_states = new Map<String, String>();
+		Data.getSceneRaw(loadingPath != "" ? loadingPath: defaultLoading, function(raw:TSceneFormat){
+			loadingState = new State(raw);
+		});
 	}
 
 	public static function addState(name:String, state:String):String {
@@ -59,7 +64,10 @@ class State extends Scene {
 	public static function set(name:String){
 		Scene.ready = false;
 		var file = _states.get(name);
+		activeState = loadingState;
 		Data.getSceneRaw(file,loadState);
+		
+		
 	}
 	private static function loadState(raw:TSceneFormat){
 		activeState = new State(raw);

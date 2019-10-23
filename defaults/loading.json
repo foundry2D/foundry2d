@@ -1,0 +1,22 @@
+{
+    "name": "loading",
+    "_entities":[
+        {
+            "name": "load-icon",
+            "type": "sprite_object",
+            "position":{ "x": 0.0, "y": 0.0},
+            "rotation": 0.0,
+            "width": 666.0,
+            "height": 555.0,
+            "center":{ "x": 0.0, "y": 0.0},
+            "depth": 0.0,
+            "active": true,
+            "traits":[
+                {
+                    "type": "Script",
+                    "class_name": "LoadingScript"
+                }
+            ]
+        }
+    ]
+}

@@ -8,9 +8,7 @@ import object.Object;
 import data.SceneFormat;
 
 class Scene {
-
-  static var uidCounter = 0;
-	public var uid:Int;
+  
 	public var raw:TSceneFormat;
   public var root:Object;
   public static var ready:Bool = false;
@@ -33,8 +31,7 @@ class Scene {
         switch(e.type){
           case "Sprite":
             var data:TSpriteData = SceneFormat.getData(e);
-            var out = new Sprite(data._imagePath,data.position.x,data.position.y,Std.int(data.width),Std.int(data.height));
-            out.raw = data;
+            var out = new Sprite(data);
             _entities.push(out);
           case "Rect":
             var data:TRectData = SceneFormat.getData(e);
@@ -42,15 +39,16 @@ class Scene {
             out.raw = data;
             _entities.push(out);
           case "Emitter":
-          default:
-            var data:TSpriteData = SceneFormat.getData(e);
-            var out = new Sprite(data._imagePath,data.position.x,data.position.y,Std.int(data.width),Std.int(data.height));
-            out.raw = data;
-            _entities.push(out);
+          default://Object
+            // var data:TSpriteData = SceneFormat.getData(e);
+            // var out = new Sprite(data._imagePath,data.position.x,data.position.y,Std.int(data.width),Std.int(data.height));
+            // out.raw = data;
+            // _entities.push(out);
 
         }
       }
     }
+    createTraits(raw.traits,root);
     #if debug
 		root.name = "Root";
     #end
@@ -150,6 +148,65 @@ class Scene {
     this._Zsort = zsort;
     return _depth = value;
   }
+
+  static function createTraits(traits:Array<TTrait>, object:Object) {
+		if (traits == null) return;
+		for (t in traits) {
+			if (t.type == "Script") {
+				// Assign arguments if any
+				var args:Array<Dynamic> = [];
+				if (t.parameters != null) {
+					for (param in t.parameters) {
+						args.push(parseArg(param));
+					}
+				}
+				var traitInst = createTraitClassInstance(t.class_name, args);
+				if (traitInst == null) {
+					trace("Error: Trait '" + t.class_name + "' referenced in object '" + object.name + "' not found");
+					continue;
+				}
+				if (t.props != null) {
+					for (i in 0...Std.int(t.props.length / 2)) {
+						var pname = t.props[i * 2];
+						var pval = t.props[i * 2 + 1];
+						if (pval != "") {
+							Reflect.setProperty(traitInst, pname, parseArg(pval));
+						}
+					}
+				}
+				object.addTrait(traitInst);
+			}
+		}
+	}
+
+  static function parseArg(str:String):Dynamic {
+		if (str == "true") return true;
+		else if (str == "false") return false;
+		else if (str == "null") return null;
+		else if (str.charAt(0) == "'") return StringTools.replace(str,"'", "");
+		else if (str.charAt(0) == '"') return StringTools.replace(str,'"', "");
+		else if (str.charAt(0) == "[") { // Array
+			// Remove [] and recursively parse into array, then append into parent
+			str = StringTools.replace(str,"[", "");
+			str = StringTools.replace(str,"]", "");
+			str = StringTools.replace(str," ", "");
+			var ar:Dynamic = [];
+			var vals = str.split(",");
+			for (v in vals) ar.push(parseArg(v));
+			return ar;
+		}
+		else {
+			var f = Std.parseFloat(str);
+			var i = Std.parseInt(str);
+			return f == i ? i : f;
+		}
+	}
+
+  static function createTraitClassInstance(traitName:String, args:Array<Dynamic>):Dynamic {
+		var cname = Type.resolveClass(traitName);
+		if (cname == null) return null;
+		return Type.createInstance(cname, args);
+	}
 
 
 }

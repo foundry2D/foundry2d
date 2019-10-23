@@ -7,4 +7,5 @@ class EmitterData {
 	public var uid:Float;
 	public var name:String;
 	public var raw:TEmitterData;
+	public var amount:Int;
 }

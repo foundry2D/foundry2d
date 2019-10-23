@@ -13,9 +13,6 @@ class SceneFormat{
         for(f in Reflect.fields(t)){
             Reflect.setField(o,f,Reflect.field(t,f));
         }
-        for(fi in Reflect.fields(o)){
-            trace(fi,Reflect.getProperty(o,fi));
-        }
         return o;
     }
 }
@@ -38,7 +35,7 @@ typedef TObj = {
 @:structInit class TObj {
 #end
     public var name:String;
-    public var type:String; // object, mesh_object, light_object, camera_object, speaker_object, decal_object
+    public var type:String; // object, sprite_object, light_object, camera_object, speaker_object, emitter_object
     public var position:Vector2;
     public var rotation:Float;
     @:optional public var velocity:Vector2;
@@ -72,8 +69,7 @@ typedef TSpriteData = {
     >TRectData,
     public var _imagePath: String;
     public var flip:Vector2;
-    @:optional public var _animPath: String;
-    @:optional public var anim:TAnimation;
+    @:optional public var animsPath:Array<String>;
 }
 
 #if js
@@ -90,7 +86,9 @@ typedef TAnimation = {
 #else
 @:structInit class TAnimation {
 #end
-    
+    public var min:Int;
+    public var max:Int;
+    public var fps:Int;
 }
 #if js
 typedef TTrait = {

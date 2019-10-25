@@ -5,10 +5,9 @@ import coin.data.SceneFormat;
 import coin.data.Data;
 import kha.Canvas;
 import kha.input.KeyCode;
-// import coin.Scene;
 
 class State extends Scene {
-	public static var activeState:State;
+	public static var active:State;
 	private static var loadingState:State;
 	private static var _states:Map<String, String>;
 
@@ -55,8 +54,8 @@ class State extends Scene {
 			var b:kha.Blob = Reflect.field(Assets.blobs, "loading_json");
 			loadingState = new State(haxe.Json.parse(b.toString()));
 		}
-		if(activeState == null)
-			activeState = loadingState;
+		if(active == null)
+			active = loadingState;
 	}
 
 	public static function addState(name:String, state:String):String {
@@ -71,13 +70,13 @@ class State extends Scene {
 	public static function set(name:String){
 		Scene.ready = false;
 		var file = _states.get(name);
-		activeState = loadingState;
+		active = loadingState;
 		Data.getSceneRaw(file,loadState);
 		
 		
 	}
 	private static function loadState(raw:TSceneFormat){
-		activeState = new State(raw);
+		active = new State(raw);
 	}
 	// Hooks
 	public function notifyOnInit(f:Void->Void) {

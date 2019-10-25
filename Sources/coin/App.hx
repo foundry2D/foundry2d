@@ -12,8 +12,6 @@ import kha.System;
 import kha.Scaler;
 import kha.ScreenCanvas;
 
-// import State;
-
 class App {
 
   	private var _imageQuality:ImageScaleQuality;
@@ -30,7 +28,9 @@ class App {
 	public function new(_appReady:Void->Void){
 		_appReady();
 		coin.Coin.backbuffer = Image.createRenderTarget(Coin.BUFFERWIDTH, Coin.BUFFERHEIGHT);
-
+		#if editor
+		coin.Coin.uibuffer = Image.createRenderTarget(Coin.BUFFERWIDTH, Coin.BUFFERHEIGHT);
+		#end
     	_imageQuality = Coin.smooth ? ImageScaleQuality.High:ImageScaleQuality.Low;
 
 		coin.State.setup();
@@ -50,8 +50,8 @@ class App {
 	}
 
 	public function update(dt:Float):Void {
-		if (State.activeState != null){
-			State.activeState.update(dt);
+		if (State.active != null){
+			State.active.update(dt);
 		}
 	}
 
@@ -59,80 +59,96 @@ class App {
 		Coin.backbuffer.g2.begin();
 		canvas.g2.color = Coin.backgroundcolor;
 		canvas.g2.fillRect(0, 0, Coin.backbuffer.width, Coin.backbuffer.height);
-		if (State.activeState != null){
-			State.activeState.render(Coin.backbuffer);
+		if (State.active != null){
+			State.active.render(Coin.backbuffer);
 		}
 		Coin.backbuffer.g2.end();
 
+		#if editor
+		if(!Coin.fullscreen){
+		Coin.uibuffer.g2.begin();
+		canvas.g2.color = Coin.backgroundcolor;
+		canvas.g2.fillRect(0, 0, Coin.uibuffer.width, Coin.uibuffer.height);
+		Coin.render(Coin.uibuffer.g2);
+		Coin.uibuffer.g2.end();
+
+		canvas.g2.begin();
+    	canvas.g2.imageScaleQuality = _imageQuality;
+		Scaler.scale(Coin.uibuffer, canvas, System.screenRotation);
+		canvas.g2.end();
+		}else{
+		#else
 		canvas.g2.begin();
     	canvas.g2.imageScaleQuality = _imageQuality;
 		Scaler.scale(Coin.backbuffer, canvas, System.screenRotation);
 		canvas.g2.end();
+		#end
+		#if editor }#end
   }
 
 	public function onKeyDown(keyCode:KeyCode):Void {
-		if (State.activeState != null){
-			State.activeState.onKeyDown(keyCode);
+		if (State.active != null){
+			State.active.onKeyDown(keyCode);
 		}
 	}
 
 	public function onKeyUp(keyCode:KeyCode):Void {
-		if (State.activeState != null){
-			State.activeState.onKeyUp(keyCode);
+		if (State.active != null){
+			State.active.onKeyUp(keyCode);
 		}
 	}
 
 	public function onMouseDown(button:Int, x:Int, y:Int):Void {
 		Coin.mouseX = Scaler.transformX(x, y, Coin.backbuffer, ScreenCanvas.the, System.screenRotation);
 		Coin.mouseY = Scaler.transformY(x, y, Coin.backbuffer, ScreenCanvas.the, System.screenRotation);
-		if (State.activeState != null){
-			State.activeState.onMouseDown(button, Coin.mouseX, Coin.mouseY);
+		if (State.active != null){
+			State.active.onMouseDown(button, Coin.mouseX, Coin.mouseY);
 		}
 	}
 
 	public function onMouseUp(button:Int, x:Int, y:Int):Void {
 		Coin.mouseX = Scaler.transformX(x, y, Coin.backbuffer, ScreenCanvas.the, System.screenRotation);
 		Coin.mouseY = Scaler.transformY(x, y, Coin.backbuffer, ScreenCanvas.the, System.screenRotation);
-		if (State.activeState != null){
-			State.activeState.onMouseUp(button, Coin.mouseX, Coin.mouseY);
+		if (State.active != null){
+			State.active.onMouseUp(button, Coin.mouseX, Coin.mouseY);
 		}
 	}
 
 	public function onMouseMove(x:Int, y:Int, cx:Int, cy:Int):Void {
 		Coin.mouseX = Scaler.transformX(x, y, Coin.backbuffer, ScreenCanvas.the, System.screenRotation);
 		Coin.mouseY = Scaler.transformY(x, y, Coin.backbuffer, ScreenCanvas.the, System.screenRotation);
-		if (State.activeState != null){
-			State.activeState.onMouseMove(Coin.mouseX, Coin.mouseY, cx, cy);
+		if (State.active != null){
+			State.active.onMouseMove(Coin.mouseX, Coin.mouseY, cx, cy);
 		}
 	}
 
 	public function onTouchDown(id:Int, x:Int, y:Int):Void {
-		if (State.activeState != null){
-			State.activeState.onTouchDown(id, x, y);
+		if (State.active != null){
+			State.active.onTouchDown(id, x, y);
 		}
 	}
 
 	public function onTouchUp(id:Int, x:Int, y:Int):Void {
-		if (State.activeState != null){
-			State.activeState.onTouchUp(id, x, y);
+		if (State.active != null){
+			State.active.onTouchUp(id, x, y);
 		}
 	}
 
 	public function onTouchMove(id:Int, x:Int, y:Int):Void {
-		if (State.activeState != null){
-			State.activeState.onTouchMove(id, x, y);
+		if (State.active != null){
+			State.active.onTouchMove(id, x, y);
 		}
 	}
 
 	public function onGamepadAxis(axis:Int, value:Float):Void {
-		if (State.activeState != null){
-			State.activeState.onGamepadAxis(axis, value);
+		if (State.active != null){
+			State.active.onGamepadAxis(axis, value);
 		}
 	}
 
 	public function onGamepadButton(button:Int, value:Float):Void {
-		if (State.activeState != null){
-			State.activeState.onGamepadButton(button, value);
+		if (State.active != null){
+			State.active.onGamepadButton(button, value);
 		}
 	}
 

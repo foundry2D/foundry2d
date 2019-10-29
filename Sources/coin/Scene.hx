@@ -96,9 +96,7 @@ class Scene {
     for (entity in _entities) entity.render(canvas);
 
     if (App.traitRenders2D.length > 0) {
-			canvas.g2.begin(false);
 			for (f in App.traitRenders2D) { App.traitRenders2D.length > 0 ? f(canvas.g2) : break; }
-			canvas.g2.end();
 		}
 
     if (App.traitInits.length > 0) {

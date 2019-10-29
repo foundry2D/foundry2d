@@ -22,7 +22,8 @@ class Coin {
   public static var backbuffer:Image;
   #if editor
   public static var uibuffer:Image;
-  public static var render:g:kha.graphics2.Graphics->Void;
+  public static var scenebuffer:Image;
+  public static var renderfunc:kha.Canvas->Void;
   public static var fullscreen:Bool = false;
   #end
   public static var BUFFERWIDTH(default, null):Int = WIDTH;

@@ -45,6 +45,7 @@ typedef TObj = {
 	public var center:Vector2;
     public var depth:Float;
 	public var active:Bool;
+    @:optional public var children:Array<TObj>;
     @:optional public var traits:Array<TTrait>;
 }
 

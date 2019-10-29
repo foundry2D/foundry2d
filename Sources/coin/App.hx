@@ -28,9 +28,7 @@ class App {
 	public function new(_appReady:Void->Void){
 		_appReady();
 		coin.Coin.backbuffer = Image.createRenderTarget(Coin.BUFFERWIDTH, Coin.BUFFERHEIGHT);
-		#if editor
-		coin.Coin.uibuffer = Image.createRenderTarget(Coin.BUFFERWIDTH, Coin.BUFFERHEIGHT);
-		#end
+		
     	_imageQuality = Coin.smooth ? ImageScaleQuality.High:ImageScaleQuality.Low;
 
 		coin.State.setup();
@@ -39,6 +37,10 @@ class App {
 		Mouse.get().notify(onMouseDown, onMouseUp, onMouseMove, null);
 		Gamepad.get().notify(onGamepadAxis, onGamepadButton);
 		Surface.get().notify(onTouchDown, onTouchUp, onTouchMove);
+		#if editor
+		coin.Coin.uibuffer = Image.createRenderTarget(Coin.BUFFERWIDTH, Coin.BUFFERHEIGHT);
+		new EditorUi();
+		#end
 	}
 
 	public static function reset() {
@@ -65,11 +67,12 @@ class App {
 		Coin.backbuffer.g2.end();
 
 		#if editor
+		coin.Coin.scenebuffer = coin.Coin.backbuffer;
 		if(!Coin.fullscreen){
 		Coin.uibuffer.g2.begin();
 		canvas.g2.color = Coin.backgroundcolor;
 		canvas.g2.fillRect(0, 0, Coin.uibuffer.width, Coin.uibuffer.height);
-		Coin.render(Coin.uibuffer.g2);
+		Coin.renderfunc(Coin.uibuffer);
 		Coin.uibuffer.g2.end();
 
 		canvas.g2.begin();

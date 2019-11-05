@@ -23,8 +23,8 @@ class Emitter extends Entity {
 		arParticle = [];
 	}
 
-	override public function update(){
-		super.update();
+	override public function update(dt:Float){
+		super.update(dt);
 		var p = arParticle.length;
 		while (p --> 0){
 			arParticle[p].update();

@@ -21,13 +21,17 @@ class Coin {
 
   public static var backbuffer:Image;
   #if editor
-  public static var uibuffer:Image;
   public static var scenebuffer:Image;
-  public static var renderfunc:kha.Canvas->Void;
+  public static var uibuffer:Image;
+  public static var renderfunc:kha.graphics2.Graphics->Void;
   public static var fullscreen:Bool = false;
-  #end
+  
+  public static var BUFFERWIDTH(default, default):Int = WIDTH;
+  public static var BUFFERHEIGHT(default, default):Int = HEIGHT;
+  #else 
   public static var BUFFERWIDTH(default, null):Int = WIDTH;
   public static var BUFFERHEIGHT(default, null):Int = HEIGHT;
+  #end
 
   public static var mouseX:Int = 0;
 	public static var mouseY:Int = 0;

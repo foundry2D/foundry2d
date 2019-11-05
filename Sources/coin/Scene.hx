@@ -4,6 +4,7 @@ import coin.collide.Rectangle;
 import coin.anim.Sprite;
 import haxe.ds.ArraySort;
 import kha.Canvas;
+import kha.math.Vector2;
 import coin.object.Object;
 import coin.data.SceneFormat;
 
@@ -12,9 +13,10 @@ class Scene {
 	public var raw:TSceneFormat;
   public var root:Object;
   public static var ready:Bool = false;
+  public var cam:Vector2;
 
   public var countEntities(get, null):Int;
-  private var _entities:Array<Object>;
+  public var _entities:Array<Object>;
 
   public var traitInits:Array<Void->Void> = [];
 	public var traitRemoves:Array<Void->Void> = [];
@@ -34,6 +36,7 @@ class Scene {
     this.raw = raw; 
     _entities = new Array<Object>();
     root = new Object();
+    cam = new Vector2();
     if(Reflect.hasField(raw,"_entities")){
       for(e in raw._entities){
         switch(e.type){

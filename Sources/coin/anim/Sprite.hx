@@ -68,8 +68,8 @@ class Sprite extends Entity {
 		if (data.image != null) {
 			canvas.g2.color = Color.White;
 			canvas.g2.pushTranslation(position.x, position.y);
-			canvas.g2.rotate(Util.degToRad(rotation), position.x + width / 2, position.y + height / 2);
-			canvas.g2.drawScaledSubImage(data.image, Std.int(data.animation.get() * _w) % data.image.width, Math.floor(data.animation.get() * _w / data.image.width) * _h, _w, _h, (flip.x > 0.0 ? width:0), (flip.y > 0.0 ? height:0), flip.x > 0.0 ? -width:width, flip.y > 0.0 ? -height:height);
+			canvas.g2.rotate(Util.degToRad(rotation), position.x + width*scale.x/ 2, position.y + height*scale.y/ 2);
+			canvas.g2.drawScaledSubImage(data.image, Std.int(data.animation.get() * _w) % data.image.width, Math.floor(data.animation.get() * _w / data.image.width) * _h, _w, _h, (flip.x > 0.0 ? width:0), (flip.y > 0.0 ? height:0), (flip.x > 0.0 ? -width:width)*scale.x, (flip.y > 0.0 ? -height:height)*scale.y);
 			canvas.g2.popTransformation();
 		}
 	}

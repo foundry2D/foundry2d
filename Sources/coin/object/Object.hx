@@ -14,6 +14,7 @@ class Object {
 
 	public var active(default, set):Bool = true;
 	public var position:Vector2;
+	public var scale:Vector2;
 	public var width(get,set):Float;
 	private var _width:Float =0.0;
 	function get_width(){
@@ -61,6 +62,14 @@ class Object {
 
 		this.width = width;
 		this.height = height;
+		
+		trace(Coin.BUFFERWIDTH != Coin.WIDTH);
+		if(Coin.BUFFERWIDTH != Coin.WIDTH || Coin.BUFFERHEIGHT != Coin.HEIGHT){
+			scale = new Vector2(Coin.BUFFERWIDTH/Coin.WIDTH,Coin.BUFFERHEIGHT/Coin.HEIGHT);
+		} else{
+			scale = new Vector2(1.0,1.0);
+		}
+		
 
 		center = new Vector2(width / 2, height / 2);
 		if(depth == null)

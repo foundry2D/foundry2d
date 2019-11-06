@@ -8,6 +8,9 @@ https://github.com/Kha-Samples/Kha2D
 Edited for the Kha Tutorial Series by Lewis Lepton
 https://lewislepton.com
 https://github.com/lewislepton/kha-tutorial-series
+
+Edited for the Coin Engine by Jean-Sébastien Nadeau
+https://github.com/mundusnine/coin
 */
 
 
@@ -25,7 +28,6 @@ import coin.data.SceneFormat;
 
 class Sprite extends Entity {
 	private var data:SpriteData;
-	
 	private var _w: Float;
 	private var _h: Float;
 
@@ -35,6 +37,7 @@ class Sprite extends Entity {
 		super(sprite.position.x, sprite.position.y, sprite.width, sprite.height);
 		this.active = sprite.active;
 		this.flip = Reflect.hasField(sprite,"flip") ? sprite.flip:new Vector2();
+		this.scale = Reflect.hasField(sprite,"scale") ? new Vector2(sprite.scale.x,sprite.scale.y):this.scale;
 		new SpriteData(sprite,function(p_data){
 			this.data = p_data;
 			this.raw = data.raw;
@@ -43,12 +46,6 @@ class Sprite extends Entity {
 			#end
 			done(this);
 		});
-		// data.image = Reflect.field(Assets.images, imagename);
-		// _w = width;
-		// _h = height;
-		// if (this.width  == 0 && _image != null) this.width  = _image.width;
-		// if (this.height == 0 && _image != null) this.height = _image.height;
-		// _animation = Animation.create(0);
 
 	}
 	
@@ -67,9 +64,9 @@ class Sprite extends Entity {
 		super.render(canvas);
 		if (data.image != null) {
 			canvas.g2.color = Color.White;
-			canvas.g2.pushTranslation(position.x, position.y);
-			canvas.g2.rotate(Util.degToRad(rotation), position.x + width*scale.x/ 2, position.y + height*scale.y/ 2);
-			canvas.g2.drawScaledSubImage(data.image, Std.int(data.animation.get() * _w) % data.image.width, Math.floor(data.animation.get() * _w / data.image.width) * _h, _w, _h, (flip.x > 0.0 ? width:0), (flip.y > 0.0 ? height:0), (flip.x > 0.0 ? -width:width)*scale.x, (flip.y > 0.0 ? -height:height)*scale.y);
+			canvas.g2.pushTranslation(position.x,position.y);
+			canvas.g2.rotate(Util.degToRad(rotation), position.x + width/ 2,position.y + height/ 2);
+			canvas.g2.drawScaledSubImage(data.image, Std.int(data.animation.get() * _w) % data.image.width, Math.floor(data.animation.get() * _w / data.image.width) * _h, _w, _h, (flip.x > 0.0 ? width:0), (flip.y > 0.0 ? height:0), (flip.x > 0.0 ? -width:width), (flip.y > 0.0 ? -height:height));
 			canvas.g2.popTransformation();
 		}
 	}
@@ -84,19 +81,13 @@ class Sprite extends Entity {
 		
 	}
 	
-	override function get_width(): Float {
-		return _w;
-	}
-	
 	override function set_width(value: Float): Float {
+		super.set_width(value);
 		return _w = value;
 	}
 	
-	override function get_height(): Float {
-		return _h;
-	}
-	
 	override function set_height(value: Float): Float {
+		super.set_height(value);
 		return _h = value;
 	}
 }

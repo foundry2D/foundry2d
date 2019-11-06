@@ -9,6 +9,7 @@
             "width": 666.0,
             "height": 555.0,
             "center":{ "x": 0.0, "y": 0.0},
+            "scale":{ "x": 0.5, "y": 0.5},
             "depth": 0.0,
             "active": true,
             "_imagePath": "loading",

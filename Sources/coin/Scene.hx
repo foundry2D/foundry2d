@@ -26,11 +26,8 @@ class Scene {
    *  If the engine should use ysort: 2DRPG or zsort: platformer drawing method.
    *  Can vary on a Scene to Scene basis i.e. Menu Scene uses zsort Gameplay Scene uses ysort 
    */
-  public static var zsort(get,null):Bool;
-  static function get_zsort(){
-    return _Zsort;
-  }
-  private static var _Zsort:Bool = false; 
+  public static var zsort(default,null):Bool = false;
+
 
   public function new(raw:TSceneFormat){
     this.raw = raw; 
@@ -70,6 +67,8 @@ class Scene {
 
   @:access(coin.App)
   public function update(dt:Float){
+    if(!Scene.ready && raw._entities.length == _entities.length)
+      Scene.ready = true;
     for (entity in _entities) entity.update(dt);
 
     var i = 0;
@@ -157,7 +156,7 @@ class Scene {
   }
 
   public function sort(?value:Bool = false,?p_zsort:Bool = false):Bool {
-    _Zsort = p_zsort;
+    zsort = p_zsort;
     return _depth = value;
   }
 

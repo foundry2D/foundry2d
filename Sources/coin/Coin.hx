@@ -36,6 +36,8 @@ class Coin {
   public static var mouseX:Int = 0;
 	public static var mouseY:Int = 0;
 
+  public static var sceneX:Float=0.0;
+  public static var sceneY:Float=0.0;
   public static var backgroundcolor:Color;
 
   public static var smooth:Bool;

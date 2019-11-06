@@ -5,15 +5,12 @@ class LoadingScript extends coin.Trait {
     public function new(){
         super();
         notifyOnInit(function (){
-            // this.object.position.x = Coin.BUFFERWIDTH*0.5-(this.object.width*this.object.scale.x)*0.5;
-            // this.object.position.y = Coin.BUFFERHEIGHT*0.5-(this.object.height*this.object.scale.y)*0.5;
             this.object.position.x = (Coin.WIDTH*0.5-(this.object.width)*0.5);
-            this.object.position.y = (Coin.HEIGHT*0.5+(this.object.height)*0.5)*this.object.scale.y;
-            trace(this.object.position);
+            this.object.position.y = (Coin.HEIGHT*0.5-(this.object.height)*0.5);
         });
         notifyOnUpdate(function(dt:Float){
-            // State.active.cam.x+=0.01;
-            // trace(this.object.scale.x);
+            // State.active.cam.x+=1.0;
+
             this.object.rotation+= 10*dt;
         });
     }

@@ -85,19 +85,14 @@ class App {
 
 		#if editor
 		if(!Coin.fullscreen){
-			
 			Coin.backbuffer.g2.begin();
-			canvas.g2.color = Coin.backgroundcolor;
-			canvas.g2.fillRect(0, 0, Coin.backbuffer.width, Coin.backbuffer.height);
-			haxe.ui.core.Screen.instance.renderTo(Coin.uibuffer.g2);
-			Coin.backbuffer.g2.pushTransformation(FastMatrix3.translation(-screenOffsetX, -screenOffsetY));
-			for(obj in State.active._entities){
-				obj.scale.x = Coin.scenebuffer.width/Coin.backbuffer.width;
-				obj.scale.y = Coin.scenebuffer.height/Coin.backbuffer.height;
-			}
-			Coin.renderfunc(Coin.backbuffer.g2);//canvas.g2.pushTransformation
-			Coin.backbuffer.g2.popTransformation();
+
+			if (Coin.scenebuffer == null) Coin.scenebuffer = kha.Image.createRenderTarget(Coin.backbuffer.width, Coin.backbuffer.height);
+			Coin.scenebuffer.g2.pushTransformation(FastMatrix3.translation(-screenOffsetX, -screenOffsetY));
+			Coin.renderfunc(Coin.backbuffer.g2);
+
 			Coin.backbuffer.g2.end();
+			
 		}else{
 			Coin.BUFFERWIDTH = Coin.backbuffer.width;
 			Coin.BUFFERHEIGHT = Coin.backbuffer.height;
@@ -123,6 +118,11 @@ class App {
 		if (State.active != null){
 			State.active.onKeyDown(keyCode);
 		}
+		#if editor
+		if(keyCode == KeyCode.F11){
+			Coin.fullscreen = !Coin.fullscreen;
+		}
+		#end
 	}
 
 	public function onKeyUp(keyCode:KeyCode):Void {

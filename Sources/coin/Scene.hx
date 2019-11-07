@@ -1,5 +1,8 @@
 package coin;
 
+#if editor
+import coin.tool.Util.Cli;
+#end
 import coin.collide.Rectangle;
 import coin.anim.Sprite;
 import haxe.ds.ArraySort;
@@ -36,33 +39,43 @@ class Scene {
     cam = new Vector2();
     if(Reflect.hasField(raw,"_entities")){
       for(e in raw._entities){
-        switch(e.type){
-          case "sprite_object":
-            var data:TSpriteData = SceneFormat.getData(e);
-            var out = new Sprite(data,function (s:Sprite){
-                createTraits(data.traits,s);
-                _entities.push(s);
-            });
-          case "rect_object":
-            var data:TRectData = SceneFormat.getData(e);
-            var out = new Rectangle(data.position.x,data.position.y,Std.int(data.width),Std.int(data.height));
-            out.raw = data;
-            createTraits(data.traits,out);
-            _entities.push(out);
-          case "emitter_object":
-          default://Object
-            // var data:TSpriteData = SceneFormat.getData(e);
-            // var out = new Sprite(data._imagePath,data.position.x,data.position.y,Std.int(data.width),Std.int(data.height));
-            // out.raw = data;
-            // _entities.push(out);
-
-        }
+        addEntity(e);
       }
     }
     createTraits(raw.traits,root);
     #if debug
 		root.name = "Root";
     #end
+  }
+
+  #if editor
+  public function addEntity(e:TObj,?isEditor = false){
+    if(!isEditor)
+      trace(Cli.byellow+"WARNING:"+Cli.reset+" This function should only be used for "+Cli.bred+"EDITOR"+Cli.reset+" developpement");
+  #else
+  function addEntity(e:TObj){
+  #end  
+    switch(e.type){
+        case "sprite_object":
+          var data:TSpriteData = SceneFormat.getData(e);
+          var out = new Sprite(data,function (s:Sprite){
+              createTraits(data.traits,s);
+              _entities.push(s);
+          });
+        case "rect_object":
+          var data:TRectData = SceneFormat.getData(e);
+          var out = new Rectangle(data.position.x,data.position.y,Std.int(data.width),Std.int(data.height));
+          out.raw = data;
+          createTraits(data.traits,out);
+          _entities.push(out);
+        case "emitter_object":
+        default://Object
+          // var data:TSpriteData = SceneFormat.getData(e);
+          // var out = new Sprite(data._imagePath,data.position.x,data.position.y,Std.int(data.width),Std.int(data.height));
+          // out.raw = data;
+          // _entities.push(out);
+
+      }
   }
 
   @:access(coin.App)

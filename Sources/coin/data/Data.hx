@@ -162,6 +162,9 @@ class Data {
 				for (f in loadingImages.get(file)) f(b);
 				loadingImages.remove(file);
 				assetsLoaded++;
+			},function (e:kha.AssetError){
+				if(e.url == "")e.url = 'Null';
+				trace("Error occurred file " + e.url + " does not exist");
 			});
 		}
 	}

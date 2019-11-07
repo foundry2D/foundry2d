@@ -41,6 +41,8 @@ class Sprite extends Entity {
 		new SpriteData(sprite,function(p_data){
 			this.data = p_data;
 			this.raw = data.raw;
+			if (this.width  == 0 && data.image != null) this.width  = data.image.width;
+			if (this.height == 0 && data.image != null) this.height = data.image.height;
 			#if debug
 			this.name = this.raw.name;
 			#end

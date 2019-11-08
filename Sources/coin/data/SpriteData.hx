@@ -19,7 +19,7 @@ class SpriteData {
 
 	public function new(raw:TSpriteData,done:SpriteData->Void){
 		this.raw = raw;
-		Data.getImage(raw._imagePath,function (img:Image){
+		Data.getImage(raw.imagePath,function (img:Image){
 			this.image = img;
 			anims = [];
 			if(raw.animsPath!= null){

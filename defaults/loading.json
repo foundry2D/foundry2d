@@ -12,7 +12,7 @@
             "scale":{ "x": 0.5, "y": 0.5},
             "depth": 0.0,
             "active": true,
-            "_imagePath": "loading",
+            "imagePath": "loading",
             "traits":[
                 {
                     "type": "Script",

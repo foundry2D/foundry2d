@@ -68,7 +68,7 @@ typedef TSpriteData = {
 @:structInit class TSpriteData {
 #end
     >TRectData,
-    public var _imagePath: String;
+    public var imagePath: String;
     @:optional public var flip:Vector2;
     @:optional public var animsPath:Array<String>;
 }

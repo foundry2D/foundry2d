@@ -43,7 +43,7 @@ class Cli{
 	public static final byellow =  "\033[1m\033[33m";
 	public static final reset =  "\033[0m";
 }
-/** the following are UBUNTU/LINUX, and MacOS ONLY terminal color codes.
+/** the following are UBUNTU/LINUX, and MacOS ONLY terminal color codes. As of 2019 they should work in windows 10: https://stackoverflow.com/a/52063884
 #define RESET   "\033[0m"
 #define BLACK   "\033[30m"      
 #define RED     "\033[31m"      

@@ -10,8 +10,18 @@ class Object {
 	#end
 	static var uidCounter = 0;
 	public var uid:Int;
+	#if editor
+	public var raw(default,set):TObj = null;
+	function set_raw(data:TObj){
+		for(f in Reflect.fields(data)){
+			Reflect.setProperty(this,f,Reflect.getProperty(data,f));
+		}
+		raw = data;
+		return raw;
+	}
+	#else
 	public var raw:TObj = null;
-
+	#end
 	public var active(default, set):Bool = true;
 	public var position:Vector2;
 	public var scale:Vector2;

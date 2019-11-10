@@ -11,12 +11,16 @@ class Object {
 	static var uidCounter = 0;
 	public var uid:Int;
 	#if editor
+	public var dataChanged:Bool = false;
 	public var raw(default,set):TObj = null;
 	function set_raw(data:TObj){
+		if(!Scene.ready)return raw = data;
+
 		for(f in Reflect.fields(data)){
 			Reflect.setProperty(this,f,Reflect.getProperty(data,f));
 		}
 		raw = data;
+		dataChanged = true;
 		return raw;
 	}
 	#else
@@ -64,7 +68,7 @@ class Object {
 	public var invincibleTimer:Float;
 	public var invincibleTimerSpeed = 0.05;
 
-	public var traits:Array<Trait> = [];
+	var traits:Array<Trait> = [];
 
 	public function new(?x:Float, ?y:Float, ?width:Float, ?height:Float){
 		uid = uidCounter++;

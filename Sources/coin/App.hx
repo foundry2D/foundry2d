@@ -187,6 +187,9 @@ class App {
 
 	// Hooks
 	public static function notifyOnInit(f:Void->Void) {
+		for(func in traitInits){
+			if(Reflect.compareMethods(func,f)) return;
+		}
 		traitInits.push(f);
 	}
 
@@ -195,6 +198,9 @@ class App {
 	}
 
 	public static function notifyOnUpdate(f:Float->Void) {
+		for(func in traitUpdates){
+			if(Reflect.compareMethods(func,f)) return;
+		}
 		traitUpdates.push(f);
 	}
 
@@ -203,6 +209,9 @@ class App {
 	}
 	
 	public static function notifyOnLateUpdate(f:Void->Void) {
+		for(func in traitLateUpdates){
+			if(Reflect.compareMethods(func,f)) return;
+		}
 		traitLateUpdates.push(f);
 	}
 
@@ -211,6 +220,9 @@ class App {
 	}
 
 	public static function notifyOnRender(f:kha.graphics4.Graphics->Void) {
+		for(func in traitRenders){
+			if(Reflect.compareMethods(func,f)) return;
+		}
 		traitRenders.push(f);
 	}
 
@@ -219,6 +231,9 @@ class App {
 	}
 
 	public static function notifyOnRender2D(f:kha.graphics2.Graphics->Void) {
+		for(func in traitRenders2D){
+			if(Reflect.compareMethods(func,f)) return;
+		}
 		traitRenders2D.push(f);
 	}
 

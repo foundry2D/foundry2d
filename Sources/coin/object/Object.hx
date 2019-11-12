@@ -3,6 +3,7 @@ package coin.object;
 import kha.Canvas;
 import kha.math.Vector2;
 import coin.data.SceneFormat;
+import coin.Scene;
 
 class Object {
 	#if debug
@@ -13,10 +14,17 @@ class Object {
 	#if editor
 	public var dataChanged:Bool = false;
 	public var raw(default,set):TObj = null;
+	@:access(coin.Scene)
 	function set_raw(data:TObj){
 		if(!Scene.ready)return raw = data;
 
 		for(f in Reflect.fields(data)){
+			if(f == "traits"){
+				var trts:Array<TTrait> = Reflect.getProperty(data,f);
+				if(traits.length == trts.length)continue;
+				Scene.createTraits(trts.splice(traits.length+1,trts.length-traits.length),this);
+				continue;
+			}
 			Reflect.setProperty(this,f,Reflect.getProperty(data,f));
 		}
 		raw = data;
@@ -120,8 +128,50 @@ class Object {
 	public function deactivate(){
 		active = false;
 	}
-
+	@:access(coin.Trait,coin.App)
 	function set_active(value:Bool):Bool {
+		if(value && active != value){
+			trace("Before add traits"+App.traitUpdates.length);
+			for(t in traits){
+				if (t._init != null) {
+					for (f in t._init) App.notifyOnInit(f);
+				}
+				if (t._update != null) {
+					for (f in t._update) App.notifyOnUpdate(f);
+				}
+				if (t._lateUpdate != null) {
+					for (f in t._lateUpdate) App.notifyOnLateUpdate(f);
+				}
+				if (t._render != null) {
+					for (f in t._render) App.notifyOnRender(f);
+				}
+				if (t._render2D != null) {
+					for (f in t._render2D) App.notifyOnRender2D(f);
+				}
+			}
+			trace("Should of add  traits"+App.traitUpdates.length);
+		}
+		else if(!value && active != value){
+			trace("Before remove traits"+App.traitUpdates.length);
+			for(t in traits){
+				if (t._init != null) {
+					for (f in t._init) App.removeInit(f);
+				}
+				if (t._update != null) {
+					for (f in t._update) App.removeUpdate(f);
+				}
+				if (t._lateUpdate != null) {
+					for (f in t._lateUpdate) App.removeLateUpdate(f);
+				}
+				if (t._render != null) {
+					for (f in t._render) App.removeRender(f);
+				}
+				if (t._render2D != null) {
+					for (f in t._render2D) App.removeRender2D(f);
+				}
+			}
+			trace("Should of removed traits"+App.traitUpdates.length);
+		}
 		return active = value;
 	}
 

@@ -203,23 +203,23 @@ class Scene {
         var t = traitInst;
         if (t._init != null) {
           for (f in t._init) App.notifyOnInit(f);
-          t._init = null;
+          // t._init = null;
         }
         if (t._update != null) {
           for (f in t._update) App.notifyOnUpdate(f);
-          t._update = null;
+          // t._update = null;
         }
         if (t._lateUpdate != null) {
           for (f in t._lateUpdate) App.notifyOnLateUpdate(f);
-          t._lateUpdate = null;
+          // t._lateUpdate = null;
         }
         if (t._render != null) {
           for (f in t._render) App.notifyOnRender(f);
-          t._render = null;
+          // t._render = null;
         }
         if (t._render2D != null) {
           for (f in t._render2D) App.notifyOnRender2D(f);
-          t._render2D = null;
+          // t._render2D = null;
         }
 			}
 		}

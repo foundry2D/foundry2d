@@ -40,7 +40,7 @@ class Sprite extends Entity {
 		this.scale = Reflect.hasField(sprite,"scale") ? new Vector2(sprite.scale.x,sprite.scale.y):this.scale;
 		new SpriteData(sprite,function(p_data){
 			this.data = p_data;
-			this.raw = data.raw;
+			this.raw = Reflect.copy(data.raw);
 			if (this.width  == 0 && data.image != null) this.width  = data.image.width;
 			if (this.height == 0 && data.image != null) this.height = data.image.height;
 			#if debug
@@ -92,4 +92,31 @@ class Sprite extends Entity {
 		super.set_height(value);
 		return _h = value;
 	}
+	#if editor
+	override function refreshObjectData(obj:TObj) {
+		super.refreshObjectData(obj);
+		var imgPath = Reflect.getProperty(obj,"imagePath");
+		if(Reflect.compare(obj,data.raw) != 0 && data.raw.imagePath != imgPath){
+			App.editorui.inspector.wait.push(0);
+			var out:TSpriteData = SceneFormat.getData(this.raw);
+			out.imagePath = imgPath;
+			new SpriteData(out,function(p_data){
+				this.data = p_data;
+				trace("Before "+data.image.width);
+				trace("Before "+this.data.raw.width);
+				trace("Before "+this.width);
+				this.width = this.data.raw.width = data.image.width;
+				this.height = this.data.raw.height= data.image.height;
+				trace("After "+data.image.width);
+				trace("After "+this.data.raw.width);
+				trace("After "+this.width);
+				this.raw = this.data.raw;
+				trace("After After "+data.image.width);
+				trace("After After "+this.data.raw.width);
+				trace("After After "+this.width);
+				App.editorui.inspector.wait.pop();
+			});
+		}
+	}
+	#end
 }

@@ -35,16 +35,16 @@ class Scene {
   public function new(raw:TSceneFormat){
     this.raw = raw; 
     _entities = new Array<Object>();
-    root = new Object();
+    // root = new Object();
     cam = new Vector2();
     if(Reflect.hasField(raw,"_entities")){
       for(e in raw._entities){
         addEntity(e);
       }
     }
-    createTraits(raw.traits,root);
+    // createTraits(raw.traits,root);
     #if debug
-		root.name = "Root";
+		// root.name = "Root";
     #end
   }
 

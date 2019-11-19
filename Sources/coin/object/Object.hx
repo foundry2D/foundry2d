@@ -16,8 +16,17 @@ class Object {
 	public var raw(default,set):TObj = null;
 	@:access(coin.Scene)
 	function set_raw(data:TObj){
-		if(!Scene.ready)return raw = data;
+		if(!Scene.ready)return this.raw = data;
 
+		refreshObjectData(data);
+		this.raw = data;
+		// trace(Reflect.getProperty(State.active.raw._entities[uid],"imagePath"));
+		// trace(Reflect.getProperty(State.active._entities[uid].raw,"imagePath"));
+		dataChanged = true;
+		return this.raw;
+	}
+	@:access(coin.Scene)
+	function refreshObjectData(data:TObj){
 		for(f in Reflect.fields(data)){
 			if(f == "traits"){
 				var trts:Array<TTrait> = Reflect.getProperty(data,f);
@@ -27,9 +36,32 @@ class Object {
 			}
 			Reflect.setProperty(this,f,Reflect.getProperty(data,f));
 		}
-		raw = data;
-		dataChanged = true;
-		return raw;
+	}
+	var e:haxe.ui.events.UIEvent = null;
+	var ds = new haxe.ui.data.ListDataSource<haxe.ui.extended.InspectorNode.InspectorData>();
+	@:access(EditorInspector,haxe.ui.extended.InspectorView,coin.Scene)
+	function refreshDataObject(){
+		if(App.editorui.inspector.wait.length > 0)return;
+		if(e == null ) e = new haxe.ui.events.UIEvent(haxe.ui.events.UIEvent.CHANGE);
+		//Update raw
+		for(f in Reflect.fields(this.raw)){
+			if(f == "traits"){
+				var trts:Array<TTrait> = Reflect.getProperty(this.raw,f);
+				if(traits.length == trts.length)continue;
+				Scene.createTraits(trts.splice(traits.length+1,trts.length-traits.length),this);
+				continue;
+			}
+			if(Reflect.hasField(this,f)){
+				Reflect.setProperty(this.raw,f,Reflect.getProperty(this,f));
+			}
+
+		}
+		//Update Inspector
+		if(App.editorui.inspector.tree.curNode != null && App.editorui.inspector.tree.curNode.data.name == this.name){
+			App.editorui.inspector.tree.curNode.updateNode(EditorHierarchy.getIDataFrom(this.raw));
+		}
+		
+			
 	}
 	#else
 	public var raw:TObj = null;
@@ -115,6 +147,9 @@ class Object {
 			invincible = false;
 			invincibleTimer = invincibleTimerMax;
 		}
+		#if editor
+		refreshDataObject();
+		#end
 	}
 
 	public function render(canvas:Canvas){

@@ -46,7 +46,9 @@ class App {
 	public static function init(_appReady:Void->Void) {
 		new App(_appReady);
 	}
-
+	#if editor
+	public static var editorui:EditorUi = null;
+	#end
 	public function new(_appReady:Void->Void){
 		_appReady();
 		Coin.backbuffer = Image.createRenderTarget(Coin.BUFFERWIDTH, Coin.BUFFERHEIGHT);
@@ -61,7 +63,7 @@ class App {
 		Surface.get().notify(onTouchDown, onTouchUp, onTouchMove);
 		#if editor
 		Coin.uibuffer = Image.createRenderTarget(Coin.BUFFERWIDTH, Coin.BUFFERHEIGHT);
-		new EditorUi();
+		editorui = new EditorUi();
 		#end
 	}
 

@@ -97,10 +97,10 @@ class Sprite extends Entity {
 		super.refreshObjectData(obj);
 		var imgPath = Reflect.getProperty(obj,"imagePath");
 		if(Reflect.compare(obj,data.raw) != 0 && data.raw.imagePath != imgPath){
-			App.editorui.inspector.wait.push(0);
 			var out:TSpriteData = SceneFormat.getData(this.raw);
 			out.imagePath = imgPath;
 			new SpriteData(out,function(p_data){
+				App.editorui.inspector.wait.push(0);
 				this.data = p_data;
 				trace("Before "+data.image.width);
 				trace("Before "+this.data.raw.width);

@@ -52,10 +52,10 @@ typedef TObj = {
 
 #if js
 typedef TRectData = {
-#else
-@:structInit class TRectData {
-#end
     >TObj,
+#else
+@:structInit class TRectData extends TObj {
+#end
     public var c_width:FastFloat;
 	public var c_height:FastFloat;
     public var c_center:Vector2;
@@ -64,10 +64,11 @@ typedef TRectData = {
 
 #if js
 typedef TSpriteData = {
-#else
-@:structInit class TSpriteData {
-#end
     >TRectData,
+#else
+@:structInit class TSpriteData extends TRectData{
+#end
+    
     public var imagePath: String;
     @:optional public var flip:Vector2;
     @:optional public var animsPath:Array<String>;
@@ -75,10 +76,10 @@ typedef TSpriteData = {
 
 #if js
 typedef TEmitterData = {
-#else
-@:structInit class TEmitterData {
-#end
     >TObj,
+#else
+@:structInit class TEmitterData extends TObj {
+#end
     public var amount:Int;
 }
 

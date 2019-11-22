@@ -67,7 +67,15 @@ class Object {
 	public var raw:TObj = null;
 	#end
 	public var active(default, set):Bool = true;
-	public var position:Vector2;
+	static var _positions:Array<Vector2> = [];
+	public var position(get,never):Vector2;
+	function get_position() {
+		return _positions[uid];
+	}
+	public function translate(func:Vector2->Vector2){
+		_translations.add(func,_positions[uid],uid);
+	}
+	static var _translations:Executor<Vector2> = new Executor<Vector2>("_positions");
 	public var scale:Vector2;
 	private var _width:Float =0.0;
 	public var width(get,set):Float;
@@ -112,7 +120,7 @@ class Object {
 
 	public function new(?x:Float, ?y:Float, ?width:Float, ?height:Float){
 		uid = uidCounter++;
-		position = new Vector2(x, y);
+		_positions.push(new Vector2(x, y));
 
 		this.width = width;
 		this.height = height;

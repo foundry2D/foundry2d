@@ -100,7 +100,6 @@ class Sprite extends Entity {
 			var out:TSpriteData = SceneFormat.getData(this.raw);
 			out.imagePath = imgPath;
 			new SpriteData(out,function(p_data){
-				App.editorui.inspector.wait.push(0);
 				this.data = p_data;
 				trace("Before "+data.image.width);
 				trace("Before "+this.data.raw.width);
@@ -114,7 +113,6 @@ class Sprite extends Entity {
 				trace("After After "+data.image.width);
 				trace("After After "+this.data.raw.width);
 				trace("After After "+this.width);
-				App.editorui.inspector.wait.pop();
 			});
 		}
 	}

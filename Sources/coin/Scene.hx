@@ -78,7 +78,7 @@ class Scene {
       }
   }
 
-  @:access(coin.App)
+  @:access(coin.App,coin.object.Object)
   public function update(dt:Float){
     if(!Scene.ready && raw._entities.length == _entities.length)
       Scene.ready = true;
@@ -95,6 +95,9 @@ class Scene {
 			// Account for removed traits
 			l <= App.traitUpdates.length ? i++ : l = App.traitUpdates.length;
 		}
+
+    Object._translations.execute();
+    Object._rotates.execute();
 
 		i = 0;
 		l = App.traitLateUpdates.length;

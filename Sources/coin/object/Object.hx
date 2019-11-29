@@ -23,12 +23,11 @@ typedef RotateData ={
 	@:optional public var from:Vector2;
 	@:optional public var towards:Vector2;
 }
+
 class Object {
 	#if debug
 	public var name:String;
 	#end
-	static var uidCounter = 0;
-	public var uid:Int;
 	#if editor
 	public var dataChanged:Bool = false;
 	public var raw(default,set):TObj = null;
@@ -38,8 +37,6 @@ class Object {
 
 		refreshObjectData(data);
 		this.raw = data;
-		// trace(Reflect.getProperty(State.active.raw._entities[uid],"imagePath"));
-		// trace(Reflect.getProperty(State.active._entities[uid].raw,"imagePath"));
 		dataChanged = true;
 		return this.raw;
 	}
@@ -55,6 +52,8 @@ class Object {
 				 	_positions[uid] = Reflect.getProperty(data,f);
 				case "rotation":
 					_rotations[uid] = Reflect.getProperty(data,f);
+				case "scale":
+					_scales[uid] = Reflect.getProperty(data,f);
 				default:
 					Reflect.setProperty(this,f,Reflect.getProperty(data,f));
 			}
@@ -63,20 +62,49 @@ class Object {
 	#else
 	public var raw:TObj = null;
 	#end
+	static var uidCounter = 0;
+	public var uid:Int;
 	public var active(default, set):Bool = true;
+
 	static var _positions:Array<Vector2> = [];
 	static var _translations:Executor<MoveData> = null;
 	public var position(get,never):Vector2;
 	function get_position() {
 		return _positions[uid];
 	}
+	/**
+	 * Add a translation function to be executed in another thread. 
+	 *
+	 * @param	func The function to be executed in the other thread.
+	 * @param	dt The delta time to be used; defaults to 1.0.
+	 */
 	public function translate(func:MoveData->MoveData, ?dt:Float = 1.0){
 		_translations.add(
 		func,
 		{_positions:new Vector2(_positions[uid].x,_positions[uid].y),dt: dt}
 		,uid);
 	}
-	public var scale:Vector2;
+
+	public var rotation(get,never):Float;
+	function get_rotation(){
+		return _rotations[uid];
+	}
+	static var _rotations:Array<Float> = [];
+	static var _rotates:Executor<RotateData> = null;
+	public function rotate(func:RotateData->RotateData, ?dt:Float = 1.0, ?from:Vector2,?towards:Vector2){
+		_rotates.add(func,{_rotations: _rotations[uid],dt: dt,from: from,towards: towards},uid);
+	}
+
+	public var scale(get,never):Vector2;
+	function get_scale(){
+		return _scales[uid];
+	}
+	static var _scales:Array<Vector2> = [];
+	static var _scaler:Executor<Vector2> = null;
+	public function resize(func:Vector2->Vector2,?dt:Float = 1.0) {
+		_scaler.add(func,_scales[uid],uid);
+	}
+
 	private var _width:Float =0.0;
 	public var width(get,set):Float;
 	function get_width(){
@@ -100,42 +128,30 @@ class Object {
 		return _height;
 	}
 	public var center:Vector2;
-	public var rotation(get,never):Float;
-	static var _rotations:Array<Float> = [];
-	static var _rotates:Executor<RotateData> = null;
-	function get_rotation(){
-		return _rotations[uid];
-	}
-	public function rotate(func:RotateData->RotateData, ?dt:Float = 1.0, ?from:Vector2,?towards:Vector2){
-		_rotates.add(func,{_rotations: rotation,dt: dt,from: from,towards: towards},uid);
-	}
 	public var velocity:Vector2 = new Vector2();
-	public var speed = 3.0;
-	public var acceleration = 0.3;
-	public var friction = 3.6;
+	// public var speed = 3.0;
+	// public var acceleration = 0.3;
+	// public var friction = 3.6;
 
 	public var depth:Float;
-
-	public var life:Int = 3;
-
-	public var invincible = false;
-	public var invincibleTimerMax = 3.0;
-	public var invincibleTimer:Float;
-	public var invincibleTimerSpeed = 0.05;
 
 	var traits:Array<Trait> = [];
 
 	public function new(?x:Float, ?y:Float, ?width:Float, ?height:Float){
 		if(_translations == null) _translations = new Executor<MoveData>("_positions");
 		if(_rotates == null) _rotates = new Executor<RotateData>("_rotations");
+		if(_scaler == null) _scaler = new Executor<Vector2>("_scales");
+		
 		uid = uidCounter++;
+
 		_positions.push(new Vector2(x, y));
 		_rotations.push(0.0);
+		_scales.push(new Vector2(1.0,1.0));
 
 		this.width = width;
 		this.height = height;
 		
-		scale = new Vector2(1.0,1.0);
+		
 		
 		
 
@@ -143,7 +159,6 @@ class Object {
 		if(depth == null)
 			depth = position.y + height;
 
-		invincibleTimer = invincibleTimerMax;
 
 		activate(x, y);
 	}
@@ -157,14 +172,6 @@ class Object {
 		center.x = width / 2;
 		center.y = height / 2;
 
-		if (invincible == true){
-			invincibleTimer -= invincibleTimerSpeed;
-		}
-
-		if (invincibleTimer <= 0.0){
-			invincible = false;
-			invincibleTimer = invincibleTimerMax;
-		}
 	}
 
 	public function render(canvas:Canvas){

@@ -9,6 +9,7 @@ import haxe.ds.ArraySort;
 import kha.Canvas;
 import kha.math.Vector2;
 import coin.object.Object;
+import coin.object.Executor;
 import coin.data.SceneFormat;
 
 class Scene {
@@ -89,15 +90,18 @@ class Scene {
 		while (i < l) {
 			if (traitInits.length > 0) {
 				for (f in traitInits) { traitInits.length > 0 ? f() : break; }
-				traitInits.splice(0, traitInits.length);     
+				traitInits.splice(0, traitInits.length);
+   
 			}
 			App.traitUpdates[i](dt);
 			// Account for removed traits
 			l <= App.traitUpdates.length ? i++ : l = App.traitUpdates.length;
 		}
 
-    Object._translations.execute();
-    Object._rotates.execute();
+    // Call deferred actions
+    for(exe in Executor.executors){
+      exe.execute();
+    }
 
 		i = 0;
 		l = App.traitLateUpdates.length;
@@ -105,6 +109,8 @@ class Scene {
 			App.traitLateUpdates[i]();
 			l <= App.traitLateUpdates.length ? i++ : l = App.traitLateUpdates.length;
 		}
+    //@:Incomplete: We should maybe add the possibility to have multithreaded
+    // calls in LateUpdate and execute them after. For now we will focus on having this in the normal update.
   }
 
   @:access(coin.App)
@@ -119,7 +125,10 @@ class Scene {
 
     if (App.traitInits.length > 0) {
 			for (f in App.traitInits) { App.traitInits.length > 0 ? f() : break; }
-			App.traitInits.splice(0, App.traitInits.length);     
+			App.traitInits.splice(0, App.traitInits.length);
+      for(exe in Executor.executors){
+        exe.execute();
+      }
 		}
   }
 

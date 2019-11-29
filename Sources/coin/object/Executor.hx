@@ -4,6 +4,7 @@ import kha.Scheduler;
 import kha.Worker;
 
 class Executor<T> {
+    public static var executors:Array<Executor<Dynamic>> = [];
     public var threads:Int = 2;
     var field:String = "";
     var actions:Array<T->T> = [];
@@ -29,11 +30,18 @@ class Executor<T> {
             set(d);
         });
         #end
+        executors.push(this);
 
     }
     function set(data:Dynamic) {
+        
         var modified:Array<T> = Reflect.field(Object,field);
-        modified[data.uid] = Reflect.field(data.out,field);
+        if(Reflect.hasField(data.out,field)){
+            modified[data.uid] = Reflect.field(data.out,field);
+        }
+        else{
+            modified[data.uid] = data.out;
+        }
         #if editor
         if(EditorHierarchy.inspector != null)
             EditorHierarchy.inspector.updateField(data.uid,field,modified[data.uid]);
@@ -53,9 +61,9 @@ class Executor<T> {
         for(i in 0...actions.length){
             set({out: actions[i](datas[i]),uid: uids[i]});
         }
-        actions = [];
-        datas = [];
-        uids = [];
+        actions.resize(0);
+        datas.resize(0);
+        uids.resize(0);
         #else
         if(actions.length % threads == 0){
             var len:Int = Std.int(actions.length/threads);

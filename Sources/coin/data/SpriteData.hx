@@ -22,6 +22,7 @@ class SpriteData {
 		Data.getImage(raw.imagePath,function (img:Image){
 			this.image = img;
 			anims = [];
+			name = this.raw.imagePath;
 			if(raw.animsPath!= null){
 				var i = 0;
 				for(a in raw.animsPath){

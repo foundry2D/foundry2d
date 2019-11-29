@@ -37,7 +37,6 @@ class Sprite extends Entity {
 		super(sprite.position.x, sprite.position.y, sprite.width, sprite.height);
 		this.active = sprite.active;
 		this.flip = Reflect.hasField(sprite,"flip") ? sprite.flip:new Vector2();
-		this.scale = Reflect.hasField(sprite,"scale") ? new Vector2(sprite.scale.x,sprite.scale.y):this.scale;
 		new SpriteData(sprite,function(p_data){
 			this.data = p_data;
 			this.raw = Reflect.copy(data.raw);
@@ -46,6 +45,13 @@ class Sprite extends Entity {
 			#if debug
 			this.name = this.raw.name;
 			#end
+			if(Reflect.hasField(sprite,"scale") && sprite.scale != null){
+				this.resize(function(data:Vector2){
+					data.x = sprite.scale.x;
+					data.y = sprite.scale.y;
+					return data;
+				});
+			}
 			done(this);
 		});
 
@@ -93,26 +99,19 @@ class Sprite extends Entity {
 		return _h = value;
 	}
 	#if editor
+	// @:Incomplete: this should take into account the animations but it does not
 	override function refreshObjectData(obj:TObj) {
-		super.refreshObjectData(obj);
 		var imgPath = Reflect.getProperty(obj,"imagePath");
-		if(Reflect.compare(obj,data.raw) != 0 && data.raw.imagePath != imgPath){
-			var out:TSpriteData = SceneFormat.getData(this.raw);
+		if(data.name != imgPath){
+			var out:TSpriteData = cast(obj);
 			out.imagePath = imgPath;
 			new SpriteData(out,function(p_data){
 				this.data = p_data;
-				trace("Before "+data.image.width);
-				trace("Before "+this.data.raw.width);
-				trace("Before "+this.width);
-				this.width = this.data.raw.width = data.image.width;
-				this.height = this.data.raw.height= data.image.height;
-				trace("After "+data.image.width);
-				trace("After "+this.data.raw.width);
-				trace("After "+this.width);
+				this.width = this.data.raw.width = p_data.image.width;
+				this.height = this.data.raw.height= p_data.image.height;
 				this.raw = this.data.raw;
-				trace("After After "+data.image.width);
-				trace("After After "+this.data.raw.width);
-				trace("After After "+this.width);
+				if(EditorHierarchy.inspector != null)
+            		EditorHierarchy.inspector.updateField(uid,"imagePath",this.raw);
 			});
 		}
 	}

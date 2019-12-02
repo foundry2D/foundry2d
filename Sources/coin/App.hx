@@ -66,13 +66,17 @@ class App {
 		editorui = new EditorUi();
 		#end
 	}
-
+	@:access(coin.object.Executor)
 	public static function reset() {
 		traitInits = [];
 		traitUpdates = [];
 		traitLateUpdates = [];
 		traitRenders = [];
 		traitRenders2D = [];
+		for(exe in coin.object.Executor.executors){
+			var modified:Array<Any> = Reflect.field(coin.object.Object,exe.field);
+			modified = [];
+		}
 	}
 
 	public function update(dt:Float):Void {

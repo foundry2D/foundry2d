@@ -34,7 +34,11 @@ class Executor<T> {
 
     }
     function set(data:Dynamic) {
-        
+        //@:Incomplete: we should test that the condition after the || is needed
+        // It was added to potentially avoid threaded calls trying to set the 
+        //data after the scene has changed
+        if(!coin.Scene.ready || State.active._entities.length == 0) return;
+
         var modified:Array<T> = Reflect.field(Object,field);
         if(Reflect.hasField(data.out,field)){
             modified[data.uid] = Reflect.field(data.out,field);
@@ -57,13 +61,14 @@ class Executor<T> {
     // So we will just have it singlethreaded on these targets since they are not the 
     // final targets anyways
     public function execute(){
+        if(!coin.Scene.ready || State.active._entities.length == 0) return;
         #if (kha_html5 || kha_krom)
         for(i in 0...actions.length){
             set({out: actions[i](datas[i]),uid: uids[i]});
         }
-        actions.resize(0);
-        datas.resize(0);
-        uids.resize(0);
+        actions = [];
+        datas= [];
+        uids= [];
         #else
         if(actions.length % threads == 0){
             var len:Int = Std.int(actions.length/threads);

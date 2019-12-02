@@ -66,6 +66,7 @@ class Object {
 	public var uid:Int;
 	public var active(default, set):Bool = true;
 
+
 	static var _positions:Array<Vector2> = [];
 	static var _translations:Executor<MoveData> = null;
 	public var position(get,never):Vector2;
@@ -209,7 +210,6 @@ class Object {
 			trace("Should of add  traits"+App.traitUpdates.length);
 		}
 		else if(!value && active != value){
-			trace("Before remove traits"+App.traitUpdates.length);
 			for(t in traits){
 				if (t._init != null) {
 					for (f in t._init) App.removeInit(f);
@@ -227,7 +227,6 @@ class Object {
 					for (f in t._render2D) App.removeRender2D(f);
 				}
 			}
-			trace("Should of removed traits"+App.traitUpdates.length);
 		}
 		return active = value;
 	}

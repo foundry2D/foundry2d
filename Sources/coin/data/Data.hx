@@ -101,7 +101,9 @@ class Data {
 	}
 
 	static function returnSceneRaw(file:String, parsed:TSceneFormat) {
-		cachedSceneRaws.set(file, parsed);
+		var separated = file.split('/');
+		var name = separated[separated.length-1];
+		cachedSceneRaws.set(name, parsed);
 		for (f in loadingSceneRaws.get(file)) f(parsed);
 		loadingSceneRaws.remove(file);
 	}
@@ -123,6 +125,10 @@ class Data {
 			for (f in loadingBlobs.get(file)) f(b);
 			loadingBlobs.remove(file);
 			assetsLoaded++;
+		},function(failed:kha.AssetError){
+			var error = failed.error;
+			var path = failed.url; 
+			trace('Asset at path: $path failed to load because of $error');
 		});
 	}
 

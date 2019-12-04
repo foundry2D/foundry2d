@@ -32,8 +32,11 @@ class Scene {
    */
   public static var zsort(default,null):Bool = false;
 
-
+  @:access(coin.object.Object)
   public function new(raw:TSceneFormat){
+
+    Object.uidCounter = 0;// When loading a scene the object counter always goes back to 0;
+
     this.raw = raw; 
     _entities = new Array<Object>();
     // root = new Object();
@@ -51,7 +54,7 @@ class Scene {
 
   #if editor
   public function addEntity(e:TObj,?isEditor = false){
-    if(!isEditor)
+    if(!isEditor && this.raw._entities.length == this._entities.length)
       trace(Cli.byellow+"WARNING:"+Cli.reset+" This function should only be used for "+Cli.bred+"EDITOR"+Cli.reset+" developpement");
   #else
   function addEntity(e:TObj){

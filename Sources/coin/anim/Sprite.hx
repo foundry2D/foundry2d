@@ -101,6 +101,7 @@ class Sprite extends Entity {
 	#if editor
 	// @:Incomplete: this should take into account the animations but it does not
 	override function refreshObjectData(obj:TObj) {
+		super.refreshObjectData(obj);
 		var imgPath = Reflect.getProperty(obj,"imagePath");
 		if(data.name != imgPath){
 			var out:TSpriteData = cast(obj);

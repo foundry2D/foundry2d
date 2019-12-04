@@ -14,7 +14,7 @@ import coin.data.SceneFormat;
 
 class Scene {
   
-	public var raw:TSceneFormat;
+	public final raw:TSceneFormat;
   public var root:Object;
   public static var ready:Bool = false;
   public var cam:Vector2;

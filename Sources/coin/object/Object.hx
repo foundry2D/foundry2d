@@ -37,7 +37,7 @@ class Object {
 
 		refreshObjectData(data);
 		this.raw = data;
-		dataChanged = true;
+		
 		return this.raw;
 	}
 	@:access(coin.Scene)
@@ -63,11 +63,11 @@ class Object {
 	public var raw:TObj = null;
 	#end
 	static var uidCounter = 0;
-	public var uid:Int;
+	public final uid:Int;
 	public var active(default, set):Bool = true;
 
 
-	static var _positions:Array<Vector2> = [];
+	static final _positions:Array<Vector2> = [];
 	static var _translations:Executor<MoveData> = null;
 	public var position(get,never):Vector2;
 	function get_position() {
@@ -134,7 +134,7 @@ class Object {
 	// public var acceleration = 0.3;
 	// public var friction = 3.6;
 
-	public var depth:Float;
+	public var depth:Float = 0.0;
 
 	var traits:Array<Trait> = [];
 
@@ -157,9 +157,6 @@ class Object {
 		
 
 		center = new Vector2(width / 2, height / 2);
-		if(depth == null)
-			depth = position.y + height;
-
 
 		activate(x, y);
 	}

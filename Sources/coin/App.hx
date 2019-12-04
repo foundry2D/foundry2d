@@ -73,7 +73,7 @@ class App {
 		traitLateUpdates = [];
 		traitRenders = [];
 		traitRenders2D = [];
-		for(exe in coin.object.Executor.executors){
+		for(exe in Executor.executors){
 			var modified:Array<Any> = Reflect.field(coin.object.Object,exe.field);
 			modified = [];
 		}
@@ -128,6 +128,14 @@ class App {
 		if(keyCode == KeyCode.F11){
 			Coin.fullscreen = !Coin.fullscreen;
 		}
+		if(keyCode == KeyCode.S && editorui.keys.ctrl)
+			editorui.saveSceneData();
+		if(keyCode == KeyCode.Control)
+			editorui.keys.ctrl = true;
+		if(keyCode == KeyCode.Alt)
+			editorui.keys.alt = true;
+		if(keyCode == KeyCode.Shift)
+			editorui.keys.shift = true;
 		#end
 	}
 
@@ -135,6 +143,14 @@ class App {
 		if (State.active != null){
 			State.active.onKeyUp(keyCode);
 		}
+		#if editor
+		if(keyCode == KeyCode.Control)
+			editorui.keys.ctrl = false;
+		if(keyCode == KeyCode.Alt)
+			editorui.keys.alt = false;
+		if(keyCode == KeyCode.Shift)
+			editorui.keys.shift = false;
+		#end
 	}
 
 	public function onMouseDown(button:Int, x:Int, y:Int):Void {

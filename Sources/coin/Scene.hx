@@ -78,6 +78,7 @@ class Scene {
           // var out = new Sprite(data._imagePath,data.position.x,data.position.y,Std.int(data.width),Std.int(data.height));
           // out.raw = data;
           // _entities.push(out);
+          trace("Data with name"+e.name+"was not added because it's type is not implemented");
 
       }
   }

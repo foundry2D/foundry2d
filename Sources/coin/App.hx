@@ -73,7 +73,7 @@ class App {
 		traitLateUpdates = [];
 		traitRenders = [];
 		traitRenders2D = [];
-		for(exe in Executor.executors){
+		for(exe in coin.object.Executor.executors){
 			var modified:Array<Any> = Reflect.field(coin.object.Object,exe.field);
 			modified = [];
 		}

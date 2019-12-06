@@ -167,8 +167,8 @@ class Object {
 		if(!Scene.zsort)
 			depth = position.y + height;
 
-		center.x = width / 2;
-		center.y = height / 2;
+		center.x = position.x+width / 2;
+		center.y = position.y+height / 2;
 
 	}
 

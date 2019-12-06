@@ -162,7 +162,7 @@ class Data {
 				assetsLoaded++;
 			});
 		}else{
-			// TODO: process format in Kha
+			// @:Incomplete: process format in Kha
 			kha.Assets.loadImageFromPath(p, readable, function(b:kha.Image) {
 				cachedImages.set(file, b);
 				for (f in loadingImages.get(file)) f(b);

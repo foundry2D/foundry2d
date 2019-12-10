@@ -128,6 +128,12 @@ class App {
 		if(keyCode == KeyCode.F11){
 			Coin.fullscreen = !Coin.fullscreen;
 		}
+		if(keyCode == KeyCode.F1){
+			EditorUi.arrowMode = 0;
+		}
+		if(keyCode == KeyCode.F2){
+			EditorUi.arrowMode = 1;
+		}
 		if(keyCode == KeyCode.S && editorui.keys.ctrl)
 			editorui.saveSceneData();
 		if(keyCode == KeyCode.Control)

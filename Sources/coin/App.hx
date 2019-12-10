@@ -167,6 +167,11 @@ class App {
 		if (State.active != null){
 			State.active.onMouseUp(button, Coin.mouseX, Coin.mouseY);
 		}
+		#if editor
+		if(EditorUi.activeMouse && button == 0/* Left */){
+			EditorUi.activeMouse = false;
+		}
+		#end
 	}
 
 	public function onMouseMove(x:Int, y:Int, cx:Int, cy:Int):Void {
@@ -175,6 +180,11 @@ class App {
 		if (State.active != null){
 			State.active.onMouseMove(Coin.mouseX, Coin.mouseY, cx, cy);
 		}
+		#if editor
+		if(EditorUi.activeMouse){
+			editorui.updateMouse(x, y, cx, cy);
+		}
+		#end
 	}
 
 	public function onTouchDown(id:Int, x:Int, y:Int):Void {

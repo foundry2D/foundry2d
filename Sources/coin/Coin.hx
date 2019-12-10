@@ -19,6 +19,8 @@ class Coin {
   public static var WIDTH(default, null):Int = 1280;
   public static var HEIGHT(default, null):Int = 720;
 
+  public static var GRID:Int = 64;
+
   public static var backbuffer:Image;
   #if editor
   public static var scenebuffer:Image;

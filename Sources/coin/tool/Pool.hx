@@ -19,13 +19,13 @@ class Pool<O:Object> extends Object {
 		entity = [];
 	}
 
-	override public function update(){
+	override public function update(dt:Float){
 		var i:Int = 0;
 		while (i < entity.length){
 			var member = entity[i];
 			if (member != null){
 				if (member.active){
-					member.update();
+					member.update(dt);
 					if (!member.active){
 						if (i < _count){
 							_count = i;
@@ -35,7 +35,7 @@ class Pool<O:Object> extends Object {
 			}
 			i++;
 		}
-		super.update();
+		super.update(dt);
 	}
 
 	override public function render(canvas:Canvas){

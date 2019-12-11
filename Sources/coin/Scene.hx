@@ -72,6 +72,8 @@ class Scene {
           out.raw = data;
           createTraits(data.traits,out);
           _entities.push(out);
+        case "tilemap_object":
+          var data:TTilemapData = SceneFormat.getData(e);
         case "emitter_object":
         default://Object
           // var data:TSpriteData = SceneFormat.getData(e);

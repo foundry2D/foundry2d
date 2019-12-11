@@ -35,7 +35,7 @@ typedef TObj = {
 @:structInit class TObj {
 #end
     public var name:String;
-    public var type:String; // object, sprite_object, light_object, camera_object, speaker_object, emitter_object
+    public var type:String; // object, sprite_object, light_object, camera_object, speaker_object, emitter_object,tilemap_object
     public var position:Vector2;
     public var rotation:Float;
     @:optional public var velocity:Vector2;
@@ -72,8 +72,21 @@ typedef TSpriteData = {
     public var imagePath: String;
     @:optional public var flip:Vector2;
     @:optional public var animsPath:Array<String>;
+    @:optional public var tileAnims:Array<Array<Int>>;
 }
-
+#if js
+typedef TTilemapData = {
+    >TObj,
+#else
+@:structInit class TTilemapData extends TObj{
+#end
+    
+    public var tileWidth: Int;
+    public var tileHeight: Int;
+    public var map:Array<Int>;
+    public var tiles:Array<TSpriteData>;
+    @:optional public var flip:Vector2;
+}
 #if js
 typedef TEmitterData = {
     >TObj,

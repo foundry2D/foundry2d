@@ -28,8 +28,8 @@ class Texture extends Entity {
     }
   }
 
-  override public function update(){
-    super.update();
+  override public function update(dt:Float){
+    super.update(dt);
     if (rotation != 0.0){
       _rot += rotation;
     }

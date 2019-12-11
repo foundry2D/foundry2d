@@ -14,6 +14,12 @@ class SpriteData {
 		return anims[curAnim];
 	}
 	private var anims:Array<Animation>;
+	public var animatable(get,never):Bool;
+	@:access(coin.anim.Animation)
+	function get_animatable(){
+		if(anims == null)return false;
+		return animation._indices.length >1;
+	}
 	public var curAnim:Int = 0;
 	public var raw:TSpriteData;
 

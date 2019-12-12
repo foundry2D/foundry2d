@@ -98,7 +98,7 @@ class App {
 			Coin.renderfunc(Coin.backbuffer.g2);
 
 			Coin.backbuffer.g2.end();
-			
+
 		}else{
 			Coin.BUFFERWIDTH = Coin.backbuffer.width;
 			Coin.BUFFERHEIGHT = Coin.backbuffer.height;
@@ -112,7 +112,11 @@ class App {
 			}
 			Coin.backbuffer.g2.popTransformation();
 			Coin.backbuffer.g2.end();
+			
 		#if editor }#end
+		#if tile_editor
+		Coin.tileeditor.render(Coin.backbuffer);
+		#end
 
 		canvas.g2.begin();
 		canvas.g2.imageScaleQuality = _imageQuality;

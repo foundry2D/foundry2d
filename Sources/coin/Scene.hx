@@ -1,5 +1,6 @@
 package coin;
 
+import coin.anim.Tilemap;
 #if editor
 import coin.tool.Util.Cli;
 #end
@@ -74,6 +75,10 @@ class Scene {
           _entities.push(out);
         case "tilemap_object":
           var data:TTilemapData = SceneFormat.getData(e);
+          new Tilemap(data,function(tilemap:Tilemap){
+            _entities.push(tilemap);
+          });
+          
         case "emitter_object":
         default://Object
           // var data:TSpriteData = SceneFormat.getData(e);

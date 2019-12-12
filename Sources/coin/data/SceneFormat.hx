@@ -72,6 +72,16 @@ typedef TSpriteData = {
     public var imagePath: String;
     @:optional public var flip:Vector2;
     @:optional public var animsPath:Array<String>;
+}
+#if js
+typedef TTileData = {
+    >TSpriteData,
+#else
+@:structInit class TTileData extends TSpriteData{
+#end
+    // public var tid: Int;
+    public var tileWidth: Int;
+    public var tileHeight: Int;
     @:optional public var tileAnims:Array<Array<Int>>;
 }
 #if js
@@ -84,7 +94,9 @@ typedef TTilemapData = {
     public var tileWidth: Int;
     public var tileHeight: Int;
     public var map:Array<Int>;
-    public var tiles:Array<TSpriteData>;
+    public var images:Array<TTileData>;
+    public var cull:Bool;
+    public var cullOffset:Int;
     @:optional public var flip:Vector2;
 }
 #if js

@@ -10,11 +10,11 @@ class LoadingScript extends coin.Trait {
             this.object.translate(center);
         });
         notifyOnUpdate(function(dt:Float){
-            this.object.rotate(function (data:RotateData){
-                data._rotations+= 10*data.dt;
-                return data;
-            },dt);
-            // State.active.cam.x+=1.0;
+            // this.object.rotate(function (data:RotateData){
+            //     data._rotations+= 10*data.dt;
+            //     return data;
+            // },dt);
+            // State.active.cam.x-=1.0;
             // this.object.translate(move,dt);
             // this.object.rotation+= 10*dt;
         });

@@ -35,6 +35,10 @@ class Coin {
   public static var BUFFERHEIGHT(default, null):Int = HEIGHT;
   #end
 
+  #if tile_editor
+  public static var tileeditor:coin.tool.TileEditor;
+  #end
+
   public static var mouseX:Int = 0;
 	public static var mouseY:Int = 0;
 
@@ -77,6 +81,9 @@ class Coin {
 				System.notifyOnFrames(function(framebuffer){
 				  render(framebuffer[0]);
 				});
+        #if tile_editor
+        tileeditor = new coin.tool.TileEditor();
+        #end
 			});
 		});
   }

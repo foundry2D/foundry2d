@@ -1,5 +1,6 @@
 package coin.anim;
 
+import kha.Canvas;
 import kha.math.Vector2;
 
 import coin.object.Entity;
@@ -10,7 +11,8 @@ import coin.data.SceneFormat;
 class Tile {
 	private var map:Tilemap;
 	//Id in the tilesheet
-	private var tileId:Int;
+	public var tileId(default,never):Int;
+	public var baseId(default,never):Int;
     private var dataId:Int;
 	// This is the tilesheet
 	private var data(get,never):SpriteData;
@@ -24,28 +26,21 @@ class Tile {
 
 	public var flip:Vector2;
 
-    public function new(tilemap:Tilemap,sprite:TSpriteData,?done:Tile->Void){
+	public var raw:TTileData;
+
+    public function new(tilemap:Tilemap,sprite:TTileData,?done:Tile->Void){
 		// super(sprite.position.x, sprite.position.y, sprite.width, sprite.height);
 		this.map = tilemap;
-		this.active = sprite.active;
+		// this.active = sprite.active;
 		this.flip = Reflect.hasField(sprite,"flip") ? sprite.flip:new Vector2();
+		_w = sprite.tileWidth;
+		_h = sprite.tileHeight;
+		this.raw = sprite;
 		new SpriteData(sprite,function(p_data){
-			var ids:{dataId:Int,tileId:Int} = map.addData(p_data);
+			var ids:{dataId:Int,tileId:Int,baseId:Int} = map.addData(p_data);
 			dataId = ids.dataId;
-			tileId = ids.tileId;
-			this.raw = Reflect.copy(data.raw);
-			// if (this.width  == 0 && data.image != null) this.width  = data.image.width;
-			// if (this.height == 0 && data.image != null) this.height = data.image.height;
-			#if debug
-			this.name = this.raw.name;
-			#end
-			if(Reflect.hasField(sprite,"scale") && sprite.scale != null){
-				this.resize(function(data:Vector2){
-					data.x = sprite.scale.x;
-					data.y = sprite.scale.y;
-					return data;
-				});
-			}
+			Reflect.setField(this,"tileId",ids.tileId);
+			Reflect.setField(this,"baseId",ids.baseId);
 			done(this);
 		});
 
@@ -64,12 +59,14 @@ class Tile {
 		if(data == null)return;
 		if(data.animatable)
 			data.animation.next();
-		super.render(canvas);
+		// super.render(canvas);
+		var width = _w;
+		var height =_h;
 		if (data.image != null) {
-			canvas.g2.color = Color.White;
+			canvas.g2.color = kha.Color.White;
 			canvas.g2.pushTranslation(position.x,position.y);
 			// canvas.g2.rotate(Util.degToRad(rotation), position.x + width/ 2,position.y + height/ 2);
-			canvas.g2.drawScaledSubImage(data.image, offsetx+Std.int(data.animation.get() * _w) % data.image.width, offsety+Math.floor(data.animation.get() * _w / data.image.width) * _h, _w, _h, (flip.x > 0.0 ? width:0), (flip.y > 0.0 ? height:0), (flip.x > 0.0 ? -width:width), (flip.y > 0.0 ? -height:height));
+			canvas.g2.drawScaledSubImage(data.image, offsetx+Std.int(data.animation.get() * map.tw) % data.image.width, offsety+Math.floor(data.animation.get() * map.tw / data.image.width) * _h, _w, _h, (flip.x > 0.0 ? width:0), (flip.y > 0.0 ? height:0), (flip.x > 0.0 ? -width:width), (flip.y > 0.0 ? -height:height));
 			canvas.g2.popTransformation();
 		}
 	}

@@ -7,6 +7,13 @@ import coin.zui.Ext;
 import coin.data.SceneFormat;
 import kha.Assets;
 
+typedef Selection = {
+    var x:Float;
+    var y:Float;
+    var w:Float;
+    var h:Float;
+}
+
 class TileEditor {
     var ui: Zui;
     var itemList:Array<TTileData> = [];
@@ -15,8 +22,8 @@ class TileEditor {
     public var x:Int = 10;
     public var y:Int = 10;
     public var visible:Bool;
-    public var selectedMap:Int = -1;
-    public var tilemapIds:Array<Int> = [];
+    public static var selectedMap:Int = -1;
+    public static var tilemapIds:Array<Int> = [];
 
     public function new(visible = true) {
         this.visible = visible;
@@ -25,12 +32,15 @@ class TileEditor {
         height = Std.int(Coin.HEIGHT*0.8);
     }
     var map:Tilemap = null;
+    var tileSelected:Selection = null;
+    @:access(coin.zui.Zui)
     public function render(canvas:kha.Canvas): Void {
         if(!visible || selectedMap < 0)return;
-        if(map == null)
-            map = cast(coin.State.active._entities[tilemapIds[selectedMap]]);
-        var newSelection = selectedMap;
         ui.begin(canvas.g2);
+        if(map == null){
+            map = cast(coin.State.active._entities[tilemapIds[selectedMap]]);
+        }
+        var newSelection = selectedMap;
         if (ui.window(Id.handle(),x,y, width, height, true)) {
 			if (ui.panel(Id.handle({selected: true}), "Tilemap editor")) {
 				ui.indent();
@@ -40,7 +50,29 @@ class TileEditor {
                 map.h = Std.int(ui.slider(Id.handle({value: map.th}), "Map Height",-1000,1000));
                 map.tw = Std.int(Ext.floatInput(ui, Id.handle({value: 64.0}), "Tile Width"));
                 map.th = Std.int(Ext.floatInput(ui, Id.handle({value: 64.0}), "Tile Height"));
-				// ui.textInput(Id.handle({text: "Hello"}), "Input");
+				
+                var px = ui._x;
+                var py = ui._y;
+                var curImg = map.imageData[0].image;
+                var state = ui.image(curImg);
+                var ratio = Math.abs((py-ui._y)/curImg.height);
+                ui.g.color = kha.Color.fromBytes(0,0,200,128);
+                if(tileSelected == null){
+                    //We always select the tile at index 0
+                    tileSelected = {x:px,y:py,w:map.tw*ratio,h:map.th*ratio};
+                    ui.g.fillRect(tileSelected.x,tileSelected.y,tileSelected.w,tileSelected.h);
+                }else{
+                    ui.g.fillRect(tileSelected.x,tileSelected.y,tileSelected.w,tileSelected.h);
+                }
+                if(state == coin.zui.Zui.State.Down){
+                    trace("Mouse input X is: "+ui.inputX+"Y is: "+ui.inputY);
+                    var x = ui._x-ui.inputX-ui.arrowOffsetX;
+                    var y = ui._y-ui.inputY-ui.arrowOffsetY;
+                    trace(x,y);
+                    tileSelected = {x:x,y:y,w:map.tw*ratio,h:map.th*ratio};
+                }
+                ui.g.color = kha.Color.White;
+                // ui.textInput(Id.handle({text: "Hello"}), "Input");
 				
 
                 ui.check(Id.handle(), "Cull");

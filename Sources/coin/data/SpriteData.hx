@@ -20,7 +20,15 @@ class SpriteData {
 		if(anims == null)return false;
 		return animation._indices.length >1;
 	}
-	public var curAnim:Int = 0;
+	public var curAnim(default,set):Int = 0;
+	function set_curAnim(index:Int){
+		if(anims.length < index){
+			trace('Trying to set animation with index: $index but the number of animations is:'+anims.length);
+		}else{
+			curAnim =index;
+		}
+		return curAnim;
+	}
 	public var raw:TSpriteData;
 
 	public function new(raw:TSpriteData,done:SpriteData->Void){
@@ -37,10 +45,13 @@ class SpriteData {
 				done(this);
 			}
 			else {
-				anims.push(Animation.create(0));
+				addSubSprite(0);
 				done(this);
 			}
 		});
+	}
+	public function addSubSprite(index:Int){
+		return anims.push(Animation.create(index))-1;
 	}
 	function animLoaded(data:Blob) {
 		var anim:TAnimation = haxe.Json.parse(data.toString());

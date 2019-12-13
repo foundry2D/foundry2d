@@ -12,7 +12,6 @@ class Tile {
 	private var map:Tilemap;
 	//Id in the tilesheet
 	public var tileId(default,never):Int;
-	public var baseId(default,never):Int;
     private var dataId:Int;
 	// This is the tilesheet
 	private var data(get,never):SpriteData;
@@ -24,11 +23,14 @@ class Tile {
 	private var _w: Float;
 	private var _h: Float;
 
+	public var animIndex(default,never):Int =0;
+
 	public var flip:Vector2;
 
 	public var raw:TTileData;
 
-    public function new(tilemap:Tilemap,sprite:TTileData,?done:Tile->Void){
+	@:access(coin.anim.Tilemap)
+    public function new(tilemap:Tilemap,sprite:TTileData,index:Int,done:Tile->Void){
 		// super(sprite.position.x, sprite.position.y, sprite.width, sprite.height);
 		this.map = tilemap;
 		// this.active = sprite.active;
@@ -36,27 +38,47 @@ class Tile {
 		_w = sprite.tileWidth;
 		_h = sprite.tileHeight;
 		this.raw = sprite;
-		new SpriteData(sprite,function(p_data){
-			var ids:{dataId:Int,tileId:Int,baseId:Int} = map.addData(p_data);
-			dataId = ids.dataId;
-			Reflect.setField(this,"tileId",ids.tileId);
-			Reflect.setField(this,"baseId",ids.baseId);
+		//Every tilesheet will have the 0 tile be created
+		if(index == 0){
+			new SpriteData(sprite,function(p_data){
+				dataId = map.addData(p_data);
+				Reflect.setField(this,"tileId",sprite.usedIds[index]);
+				done(this);
+				for(index in 0...sprite.usedIds.length){
+					if(index ==0)continue;
+					createTile(map,sprite,index);
+				}
+			});
+		} 
+		else{
+			dataId = map.addData(map.imageData[map.imageData.length-1]);
+			Reflect.setField(this,"tileId",sprite.usedIds[index]);
+			var value = data.addSubSprite(tileId);
+			Reflect.setField(this,"animIndex",value);
 			done(this);
-		});
+		}
 
+	}
+	
+	@:access(coin.anim.Tilemap)
+	public static function createTile(map:Tilemap,sprite:TTileData,index:Int,?done:Tilemap->Void){
+		new Tile(map,sprite,index,function(tile:Tile){
+			map.tiles.set(tile.tileId,tile);
+			var data:TTilemapData = coin.data.SceneFormat.getData(map.raw);
+			if(data.images.length == map.imageData.length && index ==0){
+				trace("done was called");
+				done(map);
+			}
+			
+		});
 	}
 	public function setAnimation(animation: Int): Void {
 		data.curAnim = animation;
 	}
 	
-	// public function update(dt:Float): Void {
-	// 	if(data == null)return;
-	// 	super.update(dt);
-	// 	data.animation.next();
-	// }
-	
 	public function render(canvas: Canvas,position:Vector2): Void {
 		if(data == null)return;
+		setAnimation(animIndex);
 		if(data.animatable)
 			data.animation.next();
 		// super.render(canvas);

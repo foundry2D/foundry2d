@@ -1,5 +1,6 @@
 package coin.anim;
 
+import coin.tool.TileEditor;
 import kha.Canvas;
 import coin.anim.Tile;
 import coin.object.Object;
@@ -14,9 +15,8 @@ class Tilemap extends Object{
     /* tile width */    public var tw : Int;
     /* tile height */   public var th : Int;
     public var data : Array<Int>;
-    var tiles:Array<Tile>;
+    var tiles:Map<Int,Tile>;
     public var imageData:Array<SpriteData>;
-    var tileCounter:Array<Int>= [];
     
     public function new(data:TTilemapData,done:Tilemap->Void) {
         super(data.position.x,data.position.y,data.width,data.height);
@@ -28,21 +28,7 @@ class Tilemap extends Object{
         this.imageData = [];
         this.tiles = [];
         for(tile in data.images){
-            new Tile(this,tile,function(tile:Tile){
-                if(tiles.length+1 > tile.baseId+tile.tileId || tile.baseId+tile.tileId ==0){
-                    tiles.push(tile);
-                }
-                else{
-                    for(i in tiles.length...tile.baseId){
-                        tiles.push(null);
-                    }
-                    tiles.push(tile);
-                }
-                if(data.images.length == imageData.length){
-                    done(this);
-                }
-                
-            });
+            Tile.createTile(this,tile,0,done);
         }
         if(data.images.length == 0){
             done(this);
@@ -101,17 +87,13 @@ class Tilemap extends Object{
         for(i in 0...imageData.length){
             if(imageData[i] == data){
                 id = i;
-                padding = Std.int(data.image.realWidth/tw)*Std.int(data.image.realHeight/tw);
-                tileCounter[id]+=1;
                 break;
             }
         }
         if(id == -1){
             id = imageData.push(data)-1;
-            padding = id == 0 ? 0:Std.int(data.image.realWidth/tw)*Std.int(data.image.realHeight/tw);
-            tileCounter.push(padding);
         }
-        return {dataId:id,tileId:tileCounter[id],baseId:padding};
+        return id;
     }
     override public function render(canvas:Canvas) {
         var x = 0;
@@ -120,12 +102,11 @@ class Tilemap extends Object{
             var pos = posXY2Id(x,y);
             if(pos != -1){
                 var tileId = data[pos];
+                // trace('Tileid was: $tileId');
                 if(tileId != -1){
                     var tile = tiles[tileId];
-                    trace('tile id was: $tileId.');
                     if(tile != null){
-                        trace("X: "+(x+position.x));
-                        trace("Y: "+(y+position.y));
+                        // trace('Tile was not null');
                         tile.render(canvas,new Vector2(x+position.x,y+position.y));
                     }
                 }
@@ -136,5 +117,15 @@ class Tilemap extends Object{
                 x = 0;
             }
         }
+        #if tile_editor
+        if(TileEditor.selectedMap != -1 && TileEditor.tilemapIds[TileEditor.selectedMap] == this.uid){
+            drawCountour(canvas);
+        }
+        #end
+    }
+    function drawCountour(canvas:Canvas){
+        var g = canvas.g2;
+        g.drawRect(position.x,position.y,w,h,3.0);
+
     }
 }

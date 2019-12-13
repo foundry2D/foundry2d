@@ -79,7 +79,7 @@ typedef TTileData = {
 #else
 @:structInit class TTileData extends TSpriteData{
 #end
-    // public var tid: Int;
+    public var usedIds:Array<Int>;
     public var tileWidth: Int;
     public var tileHeight: Int;
     @:optional public var tileAnims:Array<Array<Int>>;

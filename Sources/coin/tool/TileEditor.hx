@@ -19,8 +19,8 @@ class TileEditor {
     var itemList:Array<TTileData> = [];
     var width:Int;
     var height:Int;
-    public var x:Int = 10;
-    public var y:Int = 10;
+    public var x:Int = 512;
+    public var y:Int = 256;
     public var visible:Bool;
     public static var selectedMap:Int = -1;
     public static var tilemapIds:Array<Int> = [];
@@ -42,6 +42,7 @@ class TileEditor {
         }
         var newSelection = selectedMap;
         if (ui.window(Id.handle(),x,y, width, height, true)) {
+            var indents = ui._w; 
 			if (ui.panel(Id.handle({selected: true}), "Tilemap editor")) {
 				ui.indent();
 				ui.text("Text");
@@ -51,11 +52,13 @@ class TileEditor {
                 map.tw = Std.int(Ext.floatInput(ui, Id.handle({value: 64.0}), "Tile Width"));
                 map.th = Std.int(Ext.floatInput(ui, Id.handle({value: 64.0}), "Tile Height"));
 				
-                var px = ui._x;
+                var px = ui._x+ui.TAB_W()*0.5;
                 var py = ui._y;
                 var curImg = map.imageData[0].image;
                 var state = ui.image(curImg);
                 var ratio = Math.abs((py-ui._y)/curImg.height);
+                var invRatio = Math.abs(curImg.height/(py-ui._y));
+                // var thetaH = py-ui._y;
                 ui.g.color = kha.Color.fromBytes(0,0,200,128);
                 if(tileSelected == null){
                     //We always select the tile at index 0
@@ -65,10 +68,11 @@ class TileEditor {
                     ui.g.fillRect(tileSelected.x,tileSelected.y,tileSelected.w,tileSelected.h);
                 }
                 if(state == coin.zui.Zui.State.Down){
-                    trace("Mouse input X is: "+ui.inputX+"Y is: "+ui.inputY);
-                    var x = ui._x-ui.inputX-ui.arrowOffsetX;
-                    var y = ui._y-ui.inputY-ui.arrowOffsetY;
-                    trace(x,y);
+                    var x = Math.abs(ui._windowX-ui.inputX);
+                    var y = Math.abs(ui._windowY-ui.inputY);
+                    var r = ui.curRatio == -1 ? 1.0 : ui.ratios[ui.curRatio];
+                    var imgX =(x-ui.TAB_W()-ui.SCROLL_W() * r/2)*invRatio;
+                    var imgY = (y-py)*invRatio;
                     tileSelected = {x:x,y:y,w:map.tw*ratio,h:map.th*ratio};
                 }
                 ui.g.color = kha.Color.White;

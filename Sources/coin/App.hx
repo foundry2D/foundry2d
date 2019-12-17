@@ -49,6 +49,9 @@ class App {
 	#if editor
 	public static var editorui:EditorUi = null;
 	#end
+	#if tile_editor
+	public static var frameCounter:FPS = new FPS();
+	#end
 	public function new(_appReady:Void->Void){
 		_appReady();
 		Coin.backbuffer = Image.createRenderTarget(Coin.BUFFERWIDTH, Coin.BUFFERHEIGHT);
@@ -62,7 +65,6 @@ class App {
 		Gamepad.get().notify(onGamepadAxis, onGamepadButton);
 		Surface.get().notify(onTouchDown, onTouchUp, onTouchMove);
 		#if editor
-		Coin.uibuffer = Image.createRenderTarget(Coin.BUFFERWIDTH, Coin.BUFFERHEIGHT);
 		editorui = new EditorUi();
 		#end
 	}
@@ -85,6 +87,9 @@ class App {
 			screenOffsetX = State.active.cam.x;
 			screenOffsetY = State.active.cam.y;
 		}
+		#if tile_editor
+		frameCounter.update();
+		#end
 	}
 	
 	public function render(canvas:Canvas):Void {
@@ -96,8 +101,11 @@ class App {
 			if (Coin.scenebuffer == null) Coin.scenebuffer = kha.Image.createRenderTarget(Coin.backbuffer.width, Coin.backbuffer.height);
 			Coin.scenebuffer.g2.pushTransformation(FastMatrix3.translation(-screenOffsetX, -screenOffsetY));
 			Coin.renderfunc(Coin.backbuffer.g2);
-
 			Coin.backbuffer.g2.end();
+			#if tile_editor
+			Coin.tileeditor.render(Coin.backbuffer);
+			frameCounter.addFrame();
+			#end
 
 		}else{
 			Coin.BUFFERWIDTH = Coin.backbuffer.width;
@@ -112,12 +120,13 @@ class App {
 			}
 			Coin.backbuffer.g2.popTransformation();
 			Coin.backbuffer.g2.end();
-			
+			#if tile_editor
+			Coin.tileeditor.render(Coin.backbuffer);
+			frameCounter.render(Coin.backbuffer);
+			frameCounter.addFrame();
+			#end
 		#if editor }#end
-		#if tile_editor
-		Coin.tileeditor.render(Coin.backbuffer);
-		#end
-
+		
 		canvas.g2.begin();
 		canvas.g2.imageScaleQuality = _imageQuality;
 		Scaler.scale(Coin.backbuffer, canvas, System.screenRotation);
@@ -192,8 +201,11 @@ class App {
 		}
 		#if editor
 		if(EditorUi.activeMouse){
-			editorui.updateMouse(x, y, cx, cy);
+			editorui.updateMouse(Coin.mouseX, Coin.mouseY, cx, cy);
 		}
+		#end
+		#if tile_editor
+		Coin.tileeditor.onMouseMove(x, y, cx, cy);
 		#end
 	}
 
@@ -300,4 +312,47 @@ class App {
 	// public static function removeEndFrame(f:Void->Void) {
 	// 	onEndFrames.remove(f);
 	// }
+}
+
+private class FPS {
+
+	public var fps(default, null) = 0;
+	var frames = 0;
+	var time = 0.0;
+	var lastTime = 0.0;
+	var ui:coin.zui.Zui;
+	public function new() {	}
+
+	public function update():Int {
+		var deltaTime = kha.Scheduler.realTime() - lastTime;
+		lastTime = kha.Scheduler.realTime();
+		time += deltaTime;
+
+		if (time >= 1) {
+			fps = frames;
+			frames = 0;
+			time = 0;
+		}
+		return fps;
+	}
+	
+	public function render(canvas:kha.Canvas,inEditor = true): Void {
+		if(canvas.g2 == null) return;
+		if(ui == null)ui = new coin.zui.Zui({font: kha.Assets.fonts.font_default});
+		var oldScale = ui.SCALE();
+		var width = 60;
+		var height = 20;
+		if(inEditor){
+			ui.setScale(2.0);
+			width*=2;
+			height*=2;
+		}
+		ui.begin(canvas.g2);
+		if(ui.window( coin.zui.Id.handle(),0,0, width, height,false,0x00000000))ui.text('Fps: $fps');
+		ui.end();
+		ui.setScale(oldScale);
+	}
+
+	public inline function addFrame():Void frames++;
+
 }

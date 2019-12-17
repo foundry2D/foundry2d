@@ -295,7 +295,7 @@ class Zui {
 	}
 
 	// Returns true if redraw is needed
-	public function window(handle: Handle, x: Int, y: Int, w: Int, h: Int, drag = false): Bool {
+	public function window(handle: Handle, x: Int, y: Int, w: Int, h: Int, drag = false,bgColor:kha.Color = null): Bool {
 		if (handle.texture == null || w != handle.texture.width || h != handle.texture.height) {
 			resize(handle, w, h, ops.khaWindowId);
 		}
@@ -348,7 +348,7 @@ class Zui {
 		}
 		else {
 			g.begin(true, 0x00000000);
-			g.color = t.WINDOW_BG_COL;
+			g.color = bgColor == null ? t.WINDOW_BG_COL:bgColor;
 			g.fillRect(_x, _y - handle.scrollOffset, handle.lastMaxX, handle.lastMaxY);
 		}
 
@@ -919,7 +919,7 @@ class Zui {
 		return handle.position;
 	}
 
-	public function slider(handle: Handle, text: String, from = 0.0, to = 1.0, filled = false, precision = 100, displayValue = true, align: Align = Right, textEdit = true): Float {
+	public function slider(handle: Handle, text: String, from = 0.0, to = 1.0, filled = false, precision = 100, displayValue = true, align: Align = Right, textEdit = true,stepAmount =0): Float {
 		if (!isVisible(ELEMENT_H())) { endElement(); return handle.value; }
 		if (getStarted()) {
 			scrollHandle = handle;
@@ -933,7 +933,12 @@ class Zui {
 			var sliderW = _w - buttonOffsetY * 2;
 			var step = range / sliderW;
 			var value = from + (inputX - sliderX) * step;
-			handle.value = Math.round(value * precision) / precision;
+			if(stepAmount == 0)handle.value = Math.round(value * precision) / precision;
+			else{
+				value = Math.floor(value);
+				value += stepAmount - value % stepAmount;
+				handle.value = value;
+			}
 			if (handle.value < from) handle.value = from; // Stay in bounds
 			else if (handle.value > to) handle.value = to;
 			handle.changed = changed = true;

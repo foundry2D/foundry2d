@@ -95,6 +95,9 @@ class Tilemap extends Object{
         }
         return id;
     }
+    #if tile_editor
+    @:access(coin.tool.TileEditor)
+    #end
     override public function render(canvas:Canvas) {
         var x = 0;
         var y = 0;

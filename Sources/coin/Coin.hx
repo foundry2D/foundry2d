@@ -24,7 +24,6 @@ class Coin {
   public static var backbuffer:Image;
   #if editor
   public static var scenebuffer:Image;
-  public static var uibuffer:Image;
   public static var renderfunc:kha.graphics2.Graphics->Void;
   public static var fullscreen:Bool = false;
   
@@ -36,6 +35,8 @@ class Coin {
   #end
 
   #if tile_editor
+  public static var ui:coin.zui.Zui;
+  public static var uiHandle = coin.zui.Id.handle();
   public static var tileeditor:coin.tool.TileEditor;
   #end
 
@@ -82,6 +83,7 @@ class Coin {
 				  render(framebuffer[0]);
 				});
         #if tile_editor
+        ui = new coin.zui.Zui({font: kha.Assets.fonts.font_default});
         tileeditor = new coin.tool.TileEditor();
         #end
 			});

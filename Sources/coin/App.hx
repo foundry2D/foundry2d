@@ -204,9 +204,6 @@ class App {
 			editorui.updateMouse(Coin.mouseX, Coin.mouseY, cx, cy);
 		}
 		#end
-		#if tile_editor
-		Coin.tileeditor.onMouseMove(x, y, cx, cy);
-		#end
 	}
 
 	public function onTouchDown(id:Int, x:Int, y:Int):Void {

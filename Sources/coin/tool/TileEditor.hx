@@ -1,5 +1,8 @@
 package coin.tool;
 // #if tile_editor
+import kha.math.Vector2;
+import coin.data.SpriteData;
+import kha.graphics4.Graphics2;
 import coin.anim.Tilemap;
 import coin.zui.Zui;
 import coin.zui.Id;
@@ -25,7 +28,7 @@ class TileEditor {
     public var visible:Bool;
     static var selectedMap:Int = -1;
     static var tilemapIds:Array<Int> = []; 
-
+    var curTile:coin.anim.Tile;
     public function new(visible = true) {
         this.visible = visible;
         ui = new coin.zui.Zui({font: kha.Assets.fonts.font_default});
@@ -35,17 +38,18 @@ class TileEditor {
     var map:Tilemap = null;
     var tileSelected:Selection = null;
     var tileHandle = Id.handle({value: 0});
-    @:access(coin.zui.Zui)
+    @:access(coin.zui.Zui,coin.anim.Tilemap,coin.anim.Tile)
     public function render(canvas:kha.Canvas): Void {
         if(!visible || selectedMap < 0)return;
         ui.begin(canvas.g2);
         
         if(map == null){
             map = cast(coin.State.active._entities[tilemapIds[selectedMap]]);
+            curTile = map.tiles[0];
         }
         var newSelection = selectedMap;
         if (ui.window(coin.zui.Id.handle(),x,y, width, height, true)) {
-            var indents = ui._w;
+
             endHeight = ui._y;
 			if (ui.panel(Id.handle({selected: true}), "Tilemap editor")) {
 				ui.indent();
@@ -60,7 +64,7 @@ class TileEditor {
                 var r = ui.curRatio == -1 ? 1.0 : ui.ratios[ui.curRatio];
                 var px = ui._x+ui.buttonOffsetY+ui.SCROLL_W() * r*0.5;
                 var py = ui._y;
-                var curImg = map.imageData[0].image;
+                var curImg = curTile.data.image;
                 var state = ui.image(curImg);
                 var ratio = Math.abs((py-ui._y)/curImg.height);
                 var invRatio = Math.abs(curImg.height/(py-ui._y));
@@ -128,37 +132,47 @@ class TileEditor {
             endHeight = Math.abs(endHeight-ui._y);
         }
         ui.end();
+        //Draw mouse Icon
+        if(isInScreen()){
+            kha.input.Mouse.get(0).hideSystemCursor();
+            canvas.g2.begin(false,0x00000000);
+            canvas.g2.color = kha.Color.White;
+            canvas.g2.drawScaledImage(kha.Assets.images.basic,Coin.mouseX,Coin.mouseY,10,10);
+            
+            //Scale tile w/h
+            var w = curTile._w;
+            var h = curTile._h;
+            var temp = scaleToScreen(w,h);
+            curTile._w = temp.width;
+            curTile._h = temp.height;
+            //Scale map tile w/h
+            var tw = map.tw;
+            var th = map.th;
+            var tempMap = scaleToScreen(tw,th);
+            map.tw = Std.int(tempMap.width);
+            map.th = Std.int(tempMap.height);
+            //Scale image w/h
+            var wNh = scaleToScreen(curTile.data.image.width,curTile.data.image.height);
+            vec.x=Coin.mouseX-curTile._w;
+            vec.y = Coin.mouseY;
+            
+            curTile.render(canvas,vec,wNh,kha.Color.fromBytes(255,255,255,128));
+            canvas.g2.end();
+            curTile._w = w;
+            curTile._h = h;
+            map.tw = tw;
+            map.th= th;
+        }
+        else{
+            kha.input.Mouse.get(0).showSystemCursor();
+        }
+
         if(selectedMap != newSelection){
             map = null;
+            curTile = null;
         }
-        //Draw mouse Icon
-        #if editor
-        if(!Coin.fullscreen){
-            var gv = App.editorui.gameView;
-            if(isInScreen()){
-                kha.input.Mouse.get(0).hideSystemCursor();
-                canvas.g2.begin(false,0x00000000);
-                canvas.g2.color = kha.Color.White;
-                canvas.g2.drawScaledImage(kha.Assets.images.basic,Coin.mouseX,Coin.mouseY,10,10);
-                canvas.g2.end();
-            }
-            else{
-                kha.input.Mouse.get(0).showSystemCursor();
-            }
-        }
-        else{#end
-            if(isInScreen()){
-                kha.input.Mouse.get(0).hideSystemCursor();
-                canvas.g2.begin(false,0x00000000);
-                canvas.g2.color = kha.Color.White;
-                canvas.g2.drawScaledImage(kha.Assets.images.basic,Coin.mouseX,Coin.mouseY,10,10);
-                canvas.g2.end();
-            }
-            else{
-                kha.input.Mouse.get(0).showSystemCursor();
-            }
-        #if editor }#end
     }
+    var vec:kha.math.Vector2 =  new Vector2();
     public function selectMap(uid:Int){
         selectedMap = -1;
         for(i in 0...tilemapIds.length){
@@ -170,12 +184,7 @@ class TileEditor {
             selectedMap = tilemapIds.push(uid)-1;
         }
     }
-    var mx:Int;
-    var my:Int;
-    public function onMouseMove(x:Int, y:Int, cx:Int, cy:Int):Void {
-        mx = x;
-        my =y;
-    }
+
     var endHeight = 0.0;
     @:access(coin.zui.Zui)
     function isInScreen(){
@@ -200,6 +209,16 @@ class TileEditor {
                 Coin.mouseX < ui._windowX ||
                 Coin.mouseX > ui._windowX+width);
         return out;
+    }
+    function scaleToScreen(w:Float,h:Float){
+        #if editor
+        var gv = App.editorui.gameView;
+        var outW = Coin.fullscreen ? w : w*(gv.width/Coin.WIDTH);
+        var outH = Coin.fullscreen ? h : h*(gv.height/Coin.HEIGHT);
+        return {width: outW, height: outH};
+        #else
+        return {width: w, height: h};
+        #end
     }
 }
 // #end

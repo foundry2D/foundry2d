@@ -55,8 +55,8 @@ class TileEditor {
 				ui.indent();
 				ui.text("Text");
                 newSelection = Ext.list(ui, Id.handle(), tilemapIds);
-                map.w = Std.int(ui.slider(Id.handle({value: map.tw}), "Map Width",0,Math.pow(256,2),false,100,true,Right,true,map.tw));
-                map.h = Std.int(ui.slider(Id.handle({value: map.th}), "Map Height",0,Math.pow(256,2),false,100,true,Right,true,map.th));
+                map.w = Std.int(ui.slider(Id.handle({value: map.w}), "Map Width",0,Math.pow(256,2),false,1/map.tw));
+                map.h = Std.int(ui.slider(Id.handle({value: map.h}), "Map Height",0,Math.pow(256,2),false,1/map.th));
                 map.tw = Std.int(Ext.floatInput(ui, Id.handle({value: 64.0}), "Tile Width"));
                 map.th = Std.int(Ext.floatInput(ui, Id.handle({value: 64.0}), "Tile Height"));
 				
@@ -94,9 +94,14 @@ class TileEditor {
                     x = (Std.int(index * map.tw) % (curImg.width))*ratio +px;
                     y = (Math.floor(index * map.tw/curImg.width)*(map.th))*ratio+py;
                     tileSelected = {index:index,x:x,y:y,w:map.tw*ratio,h:map.th*ratio};
+                    if(!map.tiles.exists(index)){
+                        curTile.raw.usedIds.push(index);
+                        coin.anim.Tile.createTile(map,curTile.raw,index);
+                    }
+                    
                 }
                 tileHandle.value = tileSelected.index;
-                ui.slider(tileHandle, "Selected Tile",0,maxTiles,false,100,true,Right,true,1);
+                ui.slider(tileHandle, "Selected Tile",0,maxTiles);
 
                 ui.g.color = kha.Color.White;
                 // ui.textInput(Id.handle({text: "Hello"}), "Input");
@@ -132,36 +137,48 @@ class TileEditor {
             endHeight = Math.abs(endHeight-ui._y);
         }
         ui.end();
-        //Draw mouse Icon
+        
         if(isInScreen()){
+            //Draw mouse Icon
             kha.input.Mouse.get(0).hideSystemCursor();
             canvas.g2.begin(false,0x00000000);
             canvas.g2.color = kha.Color.White;
             canvas.g2.drawScaledImage(kha.Assets.images.basic,Coin.mouseX,Coin.mouseY,10,10);
             
             //Scale tile w/h
-            var w = curTile._w;
-            var h = curTile._h;
-            var temp = scaleToScreen(w,h);
-            curTile._w = temp.width;
-            curTile._h = temp.height;
-            //Scale map tile w/h
-            var tw = map.tw;
-            var th = map.th;
-            var tempMap = scaleToScreen(tw,th);
-            map.tw = Std.int(tempMap.width);
-            map.th = Std.int(tempMap.height);
             //Scale image w/h
-            var wNh = scaleToScreen(curTile.data.image.width,curTile.data.image.height);
-            vec.x=Coin.mouseX-curTile._w;
-            vec.y = Coin.mouseY;
-            
-            curTile.render(canvas,vec,wNh,kha.Color.fromBytes(255,255,255,128));
+            var temp = scaleToScreen(1.0,1.0);
+            var px:Float = Math.abs(Coin.mouseX) < Coin.GRID*0.75 ? Coin.mouseX-curTile._w*2: Coin.mouseX-curTile._w;
+            var py:Float = Math.abs(Coin.mouseY) < Coin.GRID*0.75 ? Coin.mouseY-curTile._h*2:Coin.mouseY-curTile._h;
+            #if editor
+            var gv = App.editorui.gameView;
+            if(!Coin.fullscreen){
+                px += Math.abs(Coin.mouseX) < Coin.GRID*0.75 ? curTile._w*3:curTile._w*2; //This seems hacky
+                py += Math.abs(Coin.mouseY) < Coin.GRID*0.75 ? curTile._h*2: curTile._h; //This seems hacky
+                px = ((px-gv.screenX)/gv.width)*Coin.WIDTH;
+                py = ((py-gv.screenY)/gv.height)*Coin.HEIGHT;
+            }
+            #end
+            px = Math.floor(px);
+            px += (Coin.GRID-(px % Coin.GRID));
+            py = Math.floor(py);
+            py += (Coin.GRID-(py % Coin.GRID));
+            #if editor
+            if(!Coin.fullscreen){
+                // Convert back to editor gameview then floor the values
+                px = ((px+gv.screenX)/Coin.WIDTH)*gv.width;
+                var value = Math.floor(px);
+                px = Math.floor(value-(px-value));
+                py = ((py+gv.screenY)/Coin.HEIGHT)*gv.height;
+                value = Math.floor(py);
+                py = Math.floor(value-(py-value));
+            }
+            #end
+            vec.x = px;
+            vec.y = py;
+
+            curTile.render(canvas,vec,kha.Color.fromBytes(255,255,255,128),new Vector2(temp.width,temp.height));
             canvas.g2.end();
-            curTile._w = w;
-            curTile._h = h;
-            map.tw = tw;
-            map.th= th;
         }
         else{
             kha.input.Mouse.get(0).showSystemCursor();
@@ -172,8 +189,37 @@ class TileEditor {
             curTile = null;
         }
     }
+    @:access(coin.anim.Tilemap,coin.anim.Tile)
+    public function addTile(){
+        if(!visible || selectedMap < 0 || !isInScreen())return;
+
+        var px:Float = Math.abs(Coin.mouseX) < Coin.GRID*0.75 ? Coin.mouseX-curTile._w*2: Coin.mouseX-curTile._w;
+        var py:Float = Math.abs(Coin.mouseY) < Coin.GRID*0.75 ? Coin.mouseY-curTile._h*2:Coin.mouseY-curTile._h;
+        trace('Before X: $px');
+        trace('Before Y: $py');
+        #if editor
+        var gv = App.editorui.gameView;
+        if(!Coin.fullscreen){
+            px = Math.abs(Coin.mouseX) < Coin.GRID*0.75 ? px+curTile._w*2:px; //This seems hacky
+            py = Math.abs(Coin.mouseY) < Coin.GRID*0.75 ? py+curTile._h*2: py; //This seems hacky
+            px = Math.ceil(((px-gv.screenX)/gv.width)*Coin.WIDTH);
+            py = Math.ceil(((py-gv.screenY)/gv.height)*Coin.HEIGHT);
+        }
+        #end
+        trace('Scale to scene X: $px');
+        trace('Scale to scene Y: $py');
+        px = Math.floor(px);
+        px += (Coin.GRID-(px % Coin.GRID));
+        py = Math.floor(py);
+        py += (Coin.GRID-(py % Coin.GRID));
+        trace('X: $px');
+        trace('Y: $py');
+        map.data[map.posXY2Id(px,py)] = tileSelected.index;
+
+    }
     var vec:kha.math.Vector2 =  new Vector2();
     public function selectMap(uid:Int){
+        if(uid < 0){selectedMap = -1;return;}
         selectedMap = -1;
         for(i in 0...tilemapIds.length){
             if(tilemapIds[i] == uid){

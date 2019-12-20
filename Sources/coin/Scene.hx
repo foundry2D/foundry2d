@@ -26,12 +26,12 @@ class Scene {
   public var traitInits:Array<Void->Void> = [];
 	public var traitRemoves:Array<Void->Void> = [];
 
-  private var _depth:Bool;
+  private var _depth:Bool = true;
   /**
    *  If the engine should use ysort: 2DRPG or zsort: platformer drawing method.
    *  Can vary on a Scene to Scene basis i.e. Menu Scene uses zsort Gameplay Scene uses ysort 
    */
-  public static var zsort(default,null):Bool = false;
+  public static var zsort(default,null):Bool = true;
 
   @:access(coin.object.Object)
   public function new(raw:TSceneFormat){
@@ -126,9 +126,10 @@ class Scene {
 
   @:access(coin.App)
   public function render(canvas:Canvas){
-    if (_depth) depth(_entities);
+    var ordered = _entities.copy();
+    if (_depth) depth(ordered);
 
-    for (entity in _entities) entity.render(canvas);
+    for (entity in ordered) entity.render(canvas);
 
     if (App.traitRenders2D.length > 0) {
 			for (f in App.traitRenders2D) { App.traitRenders2D.length > 0 ? f(canvas.g2) : break; }

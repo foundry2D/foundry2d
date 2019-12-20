@@ -27,13 +27,14 @@ class Tilemap extends Object{
         this.data = data.map.length == 0 ? [for (i in 0...w * h) -1]: data.map;
         this.imageData = [];
         this.tiles = [];
+        this.raw = data;
+        
         for(tile in data.images){
             Tile.createTile(this,tile,0,done);
         }
         if(data.images.length == 0){
             done(this);
         }
-        this.raw = data;
     }
     
     public inline function x(id : Int) : Int {

@@ -1,5 +1,6 @@
 package coin.anim;
 
+import kha.math.FastMatrix3;
 import kha.Canvas;
 import kha.math.Vector2;
 
@@ -76,7 +77,7 @@ class Tile {
 		data.curAnim = animation;
 	}
 	
-	public function render(canvas: Canvas,position:Vector2,?color:kha.Color=null): Void {
+	public function render(canvas: Canvas,position:Vector2,?color:kha.Color=null,?scale:kha.math.Vector2): Void {
 		if(data == null)return;
 		setAnimation(animIndex);
 		if(data.animatable)
@@ -86,10 +87,14 @@ class Tile {
 		var height =_h;
 		if (data.image != null) {
 			canvas.g2.color = color != null ? color:kha.Color.White;
+			if(scale != null)
+				canvas.g2.transformation = FastMatrix3.scale(scale.x,scale.y);
 			canvas.g2.pushTranslation(position.x,position.y);
 			// canvas.g2.rotate(Util.degToRad(rotation), position.x + width/ 2,position.y + height/ 2);
 			canvas.g2.drawScaledSubImage(data.image, offsetx+Std.int(data.animation.get() * map.tw) % data.image.width, offsety+Math.floor(data.animation.get() * map.tw / data.image.width) * _h, _w, _h, (flip.x > 0.0 ? width:0), (flip.y > 0.0 ? height:0), (flip.x > 0.0 ? -width:width), (flip.y > 0.0 ? -height:height));
 			canvas.g2.popTransformation();
+			if(scale != null)
+				canvas.g2.transformation = FastMatrix3.identity();
 		}
 	}
 }

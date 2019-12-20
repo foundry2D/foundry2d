@@ -191,6 +191,11 @@ class App {
 			EditorUi.activeMouse = false;
 		}
 		#end
+		#if tile_editor
+		if(button == 0/* Left */){
+			Coin.tileeditor.addTile();
+		}
+		#end
 	}
 
 	public function onMouseMove(x:Int, y:Int, cx:Int, cy:Int):Void {

@@ -14,7 +14,7 @@ class Executor<T> {
     var rest:Worker;
     public function new(p_field:String){
         #if debug
-        if(Scheduler.time() == 0) trace("You cant create Executors before the Scheduler has been created");
+        if(Scheduler.time() == 0) trace("You cant create Executors before the Scheduler has been created.Solution: Create your executor in the new function of your class.");
         #end
         field = p_field;
         #if kha_kore

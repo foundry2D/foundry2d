@@ -2,6 +2,7 @@ package coin.object;
 
 import kha.Canvas;
 import kha.math.Vector2;
+import kha.math.Vector3;
 import coin.data.SceneFormat;
 
 #if js
@@ -18,7 +19,7 @@ typedef RotateData ={
 #else
 @:structInit class RotateData{
 #end
-	public var _rotations:Float;
+	public var _rotations:kha.math.Vector3;
 	@:optional public var dt:Float;
 	@:optional public var from:Vector2;
 	@:optional public var towards:Vector2;
@@ -30,38 +31,8 @@ class Object {
 	#end
 	#if editor
 	public var dataChanged:Bool = false;
-	public var raw(default,set):TObj = null;
-	@:access(coin.Scene)
-	function set_raw(data:TObj){
-		if(!Scene.ready)return this.raw = data;
-
-		refreshObjectData(data);
-		this.raw = data;
-		
-		return this.raw;
-	}
-	@:access(coin.Scene)
-	function refreshObjectData(data:TObj){
-		for(f in Reflect.fields(data)){
-			switch(f){
-				case "traits":
-					var trts:Array<TTrait> = Reflect.getProperty(data,f);
-					if(traits.length == trts.length)continue;
-					Scene.createTraits(trts.splice(traits.length+1,trts.length-traits.length),this);
-				case "position":
-				 	_positions[uid] = Reflect.getProperty(data,f);
-				case "rotation":
-					_rotations[uid] = Reflect.getProperty(data,f);
-				case "scale":
-					_scales[uid] = Reflect.getProperty(data,f);
-				default:
-					Reflect.setProperty(this,f,Reflect.getProperty(data,f));
-			}
-		}
-	}
-	#else
-	public var raw:TObj = null;
 	#end
+	public var raw:TObj = null;
 	static var uidCounter = 0;
 	public final uid:Int;
 	public var active(default, set):Bool = true;
@@ -86,11 +57,11 @@ class Object {
 		,uid);
 	}
 
-	public var rotation(get,never):Float;
+	public var rotation(get,never):kha.math.Vector3;
 	function get_rotation(){
 		return _rotations[uid];
 	}
-	static var _rotations:Array<Float> = [];
+	static var _rotations:Array<kha.math.Vector3> = [];
 	static var _rotates:Executor<RotateData> = null;
 	public function rotate(func:RotateData->RotateData, ?dt:Float = 1.0, ?from:Vector2,?towards:Vector2){
 		_rotates.add(func,{_rotations: _rotations[uid],dt: dt,from: from,towards: towards},uid);
@@ -146,7 +117,7 @@ class Object {
 		uid = uidCounter++;
 
 		_positions.push(new Vector2(x, y));
-		_rotations.push(0.0);
+		_rotations.push(new Vector3());
 		_scales.push(new Vector2(1.0,1.0));
 
 		this.width = width;

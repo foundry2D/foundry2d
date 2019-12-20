@@ -2,6 +2,7 @@ package coin.data;
 
 import kha.FastFloat;
 import kha.math.Vector2;
+import kha.math.Vector3;
 import kha.arrays.Float32Array;
 import kha.arrays.Uint32Array;
 import kha.arrays.Int16Array;
@@ -37,7 +38,7 @@ typedef TObj = {
     public var name:String;
     public var type:String; // object, sprite_object, light_object, camera_object, speaker_object, emitter_object,tilemap_object
     public var position:Vector2;
-    public var rotation:Float;
+    public var rotation:Vector3;
     @:optional public var velocity:Vector2;
 	public var width:FastFloat;
 	public var height:FastFloat;

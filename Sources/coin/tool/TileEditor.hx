@@ -38,6 +38,7 @@ class TileEditor {
     var map:Tilemap = null;
     var tileSelected:Selection = null;
     var tileHandle = Id.handle({value: 0});
+    var unusedIds:Array<Int> = [];
     @:access(coin.zui.Zui,coin.anim.Tilemap,coin.anim.Tile)
     public function render(canvas:kha.Canvas): Void {
         if(!visible || selectedMap < 0)return;
@@ -95,8 +96,9 @@ class TileEditor {
                     y = (Math.floor(index * map.tw/curImg.width)*(map.th))*ratio+py;
                     tileSelected = {index:index,x:x,y:y,w:map.tw*ratio,h:map.th*ratio};
                     if(!map.tiles.exists(index)){
-                        curTile.raw.usedIds.push(index);
-                        coin.anim.Tile.createTile(map,curTile.raw,index);
+                        var value = curTile.raw.usedIds.push(index)-1;
+                        unusedIds.push(index);
+                        curTile = coin.anim.Tile.createTile(map,curTile.raw,value);
                     }
                     
                 }
@@ -192,6 +194,15 @@ class TileEditor {
     @:access(coin.anim.Tilemap,coin.anim.Tile)
     public function addTile(){
         if(!visible || selectedMap < 0 || !isInScreen())return;
+        
+        // @Incomplete: Make sure that we remove the unusedIds from the tile raw usedIds
+        // when saving the tilemap.
+        for(i in 0...unusedIds.length){
+            if(curTile.tileId == unusedIds[i]){
+                unusedIds.splice(i,1);
+                break;
+            }
+        }
 
         var px:Float = Math.abs(Coin.mouseX) < Coin.GRID*0.75 ? Coin.mouseX-curTile._w*2: Coin.mouseX-curTile._w;
         var py:Float = Math.abs(Coin.mouseY) < Coin.GRID*0.75 ? Coin.mouseY-curTile._h*2:Coin.mouseY-curTile._h;

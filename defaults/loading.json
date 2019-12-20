@@ -5,7 +5,7 @@
             "name": "load-icon",
             "type": "sprite_object",
             "position":{ "x": 0.0, "y": 0.0},
-            "rotation": 0.0,
+            "rotation": { "x": 0.0, "y": 0.0,"z": 0.0},
             "width": 666.0,
             "height": 555.0,
             "center":{ "x": 0.0, "y": 0.0},

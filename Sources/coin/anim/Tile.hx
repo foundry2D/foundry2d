@@ -60,14 +60,12 @@ class Tile {
 		}
 
 	}
-	
 	@:access(coin.anim.Tilemap)
 	public static function createTile(map:Tilemap,sprite:TTileData,index:Int,?done:Tilemap->Void){
-		new Tile(map,sprite,index,function(tile:Tile){
+		return new Tile(map,sprite,index,function(tile:Tile){
 			map.tiles.set(tile.tileId,tile);
-			var data:TTilemapData = coin.data.SceneFormat.getData(map.raw);
-			if(data.images.length == map.imageData.length && index ==0){
-				trace("done was called");
+			if(tile.raw.usedIds.length == index+1 && done != null){
+				trace('done was called $index');
 				done(map);
 			}
 			

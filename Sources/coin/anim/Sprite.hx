@@ -73,16 +73,26 @@ class Sprite extends Entity {
 		if (data.image != null) {
 			canvas.g2.color = Color.White;
 			canvas.g2.pushTranslation(position.x,position.y);
-			canvas.g2.rotate(Util.degToRad(rotation), position.x + width/ 2,position.y + height/ 2);
+			canvas.g2.rotate(Util.degToRad(rotation.z), position.x + width/ 2,position.y + height/ 2);
 			canvas.g2.drawScaledSubImage(data.image, Std.int(data.animation.get() * _w) % data.image.width, Math.floor(data.animation.get() * _w / data.image.width) * _h, _w, _h, (flip.x > 0.0 ? width:0), (flip.y > 0.0 ? height:0), (flip.x > 0.0 ? -width:width), (flip.y > 0.0 ? -height:height));
 			canvas.g2.popTransformation();
 		}
 	}
 	
-	public function set(imagename:String): Void {
-		Data.getImage(imagename,function(img:kha.Image){
-			data.image = img;
-		});
+	// @:Incomplete we set this but we never change the animations...
+	public function set(sprite:TSpriteData): Void {
+		if(data.name != sprite.imagePath){
+			new SpriteData(sprite,function(p_data){
+				this.data = p_data;
+				this.width = this.data.raw.width = p_data.image.width;
+				this.height = this.data.raw.height= p_data.image.height;
+				this.raw = this.data.raw;
+				#if editor
+				if(EditorHierarchy.inspector != null)
+					EditorHierarchy.inspector.updateField(uid,"imagePath",this.raw);
+				#end
+			});
+		}
 	}
 	
 	public function outOfView(): Void {
@@ -98,23 +108,4 @@ class Sprite extends Entity {
 		super.set_height(value);
 		return _h = value;
 	}
-	#if editor
-	// @:Incomplete: this should take into account the animations but it does not
-	override function refreshObjectData(obj:TObj) {
-		super.refreshObjectData(obj);
-		var imgPath = Reflect.getProperty(obj,"imagePath");
-		if(data.name != imgPath){
-			var out:TSpriteData = cast(obj);
-			out.imagePath = imgPath;
-			new SpriteData(out,function(p_data){
-				this.data = p_data;
-				this.width = this.data.raw.width = p_data.image.width;
-				this.height = this.data.raw.height= p_data.image.height;
-				this.raw = this.data.raw;
-				if(EditorHierarchy.inspector != null)
-            		EditorHierarchy.inspector.updateField(uid,"imagePath",this.raw);
-			});
-		}
-	}
-	#end
 }

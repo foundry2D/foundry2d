@@ -2,6 +2,10 @@ package coin;
 
 import coin.object.Object;
 
+#if editor
+@:autoBuild(ListTraits.build())
+#end
+@:keepSub 
 class Trait {
 
 	public var name:String = "";
@@ -17,7 +21,7 @@ class Trait {
 	var _lateUpdate:Array<Void->Void> = null;
 	var _render:Array<kha.graphics4.Graphics->Void> = null;
 	var _render2D:Array<kha.graphics2.Graphics->Void> = null;
-
+	
 	public function new() {}
 
 	public function remove() {

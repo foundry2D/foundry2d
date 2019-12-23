@@ -65,7 +65,7 @@ class Coin {
     if (config.backgroundcolor == null) config.backgroundcolor = Color.Black;
     backgroundcolor = config.backgroundcolor;
 
-    if (config.smooth == null) config.smooth = false;
+    if (config.smooth == null) config.smooth = true;
     smooth = config.smooth;
 
     html();
@@ -78,7 +78,9 @@ class Coin {
 		function(_){
 			Assets.loadEverything(function(){
 				Scheduler.addTimeTask(update, 0, 1 / _fps);
+        resize(System.windowWidth(),System.windowHeight());
         _app = Type.createInstance(config.app, []);
+        kha.Window.get(0).notifyOnResize(resize);
 				System.notifyOnFrames(function(framebuffer){
 				  render(framebuffer[0]);
 				});
@@ -89,7 +91,12 @@ class Coin {
 			});
 		});
   }
-
+  static function resize(width:Int,height:Int){
+    Reflect.setField(Coin,"WIDTH",width);
+    Reflect.setField(Coin,"HEIGHT",height);
+    BUFFERWIDTH = WIDTH;
+    BUFFERHEIGHT = HEIGHT;
+  }
   static function update(){
     Timer.update();
     _app.update(Timer.delta);

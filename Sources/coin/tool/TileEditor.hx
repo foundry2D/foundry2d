@@ -155,27 +155,29 @@ class TileEditor {
             #if editor
             var gv = App.editorui.gameView;
             if(!Coin.fullscreen){
-                px += Math.abs(Coin.mouseX) < Coin.GRID*0.75 ? curTile._w*3:curTile._w*2; //This seems hacky
-                py += Math.abs(Coin.mouseY) < Coin.GRID*0.75 ? curTile._h*2: curTile._h; //This seems hacky
-                px = ((px-gv.screenX)/gv.width)*Coin.WIDTH;
-                py = ((py-gv.screenY)/gv.height)*Coin.HEIGHT;
+                px = Coin.mouseX+curTile._w; //This seems hacky
+                py = Coin.mouseY+curTile._h*0.5; //This seems hacky
+                px = ((px-gv.x)/gv.w)*Coin.WIDTH;
+                py = ((py-gv.y)/gv.h)*Coin.HEIGHT;
+                px = Math.floor(px);
+                px += (Coin.GRID-(px % Coin.GRID));
+                py = Math.floor(py);
+                py += (Coin.GRID-(py % Coin.GRID));
+                px = ((px+gv.x)/Coin.WIDTH)*gv.w;
+                var value = Math.floor(px);
+                px = Math.floor(value-(px-value));
+                py = ((py+gv.y-gv.bar.height)/Coin.HEIGHT)*gv.h;
+                value = Math.floor(py);
+                py = Math.floor(value-(py-value));
             }
+            else{
             #end
             px = Math.floor(px);
             px += (Coin.GRID-(px % Coin.GRID));
             py = Math.floor(py);
             py += (Coin.GRID-(py % Coin.GRID));
-            #if editor
-            if(!Coin.fullscreen){
-                // Convert back to editor gameview then floor the values
-                px = ((px+gv.screenX)/Coin.WIDTH)*gv.width;
-                var value = Math.floor(px);
-                px = Math.floor(value-(px-value));
-                py = ((py+gv.screenY)/Coin.HEIGHT)*gv.height;
-                value = Math.floor(py);
-                py = Math.floor(value-(py-value));
-            }
-            #end
+            #if editor } #end
+            
             vec.x = px;
             vec.y = py;
 
@@ -206,25 +208,40 @@ class TileEditor {
 
         var px:Float = Math.abs(Coin.mouseX) < Coin.GRID*0.75 ? Coin.mouseX-curTile._w*2: Coin.mouseX-curTile._w;
         var py:Float = Math.abs(Coin.mouseY) < Coin.GRID*0.75 ? Coin.mouseY-curTile._h*2:Coin.mouseY-curTile._h;
-        trace('Before X: $px');
-        trace('Before Y: $py');
+        
         #if editor
         var gv = App.editorui.gameView;
         if(!Coin.fullscreen){
-            px = Math.abs(Coin.mouseX) < Coin.GRID*0.75 ? px+curTile._w*2:px; //This seems hacky
-            py = Math.abs(Coin.mouseY) < Coin.GRID*0.75 ? py+curTile._h*2: py; //This seems hacky
-            px = Math.ceil(((px-gv.screenX)/gv.width)*Coin.WIDTH);
-            py = Math.ceil(((py-gv.screenY)/gv.height)*Coin.HEIGHT);
+            px = Coin.mouseX+curTile._w; //This seems hacky
+            py = Coin.mouseY+curTile._h; //This seems hacky
+            //Find position in scene size
+            px = ((px-gv.x)/gv.w)*Coin.WIDTH;
+            py = ((py-gv.y)/gv.h)*Coin.HEIGHT;
+            px = Math.floor(px);
+            px += (Coin.GRID-(px % Coin.GRID));
+            py = Math.floor(py);
+            py += (Coin.GRID-(py % Coin.GRID));
+            //Convert back to scene preview size
+            px = ((px+gv.x)/Coin.WIDTH)*gv.w;
+            var value = Math.floor(px);
+            px = Math.floor(value-(px-value));
+            py = ((py+gv.y-gv.bar.height)/Coin.HEIGHT)*gv.h;
+            value = Math.floor(py);
+            py = Math.floor(value-(py-value));
+            //Back to scene size
+            // @:Incomplete We should be able to avoid this step.
+            // But doing it makes drawing in-editor mode more robust
+            px = ((px-gv.x)/gv.w)*Coin.WIDTH;
+            py = ((py-gv.y)/gv.h)*Coin.HEIGHT;
         }
+        else{
         #end
-        trace('Scale to scene X: $px');
-        trace('Scale to scene Y: $py');
         px = Math.floor(px);
         px += (Coin.GRID-(px % Coin.GRID));
         py = Math.floor(py);
         py += (Coin.GRID-(py % Coin.GRID));
-        trace('X: $px');
-        trace('Y: $py');
+        #if editor } #end
+
         map.data[map.posXY2Id(px,py)] = tileSelected.index;
 
     }
@@ -247,8 +264,8 @@ class TileEditor {
     function isInScreen(){
         #if editor
         var gv = App.editorui.gameView;
-        var x = Coin.fullscreen ? 0: gv.screenX;
-        var y = Coin.fullscreen ? 0:gv.screenY;
+        var x = Coin.fullscreen ? 0: gv.x;
+        var y = Coin.fullscreen ? 0:gv.y;
         var w = Coin.fullscreen ? Coin.WIDTH:gv.width;
         var h = Coin.fullscreen ? Coin.HEIGHT:gv.height;
         #else

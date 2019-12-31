@@ -100,7 +100,8 @@ class App {
 
 			if (Coin.scenebuffer == null) Coin.scenebuffer = kha.Image.createRenderTarget(Coin.backbuffer.width, Coin.backbuffer.height);
 			Coin.scenebuffer.g2.pushTransformation(FastMatrix3.translation(-screenOffsetX, -screenOffsetY));
-			Coin.renderfunc(Coin.backbuffer.g2);
+			if(Coin.renderfunc != null)
+				Coin.renderfunc(Coin.backbuffer.g2);
 			Coin.backbuffer.g2.end();
 			#if tile_editor
 			Coin.tileeditor.render(Coin.backbuffer);

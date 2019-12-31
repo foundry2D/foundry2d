@@ -7,7 +7,7 @@ import kha.System;
 import kha.Color;
 import kha.Image;
 
-#if kha_html5
+#if (kha_html5 &&js)
 import js.html.CanvasElement;
 import js.Browser.document;
 import js.Browser.window;
@@ -107,7 +107,7 @@ class Coin {
   }
 
   static function html(){
-    #if kha_html5
+    #if (kha_html5 && js)
     document.documentElement.style.padding = '0';
     document.documentElement.style.margin = '0';
     document.body.style.padding = '0';

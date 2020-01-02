@@ -32,11 +32,32 @@ class Object {
 	#if editor
 	public var dataChanged:Bool = false;
 	#end
-	public var raw:TObj = null;
+	public var raw(default,set):TObj;
+	function set_raw(data:TObj) {
+		this.raw = data;
+		if(State.active.physics_world != null && data.rigidBody != null){
+            if(data.rigidBody.x == null) data.rigidBody.x = data.position.x;
+            if(data.rigidBody.y == null) data.rigidBody.y = data.position.y;
+            if(data.rigidBody.shape.width == null) data.rigidBody.shape.width = data.width;
+            if(data.rigidBody.shape.height == null) data.rigidBody.shape.height = data.height;
+			body = State.active.physics_world.add(new echo.Body(data.rigidBody));
+			body.on_move = on_physics_move;
+		}
+		return this.raw;
+	}
 	static var uidCounter = 0;
 	public final uid:Int;
 	public var active(default, set):Bool = true;
 
+	public var body:echo.Body =null;
+	function on_physics_move(x:Float,y:Float){
+		translate(function(data:MoveData){
+			data._positions.x = x;
+			data._positions.y = y;
+
+			return data;
+		});
+	}
 
 	static final _positions:Array<Vector2> = [];
 	static var _translations:Executor<MoveData> = null;
@@ -134,6 +155,9 @@ class Object {
 
 	public function update(dt:Float){
 		if (!active || !Scene.ready) return;
+		
+		body.x = position.x;
+		body.y = position.y;
 
 		if(!Scene.zsort)
 			depth = position.y + height;
@@ -156,6 +180,8 @@ class Object {
 	}
 	@:access(coin.Trait,coin.App)
 	function set_active(value:Bool):Bool {
+		if(body != null)
+			body.active = value;
 		if(value && active != value){
 			trace("Before add traits"+App.traitUpdates.length);
 			for(t in traits){

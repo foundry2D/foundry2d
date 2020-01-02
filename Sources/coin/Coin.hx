@@ -40,6 +40,10 @@ class Coin {
   public static var tileeditor:coin.tool.TileEditor;
   #end
 
+  #if debug
+  public static var collisionsDraw:Bool = true;
+  #end
+
   public static var mouseX:Int = 0;
 	public static var mouseY:Int = 0;
 

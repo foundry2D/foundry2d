@@ -28,6 +28,7 @@ typedef TSceneFormat = {
     @:optional public var _depth:Bool;
     @:optional public var _Zsort:Bool;
     @:optional public var traits:Array<TTrait>; // Scene root traits
+    @:optional public var physicsWorld: echo.data.Options.WorldOptions;
 }
 
 #if js
@@ -45,7 +46,8 @@ typedef TObj = {
     @:optional public var scale:Vector2;
 	public var center:Vector2;
     public var depth:Float;
-	public var active:Bool;
+    public var active:Bool;
+    @:optional public var rigidBody: echo.data.Options.BodyOptions;
     @:optional public var children:Array<TObj>;
     @:optional public var traits:Array<TTrait>;
 }

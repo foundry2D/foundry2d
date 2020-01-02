@@ -23,8 +23,13 @@ class Scene {
   public var countEntities(get, null):Int;
   public var _entities:Array<Object>;
 
+  public var physics_world: echo.World;
+
   public var traitInits:Array<Void->Void> = [];
-	public var traitRemoves:Array<Void->Void> = [];
+  public var traitRemoves:Array<Void->Void> = [];
+  
+  public var physicsUpdate:Float->Void = function(f:Float){};
+  static var STEP = 16/1000;
 
   private var _depth:Bool = true;
   /**
@@ -42,11 +47,21 @@ class Scene {
     _entities = new Array<Object>();
     // root = new Object();
     cam = new Vector2();
+
+    if(raw.physicsWorld != null){
+      physics_world = echo.Echo.start(raw.physicsWorld);
+      physics_world.listen();
+      physicsUpdate = physics_world.step;
+    }
+    
+
     if(Reflect.hasField(raw,"_entities")){
       for(e in raw._entities){
         addEntity(e);
       }
     }
+
+
     // createTraits(raw.traits,root);
     #if debug
 		// root.name = "Root";
@@ -94,7 +109,13 @@ class Scene {
   public function update(dt:Float){
     if(!Scene.ready && raw._entities.length == _entities.length)
       Scene.ready = true;
+    if(!Scene.ready)
+      return;
+      
+
     for (entity in _entities) entity.update(dt);
+
+    physicsUpdate(STEP);
 
     var i = 0;
 		var l = App.traitUpdates.length;
@@ -114,6 +135,7 @@ class Scene {
       exe.execute();
     }
 
+
 		i = 0;
 		l = App.traitLateUpdates.length;
 		while (i < l) {
@@ -122,6 +144,10 @@ class Scene {
 		}
     //@:Incomplete: We should maybe add the possibility to have multithreaded
     // calls in LateUpdate and execute them after. For now we will focus on having this in the normal update.
+
+    #if debug
+    echo.util.Debug.log(physics_world);
+    #end
   }
 
   @:access(coin.App)
@@ -130,6 +156,17 @@ class Scene {
     if (_depth) depth(ordered);
 
     for (entity in ordered) entity.render(canvas);
+
+    #if debug
+    if(Coin.collisionsDraw && physics_world != null){
+      for(body in physics_world.members){
+        canvas.g2.color = kha.Color.fromBytes(255,0,0,64);
+        drawShape(canvas.g2,body.shape,body.x,body.y);
+        canvas.g2.color = kha.Color.fromBytes(0,0,255,128);
+      }
+      canvas.g2.color = kha.Color.White;
+    }
+    #end
 
     if (App.traitRenders2D.length > 0) {
 			for (f in App.traitRenders2D) { App.traitRenders2D.length > 0 ? f(canvas.g2) : break; }
@@ -141,8 +178,20 @@ class Scene {
       for(exe in Executor.executors){
         exe.execute();
       }
-		}
+    }
+
   }
+
+  #if debug
+  function drawShape(g:kha.graphics2.Graphics,shape:echo.Shape,x:Float,y:Float){
+    switch(shape.type){
+      case echo.data.Types.ShapeType.RECT:
+        var bounds = shape.bounds();
+        g.fillRect(shape.x,shape.y,bounds.width,bounds.height);
+      default:
+    }
+  }
+  #end
 
   
   public function get_countEntities():Int {

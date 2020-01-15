@@ -35,7 +35,7 @@ class Object {
 	public var raw(default,set):TObj;
 	function set_raw(data:TObj) {
 		this.raw = data;
-		if(State.active.physics_world != null && data.rigidBody != null){
+		if(State.active != null && State.active.physics_world != null && data.rigidBody != null){
             if(data.rigidBody.x == null) data.rigidBody.x = data.position.x;
             if(data.rigidBody.y == null) data.rigidBody.y = data.position.y;
             if(data.rigidBody.shape.width == null) data.rigidBody.shape.width = data.width;

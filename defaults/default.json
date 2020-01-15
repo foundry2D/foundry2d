@@ -1,0 +1,26 @@
+{
+    "name":"default",
+    "_entities":
+    [
+        {
+            "name":"default",
+            "type":"sprite_object",
+            "position":{"x":577.5,"y":297.5},
+            "rotation":{"x":0.0,"y":0.0,"z":0.0},
+            "width":250,
+            "height":250,
+            "center":{"x":0,"y":0},
+            "scale":{"x":1.4000000000000001,"y":0.5},
+            "depth":0,
+            "active":true,
+            "imagePath":"basic",
+            "traits":
+            [
+                {
+                    "type":"Script",
+                    "class_name":"found.trait.internal.LoadingScript"
+                }
+            ]
+        }
+    ]
+}

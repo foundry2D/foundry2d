@@ -54,8 +54,6 @@ class State extends Scene {
 			var b:kha.Blob = Reflect.field(Assets.blobs, "loading_json");
 			loadingState = new State(haxe.Json.parse(b.toString()));
 		}
-		if(active == null)
-			active = loadingState;
 	}
 
 	public static function addState(name:String, state:String):String {

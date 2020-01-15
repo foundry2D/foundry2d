@@ -16,7 +16,7 @@
             "traits":[
                 {
                     "type": "Script",
-                    "class_name": "coin.trait.internal.LoadingScript"
+                    "class_name": "found.trait.internal.LoadingScript"
                 }
             ],
             "rigidBody":{

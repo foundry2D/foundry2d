@@ -108,8 +108,10 @@ class Data {
 		loadingSceneRaws.remove(file);
 	}
 
+	static var getData = #if wasmfs kha.FileSystem.getBytes#else kha.Assets.loadBlobFromPath#end;
     // Raw assets
 	public static function getBlob(file:String, done:kha.Blob->Void) {
+		
 		var cached = cachedBlobs.get(file); // Is already cached
 		if (cached != null) { done(cached); return; }
 
@@ -119,8 +121,7 @@ class Data {
 		loadingBlobs.set(file, [done]); // Start loading
 
 		var p = (file.charAt(0) == '/' || file.charAt(1) == ':') ? file : dataPath + file;
-
-		kha.Assets.loadBlobFromPath(p, function(b:kha.Blob) {
+		getData(p, function(b:kha.Blob) {
 			cachedBlobs.set(file, b);
 			for (f in loadingBlobs.get(file)) f(b);
 			loadingBlobs.remove(file);

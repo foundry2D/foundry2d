@@ -65,11 +65,15 @@ class State extends Scene {
 		_states.remove(name);
 	}
 
-	public static function set(name:String){
+	public static function set(name:String,onDone:Void->Void=null){
 		Scene.ready = false;
 		var file = _states.get(name);
 		active = loadingState;
-		Data.getSceneRaw(file,loadState);
+		var loaded = onDone == null ? loadState : function(raw:TSceneFormat){
+			loadState(raw);
+			onDone();
+		};
+		Data.getSceneRaw(file,loaded);
 		
 		
 	}

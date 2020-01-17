@@ -146,7 +146,8 @@ class Scene {
     // calls in LateUpdate and execute them after. For now we will focus on having this in the normal update.
 
     #if debug
-    echo.util.Debug.log(physics_world);
+    if(physics_world != null)
+      echo.util.Debug.log(physics_world);
     #end
   }
 

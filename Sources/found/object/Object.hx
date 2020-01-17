@@ -156,9 +156,11 @@ class Object {
 	public function update(dt:Float){
 		if (!active || !Scene.ready) return;
 		
-		body.x = position.x;
-		body.y = position.y;
-
+		if(body != null){
+			body.x = position.x;
+			body.y = position.y;
+		}
+		
 		if(!Scene.zsort)
 			depth = position.y + height;
 

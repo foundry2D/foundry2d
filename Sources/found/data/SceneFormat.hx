@@ -7,6 +7,10 @@ import kha.arrays.Float32Array;
 import kha.arrays.Uint32Array;
 import kha.arrays.Int16Array;
 
+// Zui
+import found.zui.Nodes;
+import found.zui.Nodes.TNodeCanvas;
+
 class SceneFormat{
 
     public static function getData(t:Dynamic):Dynamic{
@@ -129,4 +133,14 @@ typedef TTrait = {
 	public var class_name:String;
 	@:optional public var parameters:Array<String>; // constructor params
 	@:optional public var props:Array<String>; // name - value list
+}
+
+#if js
+typedef LogicNodeData = {
+#else
+@:structInit class LogicNodeData {
+#end
+	var name: String;
+	var nodes: Nodes;
+	var nodeCanvas: TNodeCanvas;
 }

@@ -1,6 +1,6 @@
 package found.zui;
 
-@:access(zui.Zui)
+@:access(found.zui.Zui)
 class Nodes {
 
 	public var nodesDrag = false;

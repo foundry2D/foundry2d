@@ -15,17 +15,67 @@ import found.node.data.MathNode;
 import found.node.data.LogicNode;
 import found.node.data.NodeCreator;
 import found.node.data.VariableNode;
+import found.node.data.FoundryNode;
 
 @:access(zui.Zui)
 class NodeEditor {
-    var ui: Zui;
+	var ui: Zui;
+	public var visible:Bool;
+	public static var width:Int;
+    public static var height:Int;
+    public static var x:Int;
+    public static var y:Int;
 
+	public function new(px:Int,py:Int,w:Int,h:Int) {
+        this.visible = false;
+		ui = new Zui({font: kha.Assets.fonts.font_default});
+		setAll(px,py,w,h);
+	}
+
+	public function setAll(px:Int,py:Int,w:Int,h:Int){
+		x = px;
+		y = py;
+        width = w;
+        height = h;
+	}
+	
 	public static var nodesArray: Array<LogicNodeData> = [];
 	public static var selectedNode:LogicNodeData = null;
 
 	public static var nodeHandle = Id.handle();
 	public static var nodeTabHandle = Id.handle();
-    
+    public function render(g:kha.graphics2.Graphics){
+		if(!visible)return;
+
+		if(grid==null){g.end();drawGrid();g.begin();}
+		
+		var nodePanX:Float = 0.0;
+		var nodePanY:Float = 0.0;
+		if(NodeEditor.selectedNode != null) {
+			nodePanX += NodeEditor.selectedNode.nodes.panX * NodeEditor.selectedNode.nodes.SCALE() % 40 - 40;
+			nodePanY += NodeEditor.selectedNode.nodes.panY * NodeEditor.selectedNode.nodes.SCALE() % 40 - 40;
+			if(nodePanX > 0.0)
+				nodePanX=0;
+			else if(Math.abs(nodePanX) > kha.System.windowWidth()-NodeEditor.width)
+				nodePanX=-(kha.System.windowWidth()-NodeEditor.width);
+			trace(nodePanY);
+			if(nodePanY > 0.0)
+				nodePanY=0;
+			else if(Math.abs(nodePanY) > kha.System.windowHeight()-NodeEditor.height)
+				nodePanY=-(kha.System.windowHeight()-NodeEditor.height);
+			trace(nodePanY);
+		}
+		g.end();
+		ui.begin(g);
+		if(ui.window(Id.handle(), NodeEditor.x, NodeEditor.y, NodeEditor.width, NodeEditor.height)){
+			ui.g.color = kha.Color.White;
+			ui.g.drawImage(grid,nodePanX,nodePanY);
+			renderNodes(ui);
+			renderNodesMenu(ui);
+		}
+		ui.end();
+		g.begin(false);
+	}
     public static function renderNodes(ui:Zui) {
 		if(selectedNode != null) selectedNode.nodes.nodeCanvas(ui, selectedNode.nodeCanvas);
     }
@@ -33,7 +83,7 @@ class NodeEditor {
 	public static function renderNodesMenu(ui:Zui) {
 		if(selectedNode == null) return;
 
-		if(ui.window(nodeHandle, 200, 60, 150, 540, true)){
+		if(ui.window(nodeHandle, NodeEditor.x, NodeEditor.y, 150, Std.int(NodeEditor.height*0.75), true)){
 
             if(ui.tab(nodeTabHandle, "Std")){
 				if(ui.panel(Id.handle(), "Logic")){
@@ -65,20 +115,20 @@ class NodeEditor {
 				}
             }
             if(ui.tab(nodeTabHandle, "Foundry2d")){
-                if (ui.panel(eventNodeHandle, "Event")) {
+                if (ui.panel(Id.handle(), "Event")) {
                     if (ui.button("On Init")) pushNodeToSelectedGroup(FoundryNode.onInitNode);
                     if (ui.button("On Update"))pushNodeToSelectedGroup(FoundryNode.onUpdateNode);
                 }
-                if (ui.panel(inputNodeHandle, "Input")) {
+                if (ui.panel(Id.handle(), "Input")) {
                     if (ui.button("On Mouse")) pushNodeToSelectedGroup(FoundryNode.onMouseNode);
                     if (ui.button("Mouse Coord"))pushNodeToSelectedGroup(FoundryNode.mouseCoordNode);
                     if (ui.button("On Keyboard")) pushNodeToSelectedGroup(FoundryNode.onKeyboardNode);
                 }
-                if (ui.panel(mathNodeHandle, "Math")) {
+                if (ui.panel(Id.handle(), "Math")) {
                     if (ui.button("Split Vec2")) pushNodeToSelectedGroup(FoundryNode.splitVec2Node);
                     if (ui.button("Join Vec2")) pushNodeToSelectedGroup(FoundryNode.joinVec2Node);
                 }
-                if (ui.panel(transformNodeHandle, "Transform")) {
+                if (ui.panel(Id.handle(), "Transform")) {
                     if (ui.button("Set Object Loc")) pushNodeToSelectedGroup(FoundryNode.setObjectLocNode);
                     if (ui.button("Translate Object")) pushNodeToSelectedGroup(FoundryNode.translateObjectNode);
                 }
@@ -95,6 +145,34 @@ class NodeEditor {
 
 	public static function pushNodeToSelectedGroup(tnode:TNode) {
 		selectedNode.nodeCanvas.nodes.push(NodeCreator.createNode(tnode, selectedNode.nodes, selectedNode.nodeCanvas));
+	}
+
+	public static var grid:kha.Image = null;
+	public static var gridSize:Int = 20;
+	function drawGrid() {
+		var doubleGridSize = gridSize * 2;
+		var ww = kha.System.windowWidth();
+		var wh = kha.System.windowHeight();
+		var w = ww + doubleGridSize * 2;
+		var h = wh + doubleGridSize * 2;
+		grid = kha.Image.createRenderTarget(w, h);
+		grid.g2.begin(true, 0xff242424);
+		grid.g2.color = 0xff202020;
+		grid.g2.fillRect(0, 0, w, h);
+		for (i in 0...Std.int(h / doubleGridSize) + 1) {
+			grid.g2.color = 0xff282828;
+			grid.g2.drawLine(0, i * doubleGridSize, w, i * doubleGridSize, 2);
+			grid.g2.color = 0xff323232;
+			grid.g2.drawLine(0, i * doubleGridSize + gridSize, w, i * doubleGridSize + gridSize);
+		}
+		for (i in 0...Std.int(w / doubleGridSize) + 1) {
+			grid.g2.color = 0xff282828;
+			grid.g2.drawLine(i * doubleGridSize, 0, i * doubleGridSize, h, 2);
+			grid.g2.color = 0xff323232;
+			grid.g2.drawLine(i * doubleGridSize + gridSize, 0, i * doubleGridSize + gridSize, h);
+		}
+
+		grid.g2.end();
 	}
 
 }

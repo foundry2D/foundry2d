@@ -376,7 +376,7 @@ class Nodes {
 			clipboard = haxe.Json.stringify(copyCanvas);
 			cutSelected = Zui.isCut;
 		}
-		if (Zui.isPaste && !ui.isTyping) {
+		if (Zui.isPaste && !ui.isTyping && clipboard != "") {
 			var pasteCanvas: TNodeCanvas = haxe.Json.parse(clipboard);
 			for (l in pasteCanvas.links) {
 				// Assign unique link id

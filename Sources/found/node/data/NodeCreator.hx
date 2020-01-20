@@ -1,4 +1,4 @@
-package found.node;
+package found.node.data;
 
 import haxe.Json;
 import found.zui.Nodes;

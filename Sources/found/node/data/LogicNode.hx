@@ -1,4 +1,4 @@
-package found.node;
+package found.node.data;
 
 import kha.Color;
 import found.zui.Nodes.TNode;

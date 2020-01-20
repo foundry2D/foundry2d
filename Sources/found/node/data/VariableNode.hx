@@ -1,4 +1,4 @@
-package found.node;
+package found.node.data;
 
 import kha.Color;
 import found.zui.Nodes.TNode;
@@ -82,7 +82,7 @@ class VariableNode {
 				color: -10183681,
 				default_value: 0,
 				max: 100,
-				precision: 1
+				// precision: 1
 			}
 		],
 		outputs: [

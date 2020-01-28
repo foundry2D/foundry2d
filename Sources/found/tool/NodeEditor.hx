@@ -58,12 +58,10 @@ class NodeEditor {
 				nodePanX=0;
 			else if(Math.abs(nodePanX) > kha.System.windowWidth()-NodeEditor.width)
 				nodePanX=-(kha.System.windowWidth()-NodeEditor.width);
-			trace(nodePanY);
 			if(nodePanY > 0.0)
 				nodePanY=0;
 			else if(Math.abs(nodePanY) > kha.System.windowHeight()-NodeEditor.height)
 				nodePanY=-(kha.System.windowHeight()-NodeEditor.height);
-			trace(nodePanY);
 		}
 		g.end();
 		ui.begin(g);
@@ -71,8 +69,8 @@ class NodeEditor {
 			ui.g.color = kha.Color.White;
 			ui.g.drawImage(grid,nodePanX,nodePanY);
 			renderNodes(ui);
-			renderNodesMenu(ui);
 		}
+		renderNodesMenu(ui);
 		ui.end();
 		g.begin(false);
 	}

@@ -5,7 +5,7 @@
         {
             "name":"default",
             "type":"sprite_object",
-            "position":{"x":577.5,"y":297.5},
+            "position":{"x":0.0,"y":0.0},
             "rotation":{"x":0.0,"y":0.0,"z":0.0},
             "width":250,
             "height":250,

@@ -4,6 +4,6 @@ project.addSources('Sources');
 project.addDefine("found");
 project.addParameter('found.trait');
 project.addParameter("--macro keep('found.trait')");
-project.addLibrary('/home/jsnadeau/foundsdk/hxmath');
-project.addLibrary('/home/jsnadeau/foundsdk/echo');
+project.addLibrary('Libraries/foundsdk/hxmath');
+project.addLibrary('Libraries/foundsdk/echo');
 resolve(project);

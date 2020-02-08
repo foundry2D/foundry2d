@@ -20,15 +20,14 @@
                 }
             ],
             "rigidBody":{
+                "kinematic": true,
                 "mass": 9.8,
-                "shape": {
+                "shapes": [ {
                     "type": 0,
                     "solid":true,
                     "width": 333.0,
                     "height": 277.5
-                },
-                "kinematic": true
-                
+                }]
             }
         }
     ],

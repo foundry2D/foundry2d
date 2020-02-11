@@ -136,9 +136,9 @@ typedef TTrait = {
 }
 
 #if js
-typedef LogicNodeData = {
+typedef LogicTreeData = {
 #else
-@:structInit class LogicNodeData {
+@:structInit class LogicTreeData {
 #end
 	var name: String;
 	var nodes: Nodes;

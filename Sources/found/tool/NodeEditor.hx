@@ -9,7 +9,7 @@ import found.zui.Zui;
 import found.zui.Nodes;
 
 //Editor
-import found.data.SceneFormat.LogicNodeData;
+import found.data.SceneFormat.LogicTreeData;
 import found.node.data.StdNode;
 import found.node.data.MathNode;
 import found.node.data.LogicNode;
@@ -39,8 +39,8 @@ class NodeEditor {
         height = h;
 	}
 	
-	public static var nodesArray: Array<LogicNodeData> = [];
-	public static var selectedNode:LogicNodeData = null;
+	public static var nodesArray: Array<LogicTreeData> = [];
+	public static var selectedNode:LogicTreeData = null;
 
 	public static var nodeHandle = Id.handle();
 	public static var nodeTabHandle = Id.handle();

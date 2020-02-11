@@ -1,5 +1,7 @@
 package found.node;
 
+import found.data.SceneFormat.LogicTreeData;
+
 @:keep
 class Logic {
 
@@ -57,16 +59,16 @@ class Logic {
 	}
 
 	static var tree: LogicTree;
-	public static function parse(canvas:TNodeCanvas, onAdd = true): LogicTree {
+	public static function parse(logicTree:LogicTreeData, onAdd = true): LogicTree {
 
-		nodes = canvas.nodes;
-		links = canvas.links;
+		nodes = logicTree.nodeCanvas.nodes;
+		links = logicTree.nodeCanvas.links;
 
 		parsed_nodes = [];
 		parsed_labels = new Map();
 		nodeMap = new Map();
-		var root_nodes = get_root_nodes(canvas);
-
+		var root_nodes = get_root_nodes(logicTree.nodeCanvas);
+		
 		tree = new LogicTree();
 		if (onAdd) {
 			// tree.notifyOnAdd(function() {
@@ -83,7 +85,7 @@ class Logic {
 
 		// Get node name
 		var name =  node_name(node);
-
+		trace("Begun parse: "+name);
 		// Check if node already exists
 		if (parsed_nodes.indexOf(name) != -1) {
 			return name;
@@ -164,6 +166,7 @@ class Logic {
 				// return []
 			// }
 			var linked = false;
+			
 			for (out in node.outputs) {
 				var ls = getOutputLinks(out);
 				if (ls != null && ls.length > 0) {
@@ -219,6 +222,7 @@ class Logic {
 	}
 
 	static function createClassInstance(className:String, args:Array<Dynamic>):Dynamic {
+		trace(packageName + '.' + className);
 		var cname = Type.resolveClass(packageName + '.' + className);
 		if (cname == null) return null;
 		return Type.createInstance(cname, args);

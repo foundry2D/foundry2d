@@ -1,5 +1,8 @@
 package found;
 
+import found.node.Logic;
+import found.node.Logic.TNodeCanvas;
+import kha.Blob;
 import found.anim.Tilemap;
 #if editor
 import found.tool.Util.Cli;
@@ -12,6 +15,7 @@ import kha.math.Vector2;
 import found.object.Object;
 import found.object.Executor;
 import found.data.SceneFormat;
+import found.data.Data;
 
 class Scene {
   
@@ -247,11 +251,20 @@ class Scene {
     return _depth = value;
   }
 
-  @:access(found.Trait)
   static function createTraits(traits:Array<TTrait>, object:Object) {
 		if (traits == null) return;
 		for (t in traits) {
-			if (t.type == "Script") {
+      if(t.type == "VisualScript"){
+        Data.getBlob(t.class_name,function(blob:kha.Blob){
+            var node:LogicTreeData = haxe.Json.parse(blob.toString());
+            var visualTrait = Logic.parse(node);
+            trace(visualTrait);
+            // object.removeTrait(visualTrait);
+            object.addTrait(visualTrait);
+            addToApp(visualTrait);
+        });
+      }
+			else if (t.type == "Script") {
 				// Assign arguments if any
 				var args:Array<Dynamic> = [];
 				if (t.parameters != null) {
@@ -274,31 +287,33 @@ class Scene {
 					}
 				}
 				object.addTrait(traitInst);
-        var t = traitInst;
-        if (t._init != null) {
-          for (f in t._init) App.notifyOnInit(f);
-          // t._init = null;
-        }
-        if (t._update != null) {
-          for (f in t._update) App.notifyOnUpdate(f);
-          // t._update = null;
-        }
-        if (t._lateUpdate != null) {
-          for (f in t._lateUpdate) App.notifyOnLateUpdate(f);
-          // t._lateUpdate = null;
-        }
-        if (t._render != null) {
-          for (f in t._render) App.notifyOnRender(f);
-          // t._render = null;
-        }
-        if (t._render2D != null) {
-          for (f in t._render2D) App.notifyOnRender2D(f);
-          // t._render2D = null;
-        }
-			}
+        addToApp(traitInst);
+      }
 		}
-	}
-
+  }
+  @:access(found.Trait)
+  static function addToApp(t:Trait){
+    if (t._init != null) {
+      for (f in t._init) App.notifyOnInit(f);
+      // t._init = null;
+    }
+    if (t._update != null) {
+      for (f in t._update) App.notifyOnUpdate(f);
+      // t._update = null;
+    }
+    if (t._lateUpdate != null) {
+      for (f in t._lateUpdate) App.notifyOnLateUpdate(f);
+      // t._lateUpdate = null;
+    }
+    if (t._render != null) {
+      for (f in t._render) App.notifyOnRender(f);
+      // t._render = null;
+    }
+    if (t._render2D != null) {
+      for (f in t._render2D) App.notifyOnRender2D(f);
+      // t._render2D = null;
+    }
+  }
   static function parseArg(str:String):Dynamic {
 		if (str == "true") return true;
 		else if (str == "false") return false;

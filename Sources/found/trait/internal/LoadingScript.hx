@@ -6,6 +6,7 @@ import found.object.Object.MoveData;
 class LoadingScript extends found.Trait {
     public function new(){
         super();
+        notifyOnInit(doStuff);
         notifyOnInit(function (){
             this.object.translate(center);
             // this.object.rotate(function (data:RotateData){
@@ -22,6 +23,9 @@ class LoadingScript extends found.Trait {
             // this.object.translate(move,dt);
             // this.object.rotation+= 10*dt;
         });
+    }
+    function doStuff(){
+        trace("Hello World !");
     }
     function center(data:MoveData){
         data._positions.x = (Found.WIDTH*0.5-(this.object.width)*0.5);

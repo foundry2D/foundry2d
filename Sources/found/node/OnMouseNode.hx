@@ -2,28 +2,38 @@ package found.node;
 
 class OnMouseNode extends LogicNode {
 
-	public var operations1: String;
-	public var operations2: String;
-
+	public var mouseEventType: String;
+	public var mouseButton: String;
+    var func:(Int, Int, Int) -> Void;
+    var moveFunc:(Int, Int, Int,Int) -> Void;
 	public function new(tree: LogicTree) {
 		super(tree);
-		tree.notifyOnUpdate(update);
+        tree.notifyOnUpdate(update);
+        func = function(button:Int, x:Int, y:Int){
+            if(getMouseButton(mouseButton)==button){
+                runOutput(0);
+            }
+        };
+        moveFunc = function (x:Int, y:Int, cx:Int, cy:Int){
+            runOutput(0);
+        };
 	}
 
-	function update() {
-		var mouse = rice2d.system.Input.getMouse();
-		var bool = false;
-		switch (operations1) {
-            case "Started":
-                bool = mouse.started(getMouseButton(operations2));
+	function update(dt:Float) {
+		switch (mouseEventType) {
             case "Released":
-                bool = mouse.released(getMouseButton(operations2));
+                State.active.notifyOnMouseUp(func);
+                State.active.removeOnMouseDown(func);
+                State.active.removeOnMouseMove(moveFunc);
             case "Down":
-                bool = mouse.down(getMouseButton(operations2));
-            case "Moved":
-                bool = mouse.moved;
+                State.active.notifyOnMouseDown(func);
+                State.active.removeOnMouseUp(func);
+                State.active.removeOnMouseMove(moveFunc);
+            case "Move":
+                State.active.notifyOnMouseMove(moveFunc);
+                State.active.removeOnMouseUp(func);
+                State.active.removeOnMouseDown(func);
 		}
-		if (bool) runOutput(0);
 	}
 
     function getMouseButton(string:String):Int {

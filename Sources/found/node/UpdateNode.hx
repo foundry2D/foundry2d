@@ -9,7 +9,7 @@ class UpdateNode extends LogicNode {
         tree.notifyOnUpdate(update);
 	}
 
-	function update() {
+	function update(dt:Float) {
 		runOutput(0);
 	}
 }

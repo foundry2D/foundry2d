@@ -1,5 +1,6 @@
 package found.node;
 
+import found.object.Object.MoveData;
 import kha.math.FastVector2;
 
 class TranslateObjectNode extends LogicNode {
@@ -9,11 +10,14 @@ class TranslateObjectNode extends LogicNode {
 	}
 
 	override function run(from:Int) {
-        var name:String = inputs[1].get();
-        var vec2:FastVector2 = inputs[2].get();
-        var speed:Float = inputs[3].get();
+        var direction:FastVector2 = inputs[1].get();
+        var speed:Float = inputs[2].get();
         
-        Scene.getObject(name).transform.translate(vec2.x, vec2.y, speed);
+        tree.object.translate(function(data:MoveData){
+            data._positions.x += direction.x*speed;
+            data._positions.y += direction.y*speed;
+            return data;
+        });
 
 		runOutput(0);
 	}

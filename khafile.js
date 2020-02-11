@@ -4,6 +4,8 @@ project.addSources('Sources');
 project.addDefine("found");
 project.addParameter('found.trait');
 project.addParameter("--macro keep('found.trait')");
+project.addParameter('found.node');
+project.addParameter("--macro keep('found.node')");
 project.addLibrary('Libraries/foundsdk/hxmath');
 project.addLibrary('Libraries/foundsdk/echo');
 resolve(project);

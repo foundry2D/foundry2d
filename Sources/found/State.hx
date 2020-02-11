@@ -24,25 +24,121 @@ class State extends Scene {
 		super.render(canvas);
 	}
 
-	public function onKeyDown(keyCode:KeyCode){}
+	var keyDown:Array<KeyCode->Void> =[];
+	public function notifyOnKeyDown(fn:KeyCode->Void) {
+		keyDown.push(fn);
+	}
+	public function removeOnKeyDown(fn:KeyCode->Void){
+		keyDown.remove(fn);
+	}
+	public function onKeyDown(keyCode:KeyCode){
+		for(fn in keyDown){
+			fn(keyCode);
+		}
+	}
 
-	public function onKeyUp(keyCode:KeyCode){}
 
-	public function onMouseDown(button:Int, x:Int, y:Int){}
+	var keyUp:Array<KeyCode->Void> =[];
+	public function notifyOnKeyUp(fn:KeyCode->Void) {
+		keyUp.push(fn);
+	}
+	public function removeOnKeyUp(fn:KeyCode->Void){
+		keyUp.remove(fn);
+	}
+	public function onKeyUp(keyCode:KeyCode){
+		for(fn in keyUp){
+			fn(keyCode);
+		}
+	}
 
-	public function onMouseUp(button:Int, x:Int, y:Int){}
+	var mouseDown:Array<(Int,Int,Int)->Void> =[];
+	public function notifyOnMouseDown(fn:(Int,Int,Int)->Void) {
+		mouseDown.push(fn);
+	}
+	public function removeOnMouseDown(fn:(Int,Int,Int)->Void){
+		mouseDown.remove(fn);
+	}
+	public function onMouseDown(button:Int, x:Int, y:Int){
+		for(fn in mouseDown){
+			fn(button, x, y);
+		}
+	}
 
-	public function onMouseMove(x:Int, y:Int, cx:Int, cy:Int){}
+	var mouseUp:Array<(Int,Int,Int)->Void> =[];
+	public function notifyOnMouseUp(fn:(Int,Int,Int)->Void) {
+		mouseUp.push(fn);
+	}
+	public function removeOnMouseUp(fn:(Int,Int,Int)->Void){
+		mouseUp.remove(fn);
+	}
+	public function onMouseUp(button:Int, x:Int, y:Int){
+		for(fn in mouseUp){
+			fn(button, x, y);
+		}
+	}
 
-	public function onTouchDown(id:Int, x:Int, y:Int){}
+	var mouseMove:Array<(Int,Int,Int,Int)->Void> =[];
+	public function notifyOnMouseMove(fn:(Int,Int,Int,Int)->Void) {
+		mouseMove.push(fn);
+	}
+	public function removeOnMouseMove(fn:(Int,Int,Int,Int)->Void){
+		mouseMove.remove(fn);
+	}
+	public function onMouseMove(x:Int, y:Int, cx:Int, cy:Int){
+		for(fn in mouseMove){
+			fn(x, y, cx, cy);
+		}
+	}
 
-	public function onTouchUp(id:Int, x:Int, y:Int){}
+	var touchDown:Array<(Int,Int,Int)->Void> =[];
+	public function notifyOnTouchDown(fn:(Int,Int,Int)->Void) {
+		touchDown.push(fn);
+	}
+	public function onTouchDown(id:Int, x:Int, y:Int){
+		for(fn in touchDown){
+			fn(id, x, y);
+		}
+	}
 
-	public function onTouchMove(id:Int, x:Int, y:Int){}
+	var touchUp:Array<(Int,Int,Int)->Void> =[];
+	public function notifyOnTouchUp(fn:(Int,Int,Int)->Void) {
+		touchUp.push(fn);
+	}
+	public function onTouchUp(id:Int, x:Int, y:Int){
+		for(fn in touchUp){
+			fn(id, x, y);
+		}
+	}
 
-	public function onGamepadAxis(axis:Int, value:Float){}
+	var touchMove:Array<(Int,Int,Int)->Void> =[];
+	public function notifyOnTouchMove(fn:(Int,Int,Int)->Void) {
+		touchMove.push(fn);
+	}
+	public function onTouchMove(id:Int, x:Int, y:Int){
+		for(fn in touchMove){
+			fn(id, x, y);
+		}
+	}
 
-	public function onGamepadButton(button:Int, value:Float){}
+	var gamepadAxis:Array<(Int,Float)->Void> =[];
+	public function notifyOnGamepadAxis(fn:(Int,Float)->Void) {
+		gamepadAxis.push(fn);
+	}
+	public function onGamepadAxis(axis:Int, value:Float){
+		for(fn in gamepadAxis){
+			fn(axis, value);
+		}
+	}
+
+	var gamepadButton:Array<(Int,Float)->Void> =[];
+	public function notifyOnGamepadButton(fn:(Int,Float)->Void) {
+		gamepadButton.push(fn);
+	}
+	public function onGamepadButton(button:Int, value:Float){
+		for(fn in gamepadButton){
+			fn(button, value);
+		}
+	}
 
 	public static function setup(?loadingPath:String = ""){
 		_states = new Map<String, String>();

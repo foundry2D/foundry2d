@@ -1,29 +1,34 @@
 package found.node;
 
+import found.State;
 import kha.input.KeyCode;
 
 class OnKeyboardNode extends LogicNode {
 
-	public var operations1: String;
-	public var operations2: String;
-
+	public var keyboardEventType: String;
+	public var keyCode: String;
+    var func:KeyCode->Void;
 	public function new(tree: LogicTree) {
-		super(tree);
-		tree.notifyOnUpdate(update);
+        super(tree);
+        
+        tree.notifyOnUpdate(update);
+        func = function(p_keyCode:KeyCode){
+            if(getKeyboard(keyCode)==p_keyCode){
+                runOutput(0);
+            }
+        };
+        
 	}
 
-	function update() {
-		var keyboard = rice2d.system.Input.getKeyboard();
-		var bool = false;
-		switch (operations1) {
-            case "Started":
-                bool = keyboard.started(getKeyboard(operations2));
+	function update(dt:Float) {
+		switch (keyboardEventType) {
             case "Released":
-                bool = keyboard.released(getKeyboard(operations2));
+                State.active.notifyOnKeyUp(func);
+                State.active.removeOnKeyDown(func);
             case "Down":
-                bool = keyboard.down(getKeyboard(operations2));
+                State.active.notifyOnKeyDown(func);
+                State.active.removeOnKeyUp(func);
 		}
-		if (bool) runOutput(0);
 	}
 
     function getKeyboard(string:String):KeyCode {

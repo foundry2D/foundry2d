@@ -81,7 +81,7 @@ class Data {
 		var isJson = file.endsWith('.json');
 		var ext = (compressed || isJson || file.endsWith('.arm')) ? '' : '.arm';
 
-		getBlob(file + ext, function(b:kha.Blob) {
+		kha.FileSystem.getContent(file + ext, function(b:String) {
 			if (compressed) {
 				#if arm_compress
 				#end
@@ -89,8 +89,8 @@ class Data {
 
 			var parsed:TSceneFormat = null;
 			if (isJson) {
-				var s = b.toString();
-				parsed = /*s.charAt(0) == "{" ? */Json.parse(s) /*: ArmPack.decode(b.toBytes())*/;
+				// var s = b.toString();
+				parsed = /*s.charAt(0) == "{" ? */Json.parse(b) /*: ArmPack.decode(b.toBytes())*/;
 			}
 			else {
 				// parsed = ArmPack.decode(b.toBytes());
@@ -121,6 +121,7 @@ class Data {
 		loadingBlobs.set(file, [done]); // Start loading
 
 		var p = (file.charAt(0) == '/' || file.charAt(1) == ':') ? file : dataPath + file;
+		trace(p);
 		getData(p, function(b:kha.Blob) {
 			cachedBlobs.set(file, b);
 			for (f in loadingBlobs.get(file)) f(b);
@@ -140,6 +141,24 @@ class Data {
 		cachedBlobs.remove(handle);
 	}
 
+	#if wasmfs
+	static function getImageFromPath(path:String, readable:Bool, done:kha.Image -> Void, ?failed:Null<kha.AssetError -> Void>, ?pos:Null<haxe.PosInfos>){
+		var splitted = path.split('/');
+		var extension:String = splitted[splitted.length-1].split('.')[1];
+		getBlob(path,function(data:kha.Blob){
+			var bytes = data.toBytes();
+			kha.Image.fromEncodedBytes(bytes,extension,done,function(err:String){
+				if(failed != null){
+					var error:kha.AssetError = {url: path,error: err};
+					trace(err);
+					failed(error);
+				}
+			},readable);
+		});
+	}
+	#else
+	static var getImageFromPath = kha.Assets.loadImageFromPath; 
+	#end
     public static function getImage(file:String, done:kha.Image->Void, readable = false, format = 'RGBA32') {
 		#if (cpp || hl)
 		file = file.substring(0, file.length - 4) + '.k';
@@ -163,8 +182,9 @@ class Data {
 				assetsLoaded++;
 			});
 		}else{
+
 			// @:Incomplete: process format in Kha
-			kha.Assets.loadImageFromPath(p, readable, function(b:kha.Image) {
+			getImageFromPath(p, readable, function(b:kha.Image) {
 				cachedImages.set(file, b);
 				for (f in loadingImages.get(file)) f(b);
 				loadingImages.remove(file);

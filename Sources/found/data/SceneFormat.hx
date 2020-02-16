@@ -107,6 +107,17 @@ typedef TTilemapData = {
     @:optional public var flip:Vector2;
 }
 #if js
+typedef TCameraData = {
+    >TObj,
+#else
+@:structInit class TCameraData extends TObj {
+#end
+    public var speedX:Float;
+    public var speedY:Float;
+    public var offsetX:Int;
+    public var offsetY:Int;
+}
+#if js
 typedef TEmitterData = {
     >TObj,
 #else

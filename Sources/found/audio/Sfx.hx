@@ -3,7 +3,7 @@ package found.audio;
 import kha.Assets;
 import kha.audio1.Audio;
 
-import found.tool.Util;
+import found.math.Util;
 
 class Sfx {
   public static function play(name:String, ?volume:Float = 0.3){

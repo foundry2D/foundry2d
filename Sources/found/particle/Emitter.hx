@@ -8,7 +8,7 @@ import kha.Assets;
 import found.Found;
 import found.object.Entity;
 import found.particle.Particle;
-import found.tool.Util;
+import found.math.Util;
 
 class Emitter extends Entity {
 	public var arParticle:Array<Particle>;

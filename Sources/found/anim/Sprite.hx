@@ -20,7 +20,7 @@ import kha.math.Vector2;
 import kha.Assets;
 
 import found.object.Entity;
-import found.tool.Util;
+import found.math.Util;
 import found.data.Data;
 import found.data.SpriteData;
 import found.data.SceneFormat;

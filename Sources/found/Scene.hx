@@ -5,7 +5,7 @@ import found.node.Logic.TNodeCanvas;
 import kha.Blob;
 import found.anim.Tilemap;
 #if editor
-import found.tool.Util.Cli;
+import found.math.Util.Cli;
 #end
 import found.collide.Rectangle;
 import found.anim.Sprite;
@@ -13,6 +13,7 @@ import haxe.ds.ArraySort;
 import kha.Canvas;
 import kha.math.Vector2;
 import found.object.Object;
+import found.object.Camera;
 import found.object.Executor;
 import found.data.SceneFormat;
 import found.data.Data;
@@ -22,7 +23,7 @@ class Scene {
 	public final raw:TSceneFormat;
   public var root:Object;
   public static var ready:Bool = false;
-  public var cam:Vector2;
+  public var cam:Camera;
 
   public var countEntities(get, null):Int;
   public var _entities:Array<Object>;
@@ -50,7 +51,6 @@ class Scene {
     this.raw = raw; 
     _entities = new Array<Object>();
     // root = new Object();
-    cam = new Vector2();
 
     if(raw.physicsWorld != null){
       physics_world = echo.Echo.start(raw.physicsWorld);
@@ -97,7 +97,15 @@ class Scene {
           new Tilemap(data,function(tilemap:Tilemap){
             _entities.push(tilemap);
           });
-          
+        case "camera_object":
+          trace("Was created");
+          var data:TCameraData = SceneFormat.getData(e);
+          var out = new Camera(data);
+          if(cam == null)
+            cam = out;
+          out.raw = data;
+          createTraits(data.traits,out);
+          _entities.push(out);
         case "emitter_object":
         default://Object
           // var data:TSpriteData = SceneFormat.getData(e);

@@ -1,4 +1,4 @@
-package found.tool;
+package found.math;
 
 class Util {
 	public static function randomInt(value:Int):Int {

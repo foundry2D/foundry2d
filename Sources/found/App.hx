@@ -89,8 +89,10 @@ class App {
 	public function update(dt:Float):Void {
 		if (State.active != null){
 			State.active.update(dt);
-			screenOffsetX = State.active.cam.x;
-			screenOffsetY = State.active.cam.y;
+			if(State.active.cam != null){
+				screenOffsetX = State.active.cam.viewX;
+				screenOffsetY = State.active.cam.viewY;
+			}
 		}
 		#if tile_editor
 		frameCounter.update();

@@ -7,7 +7,7 @@ import kha.Assets;
 import kha.Image;
 
 import found.object.Entity;
-import found.tool.Util;
+import found.math.Util;
 
 class Texture extends Entity {
   public var image:Image;

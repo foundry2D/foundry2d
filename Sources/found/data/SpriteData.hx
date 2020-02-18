@@ -37,10 +37,9 @@ class SpriteData {
 			this.image = img;
 			anims = [];
 			name = this.raw.imagePath;
-			if(raw.animsPath!= null){
-				var i = 0;
-				for(a in raw.animsPath){
-					Data.getBlob(a,animLoaded);
+			if(raw.anims!= null){
+				for(a in raw.anims){
+					animLoad(a);
 				}
 				done(this);
 			}
@@ -53,8 +52,11 @@ class SpriteData {
 	public function addSubSprite(index:Int){
 		return anims.push(Animation.create(index))-1;
 	}
-	function animLoaded(data:Blob) {
-		var anim:TAnimation = haxe.Json.parse(data.toString());
-		anims.push(Animation.createRange(anim.min,anim.max,anim.fps));
+	function animLoad(anim:TAnimation) {
+		var indices:Array<Int> = [];
+		for(tile in anim.frames){
+			indices.push(tile.id);
+		}
+		anims.push(new Animation(indices,anim.fps,anim.frames));
 	}
 }

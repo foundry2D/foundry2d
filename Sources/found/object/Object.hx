@@ -45,7 +45,7 @@ class Object {
 		}
 		return this.raw;
 	}
-	static var uidCounter = 0;
+	static var uidCounter = -1;
 	public final uid:Int;
 	public var active(default, set):Bool = true;
 

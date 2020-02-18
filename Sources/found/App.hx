@@ -90,8 +90,8 @@ class App {
 		if (State.active != null){
 			State.active.update(dt);
 			if(State.active.cam != null){
-				screenOffsetX = State.active.cam.viewX;
-				screenOffsetY = State.active.cam.viewY;
+				screenOffsetX = State.active.cam.position.x;
+				screenOffsetY = State.active.cam.position.y;
 			}
 		}
 		#if tile_editor
@@ -347,7 +347,7 @@ private class FPS {
 	}
 	
 	public function render(canvas:kha.Canvas,inEditor = true): Void {
-		if(canvas.g2 == null) return;
+		if(canvas.g2 == null || State.active.cam == null) return;
 		if(ui == null)ui = new found.zui.Zui({font: kha.Assets.fonts.font_default});
 		var oldScale = ui.SCALE();
 		var width = 60;
@@ -358,7 +358,8 @@ private class FPS {
 			height*=2;
 		}
 		ui.begin(canvas.g2);
-		if(ui.window( found.zui.Id.handle(),0,0, width, height,false,0x00000000))ui.text('Fps: $fps');
+		var cam = State.active.cam.position;
+		if(ui.window( found.zui.Id.handle(),Std.int(cam.x),Std.int(cam.y), width, height,false,0x00000000))ui.text('Fps: $fps');
 		ui.end();
 		ui.setScale(oldScale);
 	}

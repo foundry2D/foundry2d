@@ -174,6 +174,7 @@ class State extends Scene {
 		
 	}
 	private static function loadState(raw:TSceneFormat){
+		App.reset();
 		active = new State(raw);
 	}
 	// Hooks

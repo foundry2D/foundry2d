@@ -9,26 +9,29 @@ Edited for the Kha Tutorial Series by Lewis Lepton
 https://lewislepton.com
 https://github.com/lewislepton/kha-tutorial-series
 */
+import found.data.SceneFormat.TTile;
 
 class Animation {
 	private var _indices: Array<Int>;
+	private var _frames: Array<TTile>;
 	private var _speeddiv: Int;
 	private var _count: Int;
 	private var _index: Int;
 	
 	public static function create(index: Int) {
 		var indices = [index];
-		return new Animation(indices, 1);
+		return new Animation(indices, 1,[]);
 	}
 	
 	public static function createRange(minindex: Int, maxindex: Int, speeddiv: Int): Animation {
 		var indices = new Array<Int>();
 		for (i in 0...maxindex - minindex + 1) indices.push(minindex + i);
-		return new Animation(indices, speeddiv);
+		return new Animation(indices, speeddiv,[]);
 	}
 	
-	public function new(indices: Array<Int>, speeddiv: Int) {
+	public function new(indices: Array<Int>, speeddiv: Int, frames:Array<TTile>) {
 		this._indices = indices;
+		this._frames = frames;
 		_index = 0;
 		this._speeddiv = speeddiv;
 	}
@@ -41,6 +44,7 @@ class Animation {
 	}
 	
 	public function get(): Int {
+		//@TODO: return TTile for rendering
 		return _indices[_index];
 	}
 	

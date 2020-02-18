@@ -78,7 +78,7 @@ typedef TSpriteData = {
     
     public var imagePath: String;
     @:optional public var flip:Vector2;
-    @:optional public var animsPath:Array<String>;
+    @:optional public var anims:Array<TAnimation>;
 }
 #if js
 typedef TTileData = {
@@ -134,6 +134,31 @@ typedef TAnimation = {
     public var min:Int;
     public var max:Int;
     public var fps:Int;
+    public var frames:Array<TTile>;
+}
+#if js
+typedef TTile = {
+    >TRectData,
+#else
+@:structInit class TTile extends TRectData{
+#end
+    //If no tx and ty are specified, id is considered an index.
+    //This is because of how animations work as of now. 
+    //@TODO: reevaluate these assumptions later
+    public var id:Int;
+    @:optional public var tx:Int;
+    @:optional public var ty:Int;
+    public var tw:Int;
+    public var th:Int;
+    @:optional public var movement:Array<TPos>;
+}
+#if js
+typedef TPos = {
+#else
+@:structInit class TPos{
+#end
+    public var position:Vector2;
+    public var rotation:Float;
 }
 #if js
 typedef TTrait = {

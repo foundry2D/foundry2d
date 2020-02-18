@@ -49,6 +49,7 @@ class TileEditor {
             curTile = map.tiles[0];
         }
         var newSelection = selectedMap;
+        var vec:kha.math.Vector2 =  new Vector2();
         if (ui.window(found.zui.Id.handle(),x,y, width, height, true)) {
 
             endHeight = ui._y;
@@ -245,7 +246,7 @@ class TileEditor {
         map.data[map.posXY2Id(px,py)] = tileSelected.index;
 
     }
-    var vec:kha.math.Vector2 =  new Vector2();
+
     public function selectMap(uid:Int){
         if(uid < 0){selectedMap = -1;return;}
         selectedMap = -1;
@@ -264,7 +265,7 @@ class TileEditor {
     function isInScreen(){
         #if editor
         var gv = App.editorui.gameView;
-        var x = Found.fullscreen ? 0: gv.x;
+        var x = Found.fullscreen ? 0: gv.x;//@TODO: Maybe we should use the current camera or tilemap x and y
         var y = Found.fullscreen ? 0:gv.y;
         var w = Found.fullscreen ? Found.WIDTH:gv.width;
         var h = Found.fullscreen ? Found.HEIGHT:gv.height;

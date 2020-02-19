@@ -108,7 +108,7 @@ class Data {
 		loadingSceneRaws.remove(file);
 	}
 
-	static var getData = #if wasmfs kha.FileSystem.getBytes#else kha.Assets.loadBlobFromPath#end;
+	static var getData = #if wasmfs kha.FileSystem.getData#else kha.Assets.loadBlobFromPath#end;
     // Raw assets
 	public static function getBlob(file:String, done:kha.Blob->Void) {
 		

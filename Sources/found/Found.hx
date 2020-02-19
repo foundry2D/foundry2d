@@ -35,8 +35,8 @@ class Found {
   #end
 
   #if tile_editor
-  public static var ui:found.zui.Zui;
-  public static var uiHandle = found.zui.Id.handle();
+  public static var ui:zui.Zui;
+  public static var uiHandle = zui.Id.handle();
   public static var tileeditor:found.tool.TileEditor;
   #end
 
@@ -89,7 +89,7 @@ class Found {
 				  render(framebuffer[0]);
 				});
         #if tile_editor
-        ui = new found.zui.Zui({font: kha.Assets.fonts.font_default});
+        ui = new zui.Zui({font: kha.Assets.fonts.font_default});
         tileeditor = new found.tool.TileEditor();
         #end
 			});

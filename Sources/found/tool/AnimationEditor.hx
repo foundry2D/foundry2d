@@ -1,9 +1,9 @@
 package found.tool;
 
-import found.zui.Id;
-import found.zui.Zui;
+import zui.Id;
+import zui.Zui;
 
-@:access(found.zui.Zui)
+@:access(zui.Zui)
 class AnimationEditor {
         var ui: Zui;
         public var visible:Bool;
@@ -46,7 +46,7 @@ class AnimationEditor {
                 ui._y = ty;
                 var state = ui.image(timeline);
                 
-                if(state == found.zui.Zui.State.Down ) {
+                if(state == zui.Zui.State.Down ) {
                     delta = Std.int(Math.abs(ui._windowX-ui.inputX) / 11 / ui.SCALE());
                 }
                 //Select Frame

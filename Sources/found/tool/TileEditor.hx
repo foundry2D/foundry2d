@@ -4,9 +4,9 @@ import kha.math.Vector2;
 import found.data.SpriteData;
 import kha.graphics4.Graphics2;
 import found.anim.Tilemap;
-import found.zui.Zui;
-import found.zui.Id;
-import found.zui.Ext;
+import zui.Zui;
+import zui.Id;
+import zui.Ext;
 import found.data.SceneFormat;
 import kha.Assets;
 
@@ -31,7 +31,7 @@ class TileEditor {
     var curTile:found.anim.Tile;
     public function new(visible = true) {
         this.visible = visible;
-        ui = new found.zui.Zui({font: kha.Assets.fonts.font_default});
+        ui = new zui.Zui({font: kha.Assets.fonts.font_default});
         width = Std.int(Found.WIDTH*0.175);
         height = Std.int(Found.HEIGHT*0.8);
     }
@@ -39,7 +39,7 @@ class TileEditor {
     var tileSelected:Selection = null;
     var tileHandle = Id.handle({value: 0});
     var unusedIds:Array<Int> = [];
-    @:access(found.zui.Zui,found.anim.Tilemap,found.anim.Tile)
+    @:access(zui.Zui,found.anim.Tilemap,found.anim.Tile)
     public function render(canvas:kha.Canvas): Void {
         if(!visible || selectedMap < 0)return;
         ui.begin(canvas.g2);
@@ -50,7 +50,7 @@ class TileEditor {
         }
         var newSelection = selectedMap;
         var vec:kha.math.Vector2 =  new Vector2();
-        if (ui.window(found.zui.Id.handle(),x,y, width, height, true)) {
+        if (ui.window(zui.Id.handle(),x,y, width, height, true)) {
 
             endHeight = ui._y;
 			if (ui.panel(Id.handle({selected: true}), "Tilemap editor")) {
@@ -80,7 +80,7 @@ class TileEditor {
                 }else{
                     ui.g.fillRect(tileSelected.x,tileSelected.y,tileSelected.w,tileSelected.h);
                 }
-                if(state == found.zui.Zui.State.Down || tileHandle.changed ){
+                if(state == zui.Zui.State.Down || tileHandle.changed ){
                     var x = Math.abs(ui._windowX-ui.inputX);
                     var y = Math.abs(ui._windowY-ui.inputY);
                     var imgX =(x-px)*invRatio;
@@ -261,7 +261,7 @@ class TileEditor {
     }
 
     var endHeight = 0.0;
-    @:access(found.zui.Zui)
+    @:access(zui.Zui)
     function isInScreen(){
         #if editor
         var gv = App.editorui.gameView;

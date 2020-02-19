@@ -1,6 +1,6 @@
 package found.node.data;
 
-import found.zui.Nodes.TNode;
+import zui.Nodes.TNode;
 import kha.math.FastVector2;
 
 class FoundryNode {

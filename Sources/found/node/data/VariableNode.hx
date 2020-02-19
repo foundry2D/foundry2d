@@ -1,7 +1,7 @@
 package found.node.data;
 
 import kha.Color;
-import found.zui.Nodes.TNode;
+import zui.Nodes.TNode;
 
 class VariableNode {
 

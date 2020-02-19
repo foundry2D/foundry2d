@@ -330,7 +330,7 @@ private class FPS {
 	var frames = 0;
 	var time = 0.0;
 	var lastTime = 0.0;
-	var ui:found.zui.Zui;
+	var ui:zui.Zui;
 	public function new() {	}
 
 	public function update():Int {
@@ -348,7 +348,7 @@ private class FPS {
 	
 	public function render(canvas:kha.Canvas,inEditor = true): Void {
 		if(canvas.g2 == null || State.active.cam == null) return;
-		if(ui == null)ui = new found.zui.Zui({font: kha.Assets.fonts.font_default});
+		if(ui == null)ui = new zui.Zui({font: kha.Assets.fonts.font_default});
 		var oldScale = ui.SCALE();
 		var width = 60;
 		var height = 20;
@@ -359,7 +359,7 @@ private class FPS {
 		}
 		ui.begin(canvas.g2);
 		var cam = State.active.cam.position;
-		if(ui.window( found.zui.Id.handle(),Std.int(cam.x),Std.int(cam.y), width, height,false,0x00000000))ui.text('Fps: $fps');
+		if(ui.window( zui.Id.handle(),Std.int(cam.x),Std.int(cam.y), width, height,false))ui.text('Fps: $fps');
 		ui.end();
 		ui.setScale(oldScale);
 	}

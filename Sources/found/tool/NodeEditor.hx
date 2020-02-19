@@ -4,9 +4,9 @@ package found.tool;
 import kha.Color;
 
 //Zui
-import found.zui.Id;
-import found.zui.Zui;
-import found.zui.Nodes;
+import zui.Id;
+import zui.Zui;
+import zui.Nodes;
 
 //Editor
 import found.data.SceneFormat.LogicTreeData;

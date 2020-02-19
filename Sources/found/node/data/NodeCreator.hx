@@ -1,8 +1,8 @@
 package found.node.data;
 
 import haxe.Json;
-import found.zui.Nodes;
-import found.zui.Nodes.TNode;
+import zui.Nodes;
+import zui.Nodes.TNode;
 
 class NodeCreator {
 

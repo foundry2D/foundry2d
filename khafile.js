@@ -8,4 +8,5 @@ project.addParameter('found.node');
 project.addParameter("--macro keep('found.node')");
 project.addLibrary('Libraries/foundsdk/hxmath');
 project.addLibrary('Libraries/foundsdk/echo');
+project.addLibrary('Libraries/foundsdk/zui');
 resolve(project);

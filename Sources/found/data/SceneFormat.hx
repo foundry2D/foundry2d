@@ -8,8 +8,8 @@ import kha.arrays.Uint32Array;
 import kha.arrays.Int16Array;
 
 // Zui
-import found.zui.Nodes;
-import found.zui.Nodes.TNodeCanvas;
+import zui.Nodes;
+import zui.Nodes.TNodeCanvas;
 
 class SceneFormat{
 

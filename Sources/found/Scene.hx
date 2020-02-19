@@ -25,6 +25,7 @@ class Scene {
   public static var ready:Bool = false;
   public var cam:Camera;
 
+  
   public var countEntities(get, null):Int;
   public var _entities:Array<Object>;
 
@@ -203,8 +204,26 @@ class Scene {
         g.fillRect(shape.x,shape.y,bounds.width,bounds.height);
       default:
     }
-  }
+  } 
   #end
+
+  public function getObjectNames():Array<String>{
+    var names = [];
+    for(object in _entities){
+      names.push(object.raw.name);
+    }
+    return names;
+  }
+
+  public function getObject(name:String){
+    for(object in _entities){
+      if(object.raw.name == name){
+          return object;
+      }
+    }
+    return null;
+
+  }
 
   
   public function get_countEntities():Int {

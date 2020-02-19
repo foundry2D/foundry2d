@@ -185,7 +185,6 @@ class Object {
 		if(body != null)
 			body.active = value;
 		if(value && active != value){
-			trace("Before add traits"+App.traitUpdates.length);
 			for(t in traits){
 				if (t._init != null) {
 					for (f in t._init) App.notifyOnInit(f);
@@ -203,7 +202,6 @@ class Object {
 					for (f in t._render2D) App.notifyOnRender2D(f);
 				}
 			}
-			trace("Should of add  traits"+App.traitUpdates.length);
 		}
 		else if(!value && active != value){
 			for(t in traits){

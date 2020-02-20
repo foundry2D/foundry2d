@@ -94,6 +94,9 @@ class App {
 				screenOffsetY = State.active.cam.position.y;
 			}
 		}
+		#if editor
+		editorui.update(dt);
+		#end
 		#if tile_editor
 		frameCounter.update();
 		#end

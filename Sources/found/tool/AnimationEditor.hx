@@ -1,5 +1,6 @@
 package found.tool;
 
+import kha.math.Vector2;
 import zui.Id;
 import zui.Zui;
 
@@ -13,7 +14,8 @@ class AnimationEditor {
         public static var y:Int;
         static var timeline:kha.Image = null;
         var curSprite:found.anim.Sprite;
-        var selectedUID:Int = -1;
+        public var selectedUID(default,set):Int = -1;
+        var windowHandle:zui.Zui.Handle = Id.handle();
         public function new(px:Int,py:Int,w:Int,h:Int) {
             this.visible = false;
             ui = new Zui({font: kha.Assets.fonts.font_default});
@@ -27,7 +29,32 @@ class AnimationEditor {
             width = w;
             height = h;
         }
+
+        function set_selectedUID(value:Int):Int{
+            var oldUid = selectedUID;
+            if(value < 0 && value > found.State.active._entities.length){
+                selectedUID = -1;
+            }
+            else{
+                var object = found.State.active._entities[value];
+                if(object.raw.type == "sprite_object"){
+                    curSprite = cast(object);
+                    selectedUID = value;
+                }
+                else {
+                    selectedUID = -1;
+                }
+            }
+            if(oldUid != selectedUID){
+                windowHandle.redraws = 2;
+            }
+            return selectedUID;
+        }
+
         var delta = 0.0;
+        var lastImage:String = "";
+        var doUpdate:Bool = false;
+        @:access(found.anim.Sprite)
         public function render(g:kha.graphics2.Graphics){
             if(!visible)return;
             g.end();
@@ -40,7 +67,19 @@ class AnimationEditor {
             }
 
             ui.begin(g);
-            if(ui.window(Id.handle(), AnimationEditor.x, AnimationEditor.y, AnimationEditor.width, AnimationEditor.height)){
+            if(curSprite != null && lastImage != curSprite.data.raw.imagePath){
+                lastImage = curSprite.data.raw.imagePath;
+                windowHandle.redraws = 2;//redraw
+            }
+            if(ui.window(windowHandle, AnimationEditor.x, AnimationEditor.y, AnimationEditor.width, AnimationEditor.height)){
+                if(ui.button("Play")){
+                    delta = 0.0;
+                    doUpdate = true;
+                }
+                if(ui.button("Stop")){
+                    delta = 0.0;
+                    doUpdate = false;
+                }
                 var ty = AnimationEditor.height - timeline.height;
                 animationPreview(delta,AnimationEditor.width,ty);
                 ui._y = ty;
@@ -76,17 +115,50 @@ class AnimationEditor {
             ui.end();
 		    g.begin(false);
         }
+        public function update(dt:Float) {
+            if(!visible)return;
 
-        function animationPreview(delta:Float,width:Int,height:Int){
-            if(selectedUID >= 0 && selectedUID < found.State.active._entities.length)return;
-            if(curSprite == null){
-                curSprite = cast(found.State.active._entities[selectedUID]);
+            if(doUpdate){
+                delta+=dt;
+                windowHandle.redraws = 2;//redraw
             }
+        }
+        var canvas:kha.Image;
+        var canvasScale:Vector2 = new Vector2();
+        var origDimensions:Vector2 = new Vector2();
+        function animationPreview(delta:Float,width:Int,height:Int){
+
             ui.g.color = 0xffffffff;
             var size = (width > height ? width:height)*0.25;
+            if(canvas == null){
+                canvas = kha.Image.createRenderTarget(Std.int(width*0.25),Std.int(height*0.25));
+                canvasScale.x = width/Found.WIDTH;
+                canvasScale.y  = height/Found.HEIGHT;
+            }
+            
             var rx = width*0.5 - size * 0.5;
             var ry = height*0.5 - size * 0.5;
+            if(selectedUID > 0){
+                if(curSprite.width*canvasScale.x > width || curSprite.height*canvasScale.y > height){
+                    canvasScale.x*= 0.5;
+                    canvasScale.y*= 0.5;
+                }
+                origDimensions.x = curSprite.scale.x;
+                origDimensions.y = curSprite.scale.y;
+                curSprite.scale.x = canvasScale.x;
+                curSprite.scale.y = canvasScale.y;
+                canvas.g2.pushTranslation(-curSprite.position.x+rx+size*0.125,-curSprite.position.y+height*0.5-size*0.125);
+                curSprite.render(canvas);
+                canvas.g2.popTransformation();
+                ui.g.drawImage(canvas,rx,ry);
+                curSprite.scale.x = origDimensions.x;
+                curSprite.scale.y = origDimensions.y;
+            }
             ui.g.drawRect(rx,ry,size,size);
+        }
+        function onResize(width:Int,height:Int){
+            canvas = kha.Image.createRenderTarget(Std.int(width*0.25),Std.int(height*0.25));
+            canvas.g2.clear(kha.Color.Transparent);
         }
         function drawTimeline(timelineLabelsHeight:Int, timelineFramesHeight:Int) {
             var sc = ui.SCALE();

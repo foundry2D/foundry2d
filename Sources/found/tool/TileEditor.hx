@@ -248,6 +248,8 @@ class TileEditor {
                 Found.mouseX > ui._windowX+width);
         return out;
     }
+    //@TODO: We should probably modify how we declare and use this
+    // We only ever  use values of 1.0 so...
     function scaleToScreen(w:Float,h:Float){
         #if editor
         var gv = App.editorui.gameView;

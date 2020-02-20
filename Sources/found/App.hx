@@ -179,13 +179,20 @@ class App {
 			editorui.keys.shift = false;
 		#end
 	}
-
+	#if tile_editor
+	var drawTile:Bool = false;
+	#end
 	public function onMouseDown(button:Int, x:Int, y:Int):Void {
 		Found.mouseX = Scaler.transformX(x, y, Found.backbuffer, ScreenCanvas.the, System.screenRotation);
 		Found.mouseY = Scaler.transformY(x, y, Found.backbuffer, ScreenCanvas.the, System.screenRotation);
 		if (State.active != null){
 			State.active.onMouseDown(button, Found.mouseX, Found.mouseY);
 		}
+		#if tile_editor
+		if(button == 0/* Left */){
+			drawTile = true;
+		}
+		#end
 	}
 
 	public function onMouseUp(button:Int, x:Int, y:Int):Void {
@@ -201,7 +208,7 @@ class App {
 		#end
 		#if tile_editor
 		if(button == 0/* Left */){
-			Found.tileeditor.addTile();
+			drawTile = false;
 		}
 		#end
 	}
@@ -215,6 +222,11 @@ class App {
 		#if editor
 		if(EditorUi.activeMouse){
 			editorui.updateMouse(Found.mouseX, Found.mouseY, cx, cy);
+		}
+		#end
+		#if tile_editor
+		if(drawTile){
+			Found.tileeditor.addTile();
 		}
 		#end
 	}

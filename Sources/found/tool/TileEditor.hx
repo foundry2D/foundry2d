@@ -151,36 +151,14 @@ class TileEditor {
             //Scale tile w/h
             //Scale image w/h
             var temp = scaleToScreen(1.0,1.0);
-            var px:Float = Math.abs(Found.mouseX) < Found.GRID*0.75 ? Found.mouseX-curTile._w*2: Found.mouseX-curTile._w;
-            var py:Float = Math.abs(Found.mouseY) < Found.GRID*0.75 ? Found.mouseY-curTile._h*2:Found.mouseY-curTile._h;
-            #if editor
-            var gv = App.editorui.gameView;
-            if(!Found.fullscreen){
-                px = Found.mouseX+curTile._w; //This seems hacky
-                py = Found.mouseY+curTile._h*0.5; //This seems hacky
-                px = ((px-gv.x)/gv.w)*Found.WIDTH;
-                py = ((py-gv.y)/gv.h)*Found.HEIGHT;
-                px = Math.floor(px);
-                px += (Found.GRID-(px % Found.GRID));
-                py = Math.floor(py);
-                py += (Found.GRID-(py % Found.GRID));
-                px = ((px+gv.x)/Found.WIDTH)*gv.w;
-                var value = Math.floor(px);
-                px = Math.floor(value-(px-value));
-                py = ((py+gv.y-gv.bar.height)/Found.HEIGHT)*gv.h;
-                value = Math.floor(py);
-                py = Math.floor(value-(py-value));
-            }
-            else{
-            #end
+            var px:Float = Found.mouseX;//Math.abs(Found.mouseX) < Found.GRID*0.75 ? Found.mouseX-curTile._w*2: Found.mouseX-curTile._w;
+            var py:Float = Found.mouseY;//Math.abs(Found.mouseY) < Found.GRID*0.75 ? Found.mouseY-curTile._h*2:Found.mouseY-curTile._h;
+            vec.x = px;
+            vec.y = py;
             px = Math.floor(px);
             px += (Found.GRID-(px % Found.GRID));
             py = Math.floor(py);
             py += (Found.GRID-(py % Found.GRID));
-            #if editor } #end
-            
-            vec.x = px;
-            vec.y = py;
 
             curTile.render(canvas,vec,kha.Color.fromBytes(255,255,255,128),new Vector2(temp.width,temp.height));
             canvas.g2.end();
@@ -206,37 +184,22 @@ class TileEditor {
                 break;
             }
         }
-
-        var px:Float = Math.abs(Found.mouseX) < Found.GRID*0.75 ? Found.mouseX-curTile._w*2: Found.mouseX-curTile._w;
-        var py:Float = Math.abs(Found.mouseY) < Found.GRID*0.75 ? Found.mouseY-curTile._h*2:Found.mouseY-curTile._h;
-        
+        var px:Float =0.0;
+        var py:Float = 0.0;
         #if editor
-        var gv = App.editorui.gameView;
         if(!Found.fullscreen){
-            px = Found.mouseX+curTile._w; //This seems hacky
-            py = Found.mouseY+curTile._h; //This seems hacky
-            //Find position in scene size
-            px = ((px-gv.x)/gv.w)*Found.WIDTH;
-            py = ((py-gv.y)/gv.h)*Found.HEIGHT;
-            px = Math.floor(px);
-            px += (Found.GRID-(px % Found.GRID));
-            py = Math.floor(py);
-            py += (Found.GRID-(py % Found.GRID));
-            //Convert back to scene preview size
-            px = ((px+gv.x)/Found.WIDTH)*gv.w;
-            var value = Math.floor(px);
-            px = Math.floor(value-(px-value));
-            py = ((py+gv.y-gv.bar.height)/Found.HEIGHT)*gv.h;
-            value = Math.floor(py);
-            py = Math.floor(value-(py-value));
-            //Back to scene size
-            // @:Incomplete We should be able to avoid this step.
-            // But doing it makes drawing in-editor mode more robust
-            px = ((px-gv.x)/gv.w)*Found.WIDTH;
-            py = ((py-gv.y)/gv.h)*Found.HEIGHT;
+            px = Found.mouseX;
+            py = Found.mouseY;
+            
+            var pos:kha.math.FastVector2 = new kha.math.FastVector2(px,py);  
+            pos = utilities.Conversion.ScreenToWorld(pos);
+            px = pos.x;
+            py = pos.y;
         }
         else{
         #end
+        px = Math.abs(Found.mouseX) < Found.GRID*0.75 ? Found.mouseX-curTile._w*2: Found.mouseX-curTile._w;
+        py = Math.abs(Found.mouseY) < Found.GRID*0.75 ? Found.mouseY-curTile._h*2:Found.mouseY-curTile._h;
         px = Math.floor(px);
         px += (Found.GRID-(px % Found.GRID));
         py = Math.floor(py);

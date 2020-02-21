@@ -353,7 +353,7 @@ class FoundryNode {
 		],
 		buttons: [
 			{
-				name: "objectList",
+				name: "selectedObjectName",
 				type: "ENUM",
 				data: [""],
 				output: 0,

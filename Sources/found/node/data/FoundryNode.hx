@@ -331,16 +331,7 @@ class FoundryNode {
 		type: "GetObjectNode",
 		x: 200,
 		y: 200,
-		inputs: [
-			{
-				id: 0,
-				node_id: 0,
-				name: "In",
-				type: "ACTION",
-				color: 0xffaa4444,
-				default_value: ""
-			}
-		],
+		inputs: [],
 		outputs: [
 			{
 				id: 0,

@@ -4,8 +4,7 @@ import kha.Color;
 import zui.Nodes.TNode;
 
 class VariableNode {
-
-	public static var string: TNode = {
+	public static var string:TNode = {
 		id: 0,
 		name: "String",
 		type: "StringNode",
@@ -35,7 +34,7 @@ class VariableNode {
 		buttons: []
 	}
 
-	public static var float: TNode = {
+	public static var float:TNode = {
 		id: 0,
 		name: "Float",
 		type: "FloatNode",
@@ -66,7 +65,7 @@ class VariableNode {
 		buttons: []
 	}
 
-	public static var int: TNode = {
+	public static var int:TNode = {
 		id: 0,
 		name: "Int",
 		type: "IntegerNode",
@@ -98,7 +97,7 @@ class VariableNode {
 		buttons: []
 	}
 
-	public static var boolean: TNode = {
+	public static var boolean:TNode = {
 		id: 0,
 		name: "Boolean",
 		type: "BoolNode",
@@ -128,4 +127,43 @@ class VariableNode {
 		buttons: []
 	}
 
+	public static var vector2:TNode = {
+		id: 0,
+		name: "Vector2",
+		type: "Vector2Node",
+		x: 200,
+		y: 200,
+		color: -16067936,
+		inputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name: "X",
+				type: "VALUE",
+				color: -10183681,
+				default_value: 0.0,
+				max: 100.0
+			},
+			{
+				id: 1,
+				node_id: 0,
+				name: "Y",
+				type: "VALUE",
+				color: -10183681,
+				default_value: 0.0,
+				max: 100.0
+			}
+		],
+		outputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name: "Vec2",
+				type: "VECTOR2",
+				color: -7929601,
+				default_value: [0.0, 0.0]
+			}
+		],
+		buttons: []
+	}
 }

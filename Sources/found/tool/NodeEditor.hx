@@ -124,6 +124,8 @@ class NodeEditor {
 					// ui.button("Array");
 					if (ui.button("Boolean"))
 						pushNodeToSelectedGroup(VariableNode.boolean);
+					if(ui.button("Vector2"))
+						pushNodeToSelectedGroup(VariableNode.vector2);
 				}
 				if (ui.panel(Id.handle(), "Std")) {
 					if (ui.button("Print"))

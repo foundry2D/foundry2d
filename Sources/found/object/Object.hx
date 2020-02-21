@@ -276,8 +276,14 @@ class Object {
 	 * @param	c The class of type Trait to attempt to retrieve.
 	 * @return	Trait or null
 	 */
-	public function getTrait<T:Trait>(c:Class<T>):T {
-		for (t in traits) if (Type.getClass(t) == cast c) return cast t;
+	public function getTrait<T:Trait>(c:Class<T>,?name:String):T {
+		for (t in traits) {
+			if (Type.getClass(t) == cast c) {
+				if(name == null || (name != null && t.name == name)) {
+					return cast t;
+				} 			
+			}
+		}
 		return null;
 	}
 }

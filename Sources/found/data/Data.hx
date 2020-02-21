@@ -110,10 +110,10 @@ class Data {
 
 	static var getData = #if wasmfs kha.FileSystem.getData#else kha.Assets.loadBlobFromPath#end;
     // Raw assets
-	public static function getBlob(file:String, done:kha.Blob->Void) {
+	public static function getBlob(file:String, done:kha.Blob->Void, ?reload:Bool = false) {
 		
 		var cached = cachedBlobs.get(file); // Is already cached
-		if (cached != null) { done(cached); return; }
+		if (cached != null && !reload) { done(cached); return; }
 
 		var loading = loadingBlobs.get(file); // Is already being loaded
 		if (loading != null) { loading.push(done); return; }

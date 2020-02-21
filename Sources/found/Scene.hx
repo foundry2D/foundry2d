@@ -281,15 +281,18 @@ class Scene {
   static function createTraits(traits:Array<TTrait>, object:Object) {
 		if (traits == null) return;
 		for (t in traits) {
-      if(t.type == "VisualScript"){
-        Data.getBlob(t.class_name,function(blob:kha.Blob){
-            var node:LogicTreeData = haxe.Json.parse(blob.toString());
-            var visualTrait = Logic.parse(node);
-            trace(visualTrait);
-            // object.removeTrait(visualTrait);
-            object.addTrait(visualTrait);
-            addToApp(visualTrait);
-        });
+      if (t.type == "VisualScript") {
+        Data.getBlob(t.class_name, function(blob:kha.Blob) {
+          var node:LogicTreeData = haxe.Json.parse(blob.toString());
+          var visualTrait = Logic.parse(node);
+          visualTrait.name = t.class_name;
+          var existentTrait = object.getTrait(Type.getClass(visualTrait), visualTrait.name);
+          if (existentTrait != null) {
+            object.removeTrait(existentTrait);
+          }
+          object.addTrait(visualTrait);
+          addToApp(visualTrait);
+        }, true);
       }
 			else if (t.type == "Script") {
 				// Assign arguments if any

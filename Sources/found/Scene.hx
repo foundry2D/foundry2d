@@ -99,7 +99,6 @@ class Scene {
             _entities.push(tilemap);
           });
         case "camera_object":
-          trace("Was created");
           var data:TCameraData = SceneFormat.getData(e);
           var out = new Camera(data);
           if(cam == null)
@@ -216,6 +215,7 @@ class Scene {
   }
 
   public function getObject(name:String){
+    if(name=="" || name == null)return null;
     for(object in _entities){
       if(object.raw.name == name){
           return object;

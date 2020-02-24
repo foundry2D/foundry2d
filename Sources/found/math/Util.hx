@@ -28,6 +28,11 @@ class Util {
 	public static function radToDeg(radians:Float):Float {
 		return radians * 180 / Math.PI;
 	}
+	public static function fround( value : Float, precision : Int): Float {
+		value = value * Math.pow(10, precision);
+		value = Math.round( value ) / Math.pow(10, precision);
+		return value;
+	}
 }
 
 /**

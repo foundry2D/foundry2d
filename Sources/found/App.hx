@@ -149,23 +149,7 @@ class App {
 			State.active.onKeyDown(keyCode);
 		}
 		#if editor
-		if(keyCode == KeyCode.F11){
-			Found.fullscreen = !Found.fullscreen;
-		}
-		if(keyCode == KeyCode.F1){
-			EditorUi.arrowMode = 0;
-		}
-		if(keyCode == KeyCode.F2){
-			EditorUi.arrowMode = 1;
-		}
-		if(keyCode == KeyCode.S && editorui.keys.ctrl)
-			editorui.saveSceneData();
-		if(keyCode == KeyCode.Control)
-			editorui.keys.ctrl = true;
-		if(keyCode == KeyCode.Alt)
-			editorui.keys.alt = true;
-		if(keyCode == KeyCode.Shift)
-			editorui.keys.shift = true;
+		editorui.onKeyDown(keyCode);
 		#end
 	}
 
@@ -174,12 +158,7 @@ class App {
 			State.active.onKeyUp(keyCode);
 		}
 		#if editor
-		if(keyCode == KeyCode.Control)
-			editorui.keys.ctrl = false;
-		if(keyCode == KeyCode.Alt)
-			editorui.keys.alt = false;
-		if(keyCode == KeyCode.Shift)
-			editorui.keys.shift = false;
+		editorui.onKeyDown(keyCode);
 		#end
 	}
 	#if tile_editor
@@ -191,6 +170,9 @@ class App {
 		if (State.active != null){
 			State.active.onMouseDown(button, Found.mouseX, Found.mouseY);
 		}
+		#if editor
+		editorui.onMouseDown(button,x,y);
+		#end
 		#if tile_editor
 		if(button == 0/* Left */){
 			drawTile = true;
@@ -205,9 +187,7 @@ class App {
 			State.active.onMouseUp(button, Found.mouseX, Found.mouseY);
 		}
 		#if editor
-		if(EditorUi.activeMouse && button == 0/* Left */){
-			EditorUi.activeMouse = false;
-		}
+		editorui.onMouseUp(button,x,y);
 		#end
 		#if tile_editor
 		if(button == 0/* Left */){
@@ -223,6 +203,7 @@ class App {
 			State.active.onMouseMove(Found.mouseX, Found.mouseY, cx, cy);
 		}
 		#if editor
+		editorui.onMouseMove(Found.mouseX, Found.mouseY, cx, cy);
 		if(EditorUi.activeMouse){
 			editorui.updateMouse(Found.mouseX, Found.mouseY, cx, cy);
 		}
@@ -374,6 +355,7 @@ private class FPS {
 		}
 		ui.begin(canvas.g2);
 		var cam = State.active.cam.position;
+		ui.t.ACCENT_COL =ui.t.WINDOW_BG_COL= kha.Color.Transparent;
 		if(ui.window( zui.Id.handle(),Std.int(cam.x),Std.int(cam.y), width, height,false))ui.text('Fps: $fps');
 		ui.end();
 		ui.setScale(oldScale);

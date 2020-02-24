@@ -1,5 +1,6 @@
 package found.tool;
 
+import found.math.Util;
 import kha.math.Vector2;
 import zui.Id;
 import zui.Zui;
@@ -54,6 +55,8 @@ class AnimationEditor {
         var delta = 0.0;
         var lastImage:String = "";
         var doUpdate:Bool = false;
+        var numberOfFrames:Float = 67.0;
+        var animAction:Array<Float> = [];
         @:access(found.anim.Sprite)
         public function render(g:kha.graphics2.Graphics){
             if(!visible)return;
@@ -66,17 +69,32 @@ class AnimationEditor {
                 drawTimeline(timelineLabelsHeight, timelineFramesHeight);
             }
 
+            numberOfFrames = timeline.width / (11 * sc)-1;
             ui.begin(g);
             if(curSprite != null && lastImage != curSprite.data.raw.imagePath){
                 lastImage = curSprite.data.raw.imagePath;
                 windowHandle.redraws = 2;//redraw
             }
             if(ui.window(windowHandle, AnimationEditor.x, AnimationEditor.y, AnimationEditor.width, AnimationEditor.height)){
-                if(ui.button("Play")){
-                    delta = 0.0;
-                    doUpdate = true;
+                ui.row([0.5,0.5]);
+                if(delta > numberOfFrames){
+                    delta = numberOfFrames;
+                    doUpdate = false;
                 }
-                if(ui.button("Stop")){
+                var state:String = doUpdate ? "Pause": "Play";
+                if(ui.button(state)){
+                    if(doUpdate){
+                        doUpdate = false;
+                    }
+                    else if (delta >= numberOfFrames) {
+                        delta = 0.0;
+                        doUpdate = true;
+                    }
+                    else {
+                        doUpdate = true;
+                    }
+                }
+                if(ui.button("Reset")){
                     delta = 0.0;
                     doUpdate = false;
                 }
@@ -100,7 +118,8 @@ class AnimationEditor {
                 var frameIndicatorPadding = 4 * sc;
                 var frameIndicatorWidth = 30 * sc;
                 var frameIndicatorHeight = timelineLabelsHeight - frameIndicatorMargin * 2;
-                var frameTextWidth = kha.Assets.fonts.font_default.width(ui.g.fontSize, "" + delta);
+
+                var frameTextWidth = kha.Assets.fonts.font_default.width(ui.g.fontSize, "" + 99.00 );
                 
                 // Scale the indicator if the contained text is too long
                 if (frameTextWidth > frameIndicatorWidth + frameIndicatorPadding) {
@@ -108,7 +127,7 @@ class AnimationEditor {
                 }
                 ui.g.fillRect(delta * 11 * sc + 5 * sc - frameIndicatorWidth / 2, ty + frameIndicatorMargin, frameIndicatorWidth, frameIndicatorHeight);
                 ui.g.color = 0xffffffff;
-                ui.g.drawString("" + delta, delta * 11 * sc + 5 * sc - frameTextWidth / 2, ty + timelineLabelsHeight / 2 - g.fontSize / 2);
+                ui.g.drawString("" + Util.fround(delta,2), delta * 11 * sc + 5 * sc - frameTextWidth / 2, ty + timelineLabelsHeight / 2 - g.fontSize / 2);
 
             }
             
@@ -137,7 +156,7 @@ class AnimationEditor {
             }
             
             var rx = width*0.5 - size * 0.5;
-            var ry = height*0.5 - size * 0.5;
+            var ry = height*0.5 - size * 0.5+ui.BUTTON_H()*0.5;
             if(selectedUID > 0){
                 if(curSprite.width*canvasScale.x > width || curSprite.height*canvasScale.y > height){
                     canvasScale.x*= 0.5;

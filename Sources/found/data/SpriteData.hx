@@ -50,7 +50,7 @@ class SpriteData {
 		});
 	}
 	public function addSubSprite(index:Int){
-		var frame:TFrame = {id:index,tw:Std.int(raw.width),th:Std.int(raw.height)};
+		var frame:TFrame = {id:index,start:0.0,tw:Std.int(raw.width),th:Std.int(raw.height)};
 		return anims.push(Animation.create(frame))-1;
 	}
 	function animLoad(anim:TAnimation) {

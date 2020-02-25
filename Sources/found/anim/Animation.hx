@@ -13,9 +13,9 @@ class Animation {
 		return new Animation([frame], 1);
 	}
 	
-	public static function createFrames(width:Int,height:Int,maxindex: Int, speeddiv: Int): Animation {
+	public static function createFrames(width:Int,height:Int,maxindex: Int, speeddiv: Int,?step:Float = 0.1): Animation {
 		var frames = new Array<TFrame>();
-		for (i in 0...maxindex) frames.push({id:i,tw:width,th:height});
+		for (i in 0...maxindex) frames.push({id:i,start:step*i,tw:width,th:height});
 		return new Animation(frames, speeddiv);
 	}
 	

@@ -131,7 +131,9 @@ typedef TAnimation = {
 #else
 @:structInit class TAnimation {
 #end
+    public var name:String;
     public var numFrames:Int;
+    public var time:Float;
     public var fps:Int;
     public var frames:Array<TFrame>;
 }
@@ -144,6 +146,8 @@ typedef TFrame = {
     //This is because of how animations work as of now. 
     //@TODO: reevaluate these assumptions later
     public var id:Int;
+    public var start:Float;
+    @:optional public var end:Float;
     @:optional public var tx:Int;
     @:optional public var ty:Int;
     public var tw:Int;

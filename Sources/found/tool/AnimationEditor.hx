@@ -1,9 +1,13 @@
 package found.tool;
 
+
 import found.math.Util;
+import found.data.SceneFormat;
 import kha.math.Vector2;
+
 import zui.Id;
 import zui.Zui;
+import zui.Ext;
 
 @:access(zui.Zui)
 class AnimationEditor {
@@ -17,10 +21,12 @@ class AnimationEditor {
         var curSprite:found.anim.Sprite;
         public var selectedUID(default,set):Int = -1;
         var windowHandle:zui.Zui.Handle = Id.handle();
+        var timelineHandle:zui.Zui.Handle = Id.handle();
         public function new(px:Int,py:Int,w:Int,h:Int) {
             this.visible = false;
             ui = new Zui({font: kha.Assets.fonts.font_default});
             setAll(px,py,w,h);
+            windowHandle.scrollEnabled = true;
 
         }
     
@@ -57,6 +63,7 @@ class AnimationEditor {
         var doUpdate:Bool = false;
         var numberOfFrames:Float = 67.0;
         var animAction:Array<Float> = [];
+        var curFrames:Array<TFrame> = [];
         @:access(found.anim.Sprite)
         public function render(g:kha.graphics2.Graphics){
             if(!visible)return;
@@ -73,9 +80,12 @@ class AnimationEditor {
             ui.begin(g);
             if(curSprite != null && lastImage != curSprite.data.raw.imagePath){
                 lastImage = curSprite.data.raw.imagePath;
-                windowHandle.redraws = 2;//redraw
+                curFrames = curSprite.data.raw.anims != null ? curSprite.data.raw.anims[0].frames : [];
+                frameHandles = []; 
+                timelineHandle.redraws = windowHandle.redraws = 2;//redraw
             }
-            if(ui.window(windowHandle, AnimationEditor.x, AnimationEditor.y, AnimationEditor.width, AnimationEditor.height)){
+            var ty = AnimationEditor.height - timeline.height;
+            if(ui.window(windowHandle, AnimationEditor.x, AnimationEditor.y, AnimationEditor.width, ty)){
                 ui.row([0.5,0.5]);
                 if(delta > numberOfFrames){
                     delta = numberOfFrames;
@@ -98,17 +108,23 @@ class AnimationEditor {
                     delta = 0.0;
                     doUpdate = false;
                 }
-                var ty = AnimationEditor.height - timeline.height;
-                animationPreview(delta,AnimationEditor.width,ty);
-                ui._y = ty;
+
+                ui.row([0.75,0.25]);
+
+                if(ui.panel(Id.handle({selected: true}),'',false,false,false)){
+                    animationPreview(delta,AnimationEditor.width,ty);
+                }
+                Ext.panelList(ui,Id.handle({selected: true,layout:0}),curFrames,addItem,null,getName,setName,drawItem,false);
+
+            }
+            if(ui.window(timelineHandle,AnimationEditor.x, AnimationEditor.y+ty,AnimationEditor.width, timeline.height)){
                 var state = ui.image(timeline);
-                
                 if(state == zui.Zui.State.Down ) {
                     delta = Std.int(Math.abs(ui._windowX-ui.inputX) / 11 / ui.SCALE());
                 }
                 //Select Frame
                 ui.g.color = 0xff205d9c;
-                ui.g.fillRect(delta*11*sc,ty + timelineLabelsHeight, 10 * sc, timelineFramesHeight);
+                ui.g.fillRect(delta*11*sc,timelineLabelsHeight, 10 * sc, timelineFramesHeight);
 
                 // Show selected frame number
                 ui.g.font = kha.Assets.fonts.font_default;
@@ -125,21 +141,62 @@ class AnimationEditor {
                 if (frameTextWidth > frameIndicatorWidth + frameIndicatorPadding) {
                     frameIndicatorWidth = frameTextWidth + frameIndicatorPadding;
                 }
-                ui.g.fillRect(delta * 11 * sc + 5 * sc - frameIndicatorWidth / 2, ty + frameIndicatorMargin, frameIndicatorWidth, frameIndicatorHeight);
+                ui.g.fillRect(delta * 11 * sc + 5 * sc - frameIndicatorWidth / 2,frameIndicatorMargin, frameIndicatorWidth, frameIndicatorHeight);
                 ui.g.color = 0xffffffff;
-                ui.g.drawString("" + Util.fround(delta,2), delta * 11 * sc + 5 * sc - frameTextWidth / 2, ty + timelineLabelsHeight / 2 - g.fontSize / 2);
-
+                ui.g.drawString("" + Util.fround(delta,2), delta * 11 * sc + 5 * sc - frameTextWidth / 2,timelineLabelsHeight / 2 - g.fontSize / 2);
             }
             
             ui.end();
 		    g.begin(false);
+        }
+        function addItem(name:String){
+            var frame:TFrame =  {id:0,start:delta,tw: 0,th:0};
+            var id = curFrames.push(frame)-1;
+            var handles = [];
+            for(i in 0...5){
+                handles.push(Id.handle({value:0}));
+            }
+            frameHandles.push(handles);
+            frame.id = id;
+        }
+        function getName(i:Int){
+            return "Index : "+curFrames[i].id;
+        }
+        function setName(i:Int,name:String){
+            return;
+        }
+        var frameHandles:Array<Array<zui.Zui.Handle>> = [];
+        function drawItem(handle:Handle,i:Int){
+            var cur:TFrame = curFrames[i];
+            
+            var startHandle = frameHandles[i][0];
+            var xHandle = frameHandles[i][1];
+            var yHandle = frameHandles[i][2];
+            var wHandle = frameHandles[i][3];
+            var hHandle = frameHandles[i][4];
+
+            startHandle.value = cur.start;
+            cur.start = Std.int(Ext.floatInput(ui,startHandle,"Start"));
+
+            xHandle.value = cur.tx != null ? cur.tx :0;
+            cur.tx = Std.int(Ext.floatInput(ui,xHandle,"Tile X"));
+
+            yHandle.value = cur.ty != null ? cur.ty :0;
+            cur.ty = Std.int(Ext.floatInput(ui,yHandle,"Tile Y"));
+
+            wHandle.value = cur.tw;
+            cur.tw = Std.int(Ext.floatInput(ui,wHandle,"Tile Width"));
+
+            hHandle.value = cur.th;
+            cur.th = Std.int(Ext.floatInput(ui,hHandle,"Tile Height"));
+
         }
         public function update(dt:Float) {
             if(!visible)return;
 
             if(doUpdate){
                 delta+=dt;
-                windowHandle.redraws = 2;//redraw
+                timelineHandle.redraws = windowHandle.redraws = 2;//redraw
             }
         }
         var canvas:kha.Image;

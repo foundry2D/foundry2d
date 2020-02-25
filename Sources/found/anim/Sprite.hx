@@ -71,10 +71,15 @@ class Sprite extends Entity {
 		if(data == null)return;
 		super.render(canvas);
 		if (data.image != null) {
+			var frame = data.animation.get();
+			var tx = frame.tx != null ? frame.tx: Std.int(frame.id * _w) % data.image.width;
+			var ty = frame.ty != null ? frame.ty: Math.floor(frame.id * _w / data.image.width) * _h;
+			var w = width*scale.x;
+			var h = height*scale.y;
 			canvas.g2.color = Color.White;
 			canvas.g2.pushTranslation(position.x,position.y);
-			canvas.g2.rotate(Util.degToRad(rotation.z), position.x + width/ 2,position.y + height/ 2);
-			canvas.g2.drawScaledSubImage(data.image, Std.int(data.animation.get() * _w) % data.image.width, Math.floor(data.animation.get() * _w / data.image.width) * _h, _w, _h, (flip.x > 0.0 ? width:0), (flip.y > 0.0 ? height:0), (flip.x > 0.0 ? -width:width), (flip.y > 0.0 ? -height:height));
+			canvas.g2.rotate(Util.degToRad(rotation.z), position.x + w/ 2,position.y + h/ 2);
+			canvas.g2.drawScaledSubImage(data.image,tx , ty, frame.tw, frame.th, (flip.x > 0.0 ? w:0), (flip.y > 0.0 ? h:0), (flip.x > 0.0 ? -w:w), (flip.y > 0.0 ? -h:h));
 			canvas.g2.popTransformation();
 		}
 	}
@@ -87,6 +92,10 @@ class Sprite extends Entity {
 				this.width = this.data.raw.width = p_data.image.width;
 				this.height = this.data.raw.height= p_data.image.height;
 				this.raw = this.data.raw;
+				if(!this.data.animatable){
+					this.data.animation.get().tw = Std.int(width);
+					this.data.animation.get().th = Std.int(height);
+				}
 				#if editor
 				if(EditorHierarchy.inspector != null)
 					EditorHierarchy.inspector.updateField(uid,"imagePath",this.raw);

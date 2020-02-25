@@ -143,7 +143,6 @@ class AnimationEditor {
             }
         }
         var canvas:kha.Image;
-        var canvasScale:Vector2 = new Vector2();
         var origDimensions:Vector2 = new Vector2();
         function animationPreview(delta:Float,width:Int,height:Int){
 
@@ -151,22 +150,23 @@ class AnimationEditor {
             var size = (width > height ? width:height)*0.25;
             if(canvas == null){
                 canvas = kha.Image.createRenderTarget(Std.int(width*0.25),Std.int(height*0.25));
-                canvasScale.x = width/Found.WIDTH;
-                canvasScale.y  = height/Found.HEIGHT;
             }
             
             var rx = width*0.5 - size * 0.5;
             var ry = height*0.5 - size * 0.5+ui.BUTTON_H()*0.5;
             if(selectedUID > 0){
-                if(curSprite.width*canvasScale.x > width || curSprite.height*canvasScale.y > height){
-                    canvasScale.x*= 0.5;
-                    canvasScale.y*= 0.5;
+                var scale = 1.0;
+                if(width > height){
+                    scale = curSprite.width > width*0.25 ? width*0.25/curSprite.width:1.0;
+                }
+                else{
+                    scale = curSprite.height > height*0.25 ? height*0.25/curSprite.height:1.0;
                 }
                 origDimensions.x = curSprite.scale.x;
                 origDimensions.y = curSprite.scale.y;
-                curSprite.scale.x = canvasScale.x;
-                curSprite.scale.y = canvasScale.y;
-                canvas.g2.pushTranslation(-curSprite.position.x+rx+size*0.125,-curSprite.position.y+height*0.5-size*0.125);
+                curSprite.scale.x = scale;
+                curSprite.scale.y = scale;
+                canvas.g2.pushTranslation(-curSprite.position.x+rx+size*0.25,-curSprite.position.y+ry+size*0.25);
                 curSprite.render(canvas);
                 canvas.g2.popTransformation();
                 ui.g.drawImage(canvas,rx,ry);

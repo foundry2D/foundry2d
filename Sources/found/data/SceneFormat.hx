@@ -131,16 +131,14 @@ typedef TAnimation = {
 #else
 @:structInit class TAnimation {
 #end
-    public var min:Int;
-    public var max:Int;
+    public var numFrames:Int;
     public var fps:Int;
-    public var frames:Array<TTile>;
+    public var frames:Array<TFrame>;
 }
 #if js
-typedef TTile = {
-    >TRectData,
+typedef TFrame = {
 #else
-@:structInit class TTile extends TRectData{
+@:structInit class TFrame{
 #end
     //If no tx and ty are specified, id is considered an index.
     //This is because of how animations work as of now. 

@@ -18,7 +18,7 @@ class SpriteData {
 	@:access(found.anim.Animation)
 	function get_animatable(){
 		if(anims == null)return false;
-		return animation._indices.length >1;
+		return animation._frames.length >1;
 	}
 	public var curAnim(default,set):Int = 0;
 	function set_curAnim(index:Int){
@@ -50,13 +50,10 @@ class SpriteData {
 		});
 	}
 	public function addSubSprite(index:Int){
-		return anims.push(Animation.create(index))-1;
+		var frame:TFrame = {id:index,tw:Std.int(raw.width),th:Std.int(raw.height)};
+		return anims.push(Animation.create(frame))-1;
 	}
 	function animLoad(anim:TAnimation) {
-		var indices:Array<Int> = [];
-		for(tile in anim.frames){
-			indices.push(tile.id);
-		}
-		anims.push(new Animation(indices,anim.fps,anim.frames));
+		anims.push(new Animation(anim.frames,anim.fps));
 	}
 }

@@ -1,51 +1,39 @@
 package found.anim;
 
-/*
-Originally coded & created by Robert Konrad
-http://robdangero.us
-https://github.com/Kha-Samples/Kha2D
 
-Edited for the Kha Tutorial Series by Lewis Lepton
-https://lewislepton.com
-https://github.com/lewislepton/kha-tutorial-series
-*/
-import found.data.SceneFormat.TTile;
+import found.data.SceneFormat.TFrame;
 
 class Animation {
-	private var _indices: Array<Int>;
-	private var _frames: Array<TTile>;
+	private var _frames: Array<TFrame>;
 	private var _speeddiv: Int;
 	private var _count: Int;
 	private var _index: Int;
 	
-	public static function create(index: Int) {
-		var indices = [index];
-		return new Animation(indices, 1,[]);
+	public static function create(frame: TFrame) {
+		return new Animation([frame], 1);
 	}
 	
-	public static function createRange(minindex: Int, maxindex: Int, speeddiv: Int): Animation {
-		var indices = new Array<Int>();
-		for (i in 0...maxindex - minindex + 1) indices.push(minindex + i);
-		return new Animation(indices, speeddiv,[]);
+	public static function createFrames(width:Int,height:Int,maxindex: Int, speeddiv: Int): Animation {
+		var frames = new Array<TFrame>();
+		for (i in 0...maxindex) frames.push({id:i,tw:width,th:height});
+		return new Animation(frames, speeddiv);
 	}
 	
-	public function new(indices: Array<Int>, speeddiv: Int, frames:Array<TTile>) {
-		this._indices = indices;
+	public function new(frames:Array<TFrame>,speeddiv: Int) {
 		this._frames = frames;
 		_index = 0;
 		this._speeddiv = speeddiv;
 	}
 	
 	public function take(animation: Animation) {
-		if (_indices == animation._indices) return;
-		_indices = animation._indices;
+		if (_frames == animation._frames) return;
+		_frames = animation._frames;
 		_speeddiv = animation._speeddiv;
 		reset();
 	}
 	
-	public function get(): Int {
-		//@TODO: return TTile for rendering
-		return _indices[_index];
+	public function get(): TFrame {
+		return _frames[_index];
 	}
 	
 	public function getIndex(): Int {
@@ -53,14 +41,14 @@ class Animation {
 	}
 	
 	public function setIndex(index: Int): Void {
-		if (index < _indices.length) this._index = index;
+		if (index < _frames.length) this._index = index;
 	}
 	
 	public function next(): Bool {
 		++_count;
 		if (_count % _speeddiv == 0) {
 			++_index;
-			if (_index >= _indices.length) {
+			if (_index >= _frames.length) {
 				_index = 0;
 				return false;
 			}

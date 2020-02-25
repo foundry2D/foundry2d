@@ -158,7 +158,7 @@ class App {
 			State.active.onKeyUp(keyCode);
 		}
 		#if editor
-		editorui.onKeyDown(keyCode);
+		editorui.onKeyUp(keyCode);
 		#end
 	}
 	#if tile_editor

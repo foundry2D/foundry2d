@@ -306,14 +306,14 @@ class FoundryNode {
 		],
 		buttons: [
 			{
-				name: "operations1",
+				name: "keyboardEventType",
 				type: "ENUM",
-				data: ["Started", "Down", "Release"],
+				data: ["Pressed", "Down", "Released"],
 				output: 0,
 				default_value: 0
 			},
 			{
-				name: "operations2",
+				name: "keyCode",
 				type: "ENUM",
 				data: [
 					"Up", "Down", "Left", "Right", "Space", "Return", "Shift", "Tab", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O",

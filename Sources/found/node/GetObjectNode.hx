@@ -9,6 +9,6 @@ class GetObjectNode extends LogicNode {
 	}
 
 	override function get(from:Int):Dynamic {
-		return State.active.getObject("selectedObjectName");
+		return State.active.getObject(selectedObjectName);
 	}
 }

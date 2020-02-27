@@ -355,10 +355,14 @@ private class FPS {
 		}
 		ui.begin(canvas.g2);
 		var cam = State.active.cam.position;
+		var accentCol = ui.t.ACCENT_COL;
+		var windowBgColor = ui.t.WINDOW_BG_COL;
 		ui.t.ACCENT_COL =ui.t.WINDOW_BG_COL= kha.Color.Transparent;
 		if(ui.window( zui.Id.handle(),Std.int(cam.x),Std.int(cam.y), width, height,false))ui.text('Fps: $fps');
 		ui.end();
 		ui.setScale(oldScale);
+		ui.t.ACCENT_COL = accentCol;
+		ui.t.WINDOW_BG_COL = windowBgColor;
 	}
 
 	public inline function addFrame():Void frames++;

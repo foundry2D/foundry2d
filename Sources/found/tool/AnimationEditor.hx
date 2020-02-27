@@ -78,6 +78,9 @@ class AnimationEditor {
 
             numberOfFrames = timeline.width / (11 * sc)-1;
             ui.begin(g);
+            var accentCol = ui.t.ACCENT_COL;
+            var windowBgColor = ui.t.WINDOW_BG_COL;
+            ui.t.ACCENT_COL =ui.t.WINDOW_BG_COL= kha.Color.Transparent;
             if(curSprite != null && lastImage != curSprite.data.raw.imagePath){
                 lastImage = curSprite.data.raw.imagePath;
                 curFrames = curSprite.data.raw.anims != null ? curSprite.data.raw.anims[0].frames : [];
@@ -114,11 +117,12 @@ class AnimationEditor {
                 if(ui.panel(Id.handle({selected: true}),'',false,false,false)){
                     animationPreview(delta,AnimationEditor.width,ty);
                 }
-                Ext.panelList(ui,Id.handle({selected: true,layout:0}),curFrames,addItem,null,getName,setName,drawItem,false);
+                Ext.panelList(ui,Id.handle({selected: true,layout:0}),curFrames,addItem,removeItem,getName,setName,drawItem,false);
 
             }
             if(ui.window(timelineHandle,AnimationEditor.x, AnimationEditor.y+ty,AnimationEditor.width, timeline.height)){
-                var state = ui.image(timeline);
+                
+                var state = ui.image(timeline,0xfffffff,null,0,0,timeline.width);
                 if(state == zui.Zui.State.Down ) {
                     delta = Std.int(Math.abs(ui._windowX-ui.inputX) / 11 / ui.SCALE());
                 }
@@ -144,9 +148,18 @@ class AnimationEditor {
                 ui.g.fillRect(delta * 11 * sc + 5 * sc - frameIndicatorWidth / 2,frameIndicatorMargin, frameIndicatorWidth, frameIndicatorHeight);
                 ui.g.color = 0xffffffff;
                 ui.g.drawString("" + Util.fround(delta,2), delta * 11 * sc + 5 * sc - frameTextWidth / 2,timelineLabelsHeight / 2 - g.fontSize / 2);
+
+                ui.g.color = kha.Color.fromBytes(255,100,100,255);
+                for(frame in curFrames){
+                    var frameWidth = 10 * sc;
+                    ui.g.fillRect(frame.start * 11 * sc,timeline.height*0.5, frameWidth* 0.5,frameWidth* 0.5);
+                    ui.g.drawString("Frame: " + frame.id, frame.start * 11 * sc + 5 * sc - frameTextWidth / 2,timeline.height*0.5+frameWidth);
+                }
             }
             
             ui.end();
+            ui.t.ACCENT_COL = accentCol;
+		    ui.t.WINDOW_BG_COL = windowBgColor;
 		    g.begin(false);
         }
         function addItem(name:String){
@@ -154,10 +167,20 @@ class AnimationEditor {
             var id = curFrames.push(frame)-1;
             var handles = [];
             for(i in 0...5){
-                handles.push(Id.handle({value:0}));
+                handles.push(new zui.Zui.Handle({value:0}));
             }
+
             frameHandles.push(handles);
             frame.id = id;
+        }
+        function removeItem(i:Int){
+            curFrames.splice(i,1);
+            for( index in 0...curFrames.length){
+                if(curFrames[index].id != index){
+                    curFrames[index].id = index;
+                }
+            }
+            frameHandles.splice(i,1);
         }
         function getName(i:Int){
             return "Index : "+curFrames[i].id;

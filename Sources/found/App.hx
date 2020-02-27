@@ -60,7 +60,7 @@ class App {
 
 		found.State.setup();
 
-		Keyboard.get().notify(onKeyDown, onKeyUp);
+		Keyboard.get().notify(onKeyPressed, onKeyReleased);
 		Mouse.get().notify(onMouseDown, onMouseUp, onMouseMove, null);
 		Gamepad.get().notify(onGamepadAxis, onGamepadButton);
 		Surface.get().notify(onTouchDown, onTouchUp, onTouchMove);
@@ -144,21 +144,21 @@ class App {
 		canvas.g2.end();
   }
 
-	public function onKeyDown(keyCode:KeyCode):Void {
+	public function onKeyPressed(keyCode:KeyCode):Void {
 		if (State.active != null){
-			State.active.onKeyDown(keyCode);
+			State.active.onKeyPressed(keyCode);
 		}
 		#if editor
-		editorui.onKeyDown(keyCode);
+		editorui.onKeyPressed(keyCode);
 		#end
 	}
 
-	public function onKeyUp(keyCode:KeyCode):Void {
+	public function onKeyReleased(keyCode:KeyCode):Void {
 		if (State.active != null){
-			State.active.onKeyUp(keyCode);
+			State.active.onKeyReleased(keyCode);
 		}
 		#if editor
-		editorui.onKeyUp(keyCode);
+		editorui.onKeyReleased(keyCode);
 		#end
 	}
 	#if tile_editor

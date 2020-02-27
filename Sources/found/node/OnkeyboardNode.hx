@@ -7,7 +7,7 @@ class OnKeyboardNode extends LogicNode {
 	public var keyboardEventType:String;
 	public var keyCode:String;
 
-	var keyPressed:Bool = false;
+	var keyDown:Bool = false;
 
 	public function new(tree:LogicTree) {
 		super(tree);
@@ -15,26 +15,26 @@ class OnKeyboardNode extends LogicNode {
 		tree.notifyOnInit(function() {
 			switch (keyboardEventType) {
 				case "Released":
-					State.active.notifyOnKeyUp(onKeyEvent);
-				case "Down":
-					State.active.notifyOnKeyDown(onKeyEvent);
+					State.active.notifyOnKeyReleased(onKeyEvent);
 				case "Pressed":
-					State.active.notifyOnKeyDown(updateKeyPressed);
-					State.active.notifyOnKeyUp(updateKeyPressed);
+					State.active.notifyOnKeyPressed(onKeyEvent);
+				case "Down":
+					State.active.notifyOnKeyPressed(updateKeyDownPressed);
+					State.active.notifyOnKeyReleased(updateKeyDownReleased);
 					tree.notifyOnUpdate(update);
 			}
 		});
 
 		tree.notifyOnRemove(function() {
-			State.active.removeOnKeyDown(onKeyEvent);
-            State.active.removeOnKeyUp(onKeyEvent);
-            State.active.removeOnKeyDown(updateKeyPressed);
-            State.active.removeOnKeyUp(updateKeyPressed);
+			State.active.removeOnKeyPressed(onKeyEvent);
+			State.active.removeOnKeyReleased(onKeyEvent);
+			State.active.removeOnKeyPressed(updateKeyDownPressed);
+			State.active.removeOnKeyReleased(updateKeyDownReleased);
 		});
 	}
 
 	function update(dt:Float) {
-		if (keyPressed) {
+		if (keyDown) {
 			runOutput(0);
 		}
 	}
@@ -45,9 +45,15 @@ class OnKeyboardNode extends LogicNode {
 		}
 	}
 
-	function updateKeyPressed(p_keyCode:KeyCode) {
+	function updateKeyDownPressed(p_keyCode:KeyCode) {
 		if (getKeyboard(keyCode) == p_keyCode) {
-			keyPressed = !keyPressed;
+			keyDown = true;
+		}
+	}
+
+	function updateKeyDownReleased(p_keyCode:KeyCode) {
+		if (getKeyboard(keyCode) == p_keyCode) {
+			keyDown = false;
 		}
 	}
 

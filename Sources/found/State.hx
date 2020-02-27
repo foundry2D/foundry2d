@@ -24,29 +24,29 @@ class State extends Scene {
 		super.render(canvas);
 	}
 
-	var keyDown:Array<KeyCode->Void> =[];
-	public function notifyOnKeyDown(fn:KeyCode->Void) {
-		keyDown.push(fn);
+	var keyPressed:Array<KeyCode->Void> =[];
+	public function notifyOnKeyPressed(fn:KeyCode->Void) {
+		keyPressed.push(fn);
 	}
-	public function removeOnKeyDown(fn:KeyCode->Void){
-		keyDown.remove(fn);
+	public function removeOnKeyPressed(fn:KeyCode->Void){
+		keyPressed.remove(fn);
 	}
-	public function onKeyDown(keyCode:KeyCode){
-		for(fn in keyDown){
+	public function onKeyPressed(keyCode:KeyCode){
+		for(fn in keyPressed){
 			fn(keyCode);
 		}
 	}
 
 
-	var keyUp:Array<KeyCode->Void> =[];
-	public function notifyOnKeyUp(fn:KeyCode->Void) {
-		keyUp.push(fn);
+	var keyReleased:Array<KeyCode->Void> =[];
+	public function notifyOnKeyReleased(fn:KeyCode->Void) {
+		keyReleased.push(fn);
 	}
-	public function removeOnKeyUp(fn:KeyCode->Void){
-		keyUp.remove(fn);
+	public function removeOnKeyReleased(fn:KeyCode->Void){
+		keyReleased.remove(fn);
 	}
-	public function onKeyUp(keyCode:KeyCode){
-		for(fn in keyUp){
+	public function onKeyReleased(keyCode:KeyCode){
+		for(fn in keyReleased){
 			fn(keyCode);
 		}
 	}

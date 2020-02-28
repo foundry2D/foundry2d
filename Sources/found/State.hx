@@ -124,6 +124,9 @@ class State extends Scene {
 	public function notifyOnGamepadAxis(fn:(Int,Float)->Void) {
 		gamepadAxis.push(fn);
 	}
+	public function removeOnGamepadAxis(fn:(Int,Float)->Void){
+		gamepadAxis.remove(fn);
+	}
 	public function onGamepadAxis(axis:Int, value:Float){
 		for(fn in gamepadAxis){
 			fn(axis, value);

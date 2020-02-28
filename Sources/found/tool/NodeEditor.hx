@@ -2,13 +2,11 @@ package found.tool;
 
 // Kha
 import kha.Color;
-
-//Zui
+// Zui
 import zui.Id;
 import zui.Zui;
 import zui.Nodes;
-
-//Editor
+// Editor
 import found.data.SceneFormat.LogicTreeData;
 import found.node.data.StdNode;
 import found.node.data.MathNode;
@@ -124,7 +122,7 @@ class NodeEditor {
 					// ui.button("Array");
 					if (ui.button("Boolean"))
 						pushNodeToSelectedGroup(VariableNode.boolean);
-					if(ui.button("Vector2"))
+					if (ui.button("Vector2"))
 						pushNodeToSelectedGroup(VariableNode.vector2);
 				}
 				if (ui.panel(Id.handle(), "Std")) {
@@ -164,6 +162,8 @@ class NodeEditor {
 						pushNodeToSelectedGroup(FoundryNode.mouseCoordNode);
 					if (ui.button("On Keyboard"))
 						pushNodeToSelectedGroup(FoundryNode.onKeyboardNode);
+					if (ui.button("On Gamepad Axis"))
+						pushNodeToSelectedGroup(FoundryNode.onGamepadAxisNode);
 				}
 				if (ui.panel(Id.handle(), "Math")) {
 					if (ui.button("Split Vec2"))

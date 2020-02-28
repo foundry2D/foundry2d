@@ -153,6 +153,49 @@ class FoundryNode {
 		],
 		color: -4962746
 	};
+	public static var onGamepadAxisNode:TNode = {
+		id: 0,
+		name: "On Gamepad Axis",
+		type: "OnGamepadAxisNode",
+		x: 200,
+		y: 200,
+		inputs: [],
+		outputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name: "Out",
+				type: "ACTION",
+				color: 0xffaa4444,
+				default_value: ""
+			},
+			{
+				id: 1,
+				node_id: 0,
+				name: "Float",
+				type: "VALUE",
+				color: -10183681,
+				default_value: 0.0
+			}
+		],
+		buttons: [
+			{
+				name: "axisName",
+				type: "ENUM",
+				data: [
+					"Left Joystick X",
+					"Left Joystick Y",
+					"Right Joystick X",
+					"Right Joystick Y",
+					"Left Bumper",
+					"Right Bumper"
+				],
+				output: 0,
+				default_value: 0
+			}
+		],
+		color: -4962746
+	};
 	public static var setObjectLocNode:TNode = {
 		id: 0,
 		name: "Set Object Location",

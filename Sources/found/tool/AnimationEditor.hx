@@ -18,6 +18,7 @@ class AnimationEditor {
         public static var x:Int;
         public static var y:Int;
         static var timeline:kha.Image = null;
+        static var dot:kha.Image = null;
         var curSprite:found.anim.Sprite;
         public var selectedUID(default,set):Int = -1;
         var windowHandle:zui.Zui.Handle = Id.handle();
@@ -27,7 +28,6 @@ class AnimationEditor {
             ui = new Zui({font: kha.Assets.fonts.font_default});
             setAll(px,py,w,h);
             windowHandle.scrollEnabled = true;
-
         }
     
         public function setAll(px:Int,py:Int,w:Int,h:Int){
@@ -64,7 +64,11 @@ class AnimationEditor {
         var numberOfFrames:Float = 67.0;
         var animAction:Array<Float> = [];
         var curFrames:Array<TFrame> = [];
-        @:access(found.anim.Sprite)
+        var animations:Array<String> = [];
+        var animIndex:Int  = -1;
+        var animHandle:zui.Zui.Handle = new zui.Zui.Handle();
+        var fpsHandle:zui.Zui.Handle =  new zui.Zui.Handle();
+        @:access(found.anim.Sprite,found.anim.Animation)
         public function render(g:kha.graphics2.Graphics){
             if(!visible)return;
             g.end();
@@ -74,21 +78,57 @@ class AnimationEditor {
 
             if(timeline==null || timeline.height != timelineLabelsHeight + timelineFramesHeight){
                 drawTimeline(timelineLabelsHeight, timelineFramesHeight);
+                drawDot();
             }
 
             numberOfFrames = timeline.width / (11 * sc)-1;
             ui.begin(g);
-            var accentCol = ui.t.ACCENT_COL;
-            var windowBgColor = ui.t.WINDOW_BG_COL;
-            ui.t.ACCENT_COL =ui.t.WINDOW_BG_COL= kha.Color.Transparent;
             if(curSprite != null && lastImage != curSprite.data.raw.imagePath){
                 lastImage = curSprite.data.raw.imagePath;
-                curFrames = curSprite.data.raw.anims != null ? curSprite.data.raw.anims[0].frames : [];
+                // if(curSprite.data.raw.anims != null){
+                //     curFrames =  curSprite.data.raw.anims[0].frames;
+                //     for(anim in curSprite.data.raw.anims){
+                //         animations.push(anim.name);
+                //     }
+                // }
+                // else {
+                    curFrames.resize(0);
+                    animations.resize(0);
+                // }
+                 
                 frameHandles = []; 
                 timelineHandle.redraws = windowHandle.redraws = 2;//redraw
             }
-            var ty = AnimationEditor.height - timeline.height;
-            if(ui.window(windowHandle, AnimationEditor.x, AnimationEditor.y, AnimationEditor.width, ty)){
+            var viewHeight = AnimationEditor.height - timeline.height;
+            if(ui.window(windowHandle, AnimationEditor.x, AnimationEditor.y, AnimationEditor.width, viewHeight)){
+                ui.row([0.5,0.25,0.25]);
+                animHandle.position = animIndex;
+                animIndex = ui.combo(animHandle,animations);
+            
+                if(ui.button("New Animation") && curSprite != null){
+                    var id = animations.length;
+                    animIndex = animations.push('Animation $id')-1;
+                    if(animIndex == 0){
+                        curSprite.data.curAnim = curSprite.data.addSubSprite(0);
+                        curFrames = curSprite.data.animation._frames;
+                        for(frame in curFrames){
+                            var handles = [];
+                            for(i in 0...5){
+                                handles.push(new zui.Zui.Handle({value:0}));
+                            }
+                            frameHandles.push(handles);
+                        }
+                    }
+                }
+
+                if(ui.button("Save Animations") && curSprite != null){
+                    // @TODO: Implement me
+                }
+
+                if(animIndex > -1){
+                    fpsHandle.value = curSprite.data.animation._speeddiv;
+                    curSprite.data.animation._speeddiv = Std.int(Ext.floatInput(ui,fpsHandle,"Fps: "));
+                }
                 ui.row([0.5,0.5]);
                 if(delta > numberOfFrames){
                     delta = numberOfFrames;
@@ -114,15 +154,19 @@ class AnimationEditor {
 
                 ui.row([0.75,0.25]);
 
-                if(ui.panel(Id.handle({selected: true}),'',false,false,false)){
-                    animationPreview(delta,AnimationEditor.width,ty);
-                }
+                ui.panel(Id.handle({selected: true}),'',false,false,false);
+                var oldY = ui._y;
                 Ext.panelList(ui,Id.handle({selected: true,layout:0}),curFrames,addItem,removeItem,getName,setName,drawItem,false);
+                animationPreview(delta,AnimationEditor.width,viewHeight,oldY);
 
             }
-            if(ui.window(timelineHandle,AnimationEditor.x, AnimationEditor.y+ty,AnimationEditor.width, timeline.height)){
+
+            if(ui.window(timelineHandle,AnimationEditor.x, AnimationEditor.y+viewHeight,AnimationEditor.width, timeline.height)){
                 
-                var state = ui.image(timeline,0xfffffff,null,0,0,timeline.width);
+                ui.imageScrollAlign =false;// This makes its so that we can cheat the image drawing to draw well to make it easier to have valid input
+                var state = ui.image(timeline);
+                
+
                 if(state == zui.Zui.State.Down ) {
                     delta = Std.int(Math.abs(ui._windowX-ui.inputX) / 11 / ui.SCALE());
                 }
@@ -150,19 +194,39 @@ class AnimationEditor {
                 ui.g.drawString("" + Util.fround(delta,2), delta * 11 * sc + 5 * sc - frameTextWidth / 2,timelineLabelsHeight / 2 - g.fontSize / 2);
 
                 ui.g.color = kha.Color.fromBytes(255,100,100,255);
+                var old = new Vector2(ui._x,ui._y);
                 for(frame in curFrames){
                     var frameWidth = 10 * sc;
-                    ui.g.fillRect(frame.start * 11 * sc,timeline.height*0.5, frameWidth* 0.5,frameWidth* 0.5);
-                    ui.g.drawString("Frame: " + frame.id, frame.start * 11 * sc + 5 * sc - frameTextWidth / 2,timeline.height*0.5+frameWidth);
+                    ui._x = frame.start * 11 * sc;
+                    ui._y = timelineLabelsHeight*0.5 + timelineFramesHeight*0.5+frameWidth*0.75;
+                    var state = ui.image(dot,0xffffff00,null,0,0,Std.int(frameWidth*0.5),Std.int(frameWidth*0.5));
+                    ui._x = frame.start * 11 * sc;
+                    ui._y = timelineLabelsHeight*0.5 + timelineFramesHeight*0.5 + frameWidth*0.75;
+                    if(ui.getHover()){
+                        ui.tooltip("Frame: " + frame.id);
+                    }
+                    
+                    // ui.g.drawString(, frame.start * 11 * sc + 5 * sc - frameTextWidth / 2 +frameWidth* 0.25,timeline.height*0.5+frameWidth*0.5);
                 }
+                ui._x = old.x;
+                ui._y = old.y;
+                ui.imageScrollAlign =true;
             }
             
             ui.end();
-            ui.t.ACCENT_COL = accentCol;
-		    ui.t.WINDOW_BG_COL = windowBgColor;
 		    g.begin(false);
         }
+        
+
         function addItem(name:String){
+            if(animIndex < 0) return;
+            for(frame in  curFrames){
+                if(frame.start == delta){
+                    //@TODO: Implement popup in zui or in editor
+                    return;
+                }
+            }
+
             var frame:TFrame =  {id:0,start:delta,tw: 0,th:0};
             var id = curFrames.push(frame)-1;
             var handles = [];
@@ -172,6 +236,8 @@ class AnimationEditor {
 
             frameHandles.push(handles);
             frame.id = id;
+
+            timelineHandle.redraws = 2;
         }
         function removeItem(i:Int){
             curFrames.splice(i,1);
@@ -181,6 +247,7 @@ class AnimationEditor {
                 }
             }
             frameHandles.splice(i,1);
+            timelineHandle.redraws = 2;
         }
         function getName(i:Int){
             return "Index : "+curFrames[i].id;
@@ -224,16 +291,15 @@ class AnimationEditor {
         }
         var canvas:kha.Image;
         var origDimensions:Vector2 = new Vector2();
-        function animationPreview(delta:Float,width:Int,height:Int){
+        function animationPreview(delta:Float,width:Int,height:Int,oldY:Float){
 
-            ui.g.color = 0xffffffff;
             var size = (width > height ? width:height)*0.25;
+            var rx = width*0.5 - size * 0.5;
+            // var ry = height*0.5 - size * 0.5+ui.BUTTON_H()*0.5;
             if(canvas == null){
                 canvas = kha.Image.createRenderTarget(Std.int(width*0.25),Std.int(height*0.25));
             }
-            
-            var rx = width*0.5 - size * 0.5;
-            var ry = height*0.5 - size * 0.5+ui.BUTTON_H()*0.5;
+
             if(selectedUID > 0){
                 var scale = 1.0;
                 if(width > height){
@@ -246,18 +312,30 @@ class AnimationEditor {
                 origDimensions.y = curSprite.scale.y;
                 curSprite.scale.x = scale;
                 curSprite.scale.y = scale;
-                canvas.g2.pushTranslation(-curSprite.position.x+rx+size*0.25,-curSprite.position.y+ry+size*0.25);
-                curSprite.render(canvas);
+                canvas.g2.pushTranslation(-curSprite.position.x+rx+size*0.25,-curSprite.position.y+oldY+size*0.25);
+                curSprite.render(canvas); //@TODO: Fix timeline playback, presently works with render which updates the count of speeddiv we should do it manually
                 canvas.g2.popTransformation();
-                ui.g.drawImage(canvas,rx,ry);
+
                 curSprite.scale.x = origDimensions.x;
                 curSprite.scale.y = origDimensions.y;
             }
-            ui.g.drawRect(rx,ry,size,size);
+
+            ui.image(canvas,0xffffffff,size,Std.int(rx),Std.int(oldY));
+            ui.g.drawRect(rx,oldY,size,size);
+            
         }
         function onResize(width:Int,height:Int){
             canvas = kha.Image.createRenderTarget(Std.int(width*0.25),Std.int(height*0.25));
             canvas.g2.clear(kha.Color.Transparent);
+        }
+        function drawDot(){
+            var frameWidth = Std.int(10 * ui.SCALE())*4;
+            dot = kha.Image.createRenderTarget(frameWidth, frameWidth);
+            var g = dot.g2;
+            g.begin(true);
+            g.color = kha.Color.Red;
+            g.fillTriangle(0,frameWidth,frameWidth*0.5,0,frameWidth,frameWidth);
+            g.end();
         }
         function drawTimeline(timelineLabelsHeight:Int, timelineFramesHeight:Int) {
             var sc = ui.SCALE();

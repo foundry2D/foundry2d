@@ -61,7 +61,7 @@ class App {
 		found.State.setup();
 
 		Keyboard.get().notify(onKeyPressed, onKeyReleased);
-		Mouse.get().notify(onMouseDown, onMouseUp, onMouseMove, null);
+		Mouse.get().notify(onMousePressed, onMouseReleased, onMouseMove, null);
 		Gamepad.get().notify(onGamepadAxis, onGamepadButton);
 		Surface.get().notify(onTouchDown, onTouchUp, onTouchMove);
 		#if editor
@@ -164,14 +164,14 @@ class App {
 	#if tile_editor
 	var drawTile:Bool = false;
 	#end
-	public function onMouseDown(button:Int, x:Int, y:Int):Void {
+	public function onMousePressed(button:Int, x:Int, y:Int):Void {
 		Found.mouseX = Scaler.transformX(x, y, Found.backbuffer, ScreenCanvas.the, System.screenRotation);
 		Found.mouseY = Scaler.transformY(x, y, Found.backbuffer, ScreenCanvas.the, System.screenRotation);
 		if (State.active != null){
-			State.active.onMouseDown(button, Found.mouseX, Found.mouseY);
+			State.active.onMousePressed(button, Found.mouseX, Found.mouseY);
 		}
 		#if editor
-		editorui.onMouseDown(button,x,y);
+		editorui.onMousePressed(button,x,y);
 		#end
 		#if tile_editor
 		if(button == 0/* Left */){
@@ -180,14 +180,14 @@ class App {
 		#end
 	}
 
-	public function onMouseUp(button:Int, x:Int, y:Int):Void {
+	public function onMouseReleased(button:Int, x:Int, y:Int):Void {
 		Found.mouseX = Scaler.transformX(x, y, Found.backbuffer, ScreenCanvas.the, System.screenRotation);
 		Found.mouseY = Scaler.transformY(x, y, Found.backbuffer, ScreenCanvas.the, System.screenRotation);
 		if (State.active != null){
-			State.active.onMouseUp(button, Found.mouseX, Found.mouseY);
+			State.active.onMouseReleased(button, Found.mouseX, Found.mouseY);
 		}
 		#if editor
-		editorui.onMouseUp(button,x,y);
+		editorui.onMouseReleased(button,x,y);
 		#end
 		#if tile_editor
 		if(button == 0/* Left */){

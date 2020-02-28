@@ -52,26 +52,26 @@ class State extends Scene {
 	}
 
 	var mouseDown:Array<(Int,Int,Int)->Void> =[];
-	public function notifyOnMouseDown(fn:(Int,Int,Int)->Void) {
+	public function notifyOnMousePressed(fn:(Int,Int,Int)->Void) {
 		mouseDown.push(fn);
 	}
-	public function removeOnMouseDown(fn:(Int,Int,Int)->Void){
+	public function removeOnMousePressed(fn:(Int,Int,Int)->Void){
 		mouseDown.remove(fn);
 	}
-	public function onMouseDown(button:Int, x:Int, y:Int){
+	public function onMousePressed(button:Int, x:Int, y:Int){
 		for(fn in mouseDown){
 			fn(button, x, y);
 		}
 	}
 
 	var mouseUp:Array<(Int,Int,Int)->Void> =[];
-	public function notifyOnMouseUp(fn:(Int,Int,Int)->Void) {
+	public function notifyOnMouseReleased(fn:(Int,Int,Int)->Void) {
 		mouseUp.push(fn);
 	}
-	public function removeOnMouseUp(fn:(Int,Int,Int)->Void){
+	public function removeOnMouseReleased(fn:(Int,Int,Int)->Void){
 		mouseUp.remove(fn);
 	}
-	public function onMouseUp(button:Int, x:Int, y:Int){
+	public function onMouseReleased(button:Int, x:Int, y:Int){
 		for(fn in mouseUp){
 			fn(button, x, y);
 		}

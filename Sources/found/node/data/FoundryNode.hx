@@ -63,14 +63,14 @@ class FoundryNode {
 		],
 		buttons: [
 			{
-				name: "operations1",
+				name: "mouseEventType",
 				type: "ENUM",
-				data: ["Started", "Down", "Release", "Moved"],
+				data: ["Pressed", "Down", "Released", "Moved"],
 				output: 0,
 				default_value: 0
 			},
 			{
-				name: "operations2",
+				name: "mouseButton",
 				type: "ENUM",
 				data: ["Left", "Middle", "Right"],
 				output: 0,
@@ -113,6 +113,44 @@ class FoundryNode {
 			}
 		],
 		buttons: [],
+		color: -4962746
+	};
+	public static var onKeyboardNode:TNode = {
+		id: 0,
+		name: "On Keyboard",
+		type: "OnKeyboardNode",
+		x: 200,
+		y: 200,
+		inputs: [],
+		outputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name: "Out",
+				type: "ACTION",
+				color: 0xffaa4444,
+				default_value: ""
+			}
+		],
+		buttons: [
+			{
+				name: "keyboardEventType",
+				type: "ENUM",
+				data: ["Pressed", "Down", "Released"],
+				output: 0,
+				default_value: 0
+			},
+			{
+				name: "keyCode",
+				type: "ENUM",
+				data: [
+					"Up", "Down", "Left", "Right", "Space", "Return", "Shift", "Tab", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O",
+					"P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
+				],
+				output: 0,
+				default_value: 0
+			}
+		],
 		color: -4962746
 	};
 	public static var setObjectLocNode:TNode = {
@@ -286,44 +324,6 @@ class FoundryNode {
 			}
 		],
 		buttons: []
-	};
-	public static var onKeyboardNode:TNode = {
-		id: 0,
-		name: "On Keyboard",
-		type: "OnKeyboardNode",
-		x: 200,
-		y: 200,
-		inputs: [],
-		outputs: [
-			{
-				id: 0,
-				node_id: 0,
-				name: "Out",
-				type: "ACTION",
-				color: 0xffaa4444,
-				default_value: ""
-			}
-		],
-		buttons: [
-			{
-				name: "keyboardEventType",
-				type: "ENUM",
-				data: ["Pressed", "Down", "Released"],
-				output: 0,
-				default_value: 0
-			},
-			{
-				name: "keyCode",
-				type: "ENUM",
-				data: [
-					"Up", "Down", "Left", "Right", "Space", "Return", "Shift", "Tab", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O",
-					"P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
-				],
-				output: 0,
-				default_value: 0
-			}
-		],
-		color: -4962746
 	};
 	public static var getObjectNode:TNode = {
 		id: 0,

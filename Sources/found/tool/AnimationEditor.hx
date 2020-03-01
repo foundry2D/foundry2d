@@ -1,9 +1,9 @@
 package found.tool;
 
 
+import found.math.Vec2;
 import found.math.Util;
 import found.data.SceneFormat;
-import kha.math.Vector2;
 
 import zui.Id;
 import zui.Zui;
@@ -122,7 +122,10 @@ class AnimationEditor {
                 }
 
                 if(ui.button("Save Animations") && curSprite != null){
-                    // @TODO: Implement me
+                    saveAnimations();
+                    #if editor
+                    EditorHierarchy.makeDirty();
+                    #end
                 }
 
                 if(animIndex > -1){
@@ -194,7 +197,7 @@ class AnimationEditor {
                 ui.g.drawString("" + Util.fround(delta,2), delta * 11 * sc + 5 * sc - frameTextWidth / 2,timelineLabelsHeight / 2 - g.fontSize / 2);
 
                 ui.g.color = kha.Color.fromBytes(255,100,100,255);
-                var old = new Vector2(ui._x,ui._y);
+                var old = new Vec2(ui._x,ui._y);
                 for(frame in curFrames){
                     var frameWidth = 10 * sc;
                     ui._x = frame.start * 11 * sc;
@@ -290,7 +293,7 @@ class AnimationEditor {
             }
         }
         var canvas:kha.Image;
-        var origDimensions:Vector2 = new Vector2();
+        var origDimensions:Vec2 = new Vec2();
         function animationPreview(delta:Float,width:Int,height:Int,oldY:Float){
 
             var size = (width > height ? width:height)*0.25;
@@ -365,5 +368,32 @@ class AnimationEditor {
             }
     
             g.end();
+        }
+
+        @:access(found.anim.Sprite,found.data.SpriteData,found.anim.Animation)
+        public function saveAnimations(){
+            if(curSprite == null)return;
+
+            for(anim in curSprite.data.anims){
+                var exists = false;
+                for( a in curSprite.data.raw.anims){
+                    if(a.name == anim.name){
+                        a.frames.resize(0);
+                        a.fps = anim._speeddiv;
+                        for( frame in anim._frames){
+                            if(a.time < frame.start) a.time = frame.start;
+                            a.frames.push(frame);
+                        }
+                        exists = true;
+                    }
+                }
+                if(!exists){
+                    var out:TAnimation = {name: anim.name,frames: anim._frames,fps: anim._speeddiv,time:0.0};
+                    for( frame in out.frames){
+                        if(out.time < frame.start) out.time = frame.start;
+                    }
+                    curSprite.data.raw.anims.push(out);
+                }
+            }
         }
 }

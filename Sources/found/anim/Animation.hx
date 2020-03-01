@@ -4,6 +4,7 @@ package found.anim;
 import found.data.SceneFormat.TFrame;
 
 class Animation {
+	public var name:String;
 	private var _frames: Array<TFrame>;
 	private var _speeddiv: Int;
 	private var _count: Int;

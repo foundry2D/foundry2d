@@ -132,7 +132,6 @@ typedef TAnimation = {
 @:structInit class TAnimation {
 #end
     public var name:String;
-    public var numFrames:Int;
     public var time:Float;
     public var fps:Int;
     public var frames:Array<TFrame>;

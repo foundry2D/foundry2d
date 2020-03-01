@@ -117,4 +117,12 @@ class Sprite extends Entity {
 		super.set_height(value);
 		return _h = value;
 	}
+
+	override function set_raw(data:TObj):TObj {
+		var obj = super.set_raw(data);
+		for(field in Reflect.fields(obj)){
+			Reflect.setProperty(this.data.raw,field,Reflect.field(obj,field));
+		}
+		return this.data.raw;
+	}
 }

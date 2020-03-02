@@ -47,7 +47,10 @@ class Scene {
   @:access(found.object.Object)
   public function new(raw:TSceneFormat){
 
-    Object.uidCounter = 0;// When loading a scene the object counter always goes back to 0;
+    Object.uidCounter = -1;// When loading a scene the object counter always goes back to 0;
+    Object._positions.resize(0);
+    Object._rotations.resize(0);
+    Object._scales.resize(0);
 
     this.raw = raw; 
     _entities = new Array<Object>();

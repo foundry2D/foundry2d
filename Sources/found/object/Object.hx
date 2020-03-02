@@ -135,7 +135,7 @@ class Object {
 		if(_rotates == null) _rotates = new Executor<RotateData>("_rotations");
 		if(_scaler == null) _scaler = new Executor<Vector2>("_scales");
 		
-		uid = uidCounter++;
+		uid = ++uidCounter;
 
 		_positions.push(new Vector2(x, y));
 		_rotations.push(new Vector3());

@@ -2,9 +2,10 @@ package found.node;
 
 import found.State;
 
-class OnGamepadAxisNode extends LogicNode {
+class GamepadAxisInputNode extends LogicNode {
 	public var axisName:String;
 
+	var deadZone = 0.2;
 	var axisValue:Float = 0;
 
 	public function new(tree:LogicTree) {
@@ -14,17 +15,9 @@ class OnGamepadAxisNode extends LogicNode {
 			State.active.notifyOnGamepadAxis(onGamepadAxisEvent);
 		});
 
-		tree.notifyOnUpdate(update);
-
 		tree.notifyOnRemove(function() {
 			State.active.removeOnGamepadAxis(onGamepadAxisEvent);
 		});
-	}
-
-	function update(dt:Float) {
-		if (axisValue >= 0.1 || axisValue <= -0.1) {
-			runOutput(0);
-		}
 	}
 
 	override function get(from:Int):Dynamic {
@@ -33,7 +26,7 @@ class OnGamepadAxisNode extends LogicNode {
 
 	function onGamepadAxisEvent(p_axisId:Int, p_axisValue:Float) {
 		if (getAxisId(axisName) == p_axisId) {
-			if (p_axisValue >= 0.1 || p_axisValue <= -0.1) {
+			if (p_axisValue >= deadZone || p_axisValue <= -deadZone) {
 				axisValue = p_axisValue;
 			} else {
 				axisValue = 0;
@@ -52,9 +45,9 @@ class OnGamepadAxisNode extends LogicNode {
 				axisId = 2;
 			case "Right Joystick Y":
 				axisId = 3;
-			case "Left Bumper":
+			case "Left Trigger":
 				axisId = 4;
-			case "Right Bumper":
+			case "Right Trigger":
 				axisId = 5;
 		}
 		return axisId;

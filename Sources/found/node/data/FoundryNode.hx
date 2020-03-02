@@ -153,24 +153,16 @@ class FoundryNode {
 		],
 		color: -4962746
 	};
-	public static var onGamepadAxisNode:TNode = {
+	public static var gamepadAxisInputNode:TNode = {
 		id: 0,
-		name: "On Gamepad Axis",
-		type: "OnGamepadAxisNode",
+		name: "Gamepad Axis Input",
+		type: "GamepadAxisInputNode",
 		x: 200,
 		y: 200,
 		inputs: [],
 		outputs: [
 			{
 				id: 0,
-				node_id: 0,
-				name: "Out",
-				type: "ACTION",
-				color: 0xffaa4444,
-				default_value: ""
-			},
-			{
-				id: 1,
 				node_id: 0,
 				name: "Float",
 				type: "VALUE",
@@ -187,8 +179,8 @@ class FoundryNode {
 					"Left Joystick Y",
 					"Right Joystick X",
 					"Right Joystick Y",
-					"Left Bumper",
-					"Right Bumper"
+					"Left Trigger",
+					"Right Trigger"
 				],
 				output: 0,
 				default_value: 0

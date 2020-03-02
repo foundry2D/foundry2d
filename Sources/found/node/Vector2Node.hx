@@ -5,17 +5,17 @@ class Vector2Node extends LogicNode {
 
 	public function new(tree:LogicTree, x:Null<Float> = null, y:Null<Float> = null) {
 		super(tree);
-
-		// if (x != null) {
-		// 	addInput(new FloatNode(tree, x), 0);
-		// 	addInput(new FloatNode(tree, y), 0);
-		// }
 	}
 
 	override function get(from:Int):Dynamic {
 		value.x = inputs[0].get();
 		value.y = inputs[1].get();
-		return value;
+
+		if (from == 0) {
+			return value;
+		}
+
+		return value.normalized();
 	}
 
 	override function set(value:Dynamic) {

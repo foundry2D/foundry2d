@@ -162,6 +162,14 @@ class VariableNode {
 				type: "VECTOR2",
 				color: -7929601,
 				default_value: [0.0, 0.0]
+			},
+			{
+				id: 1,
+				node_id: 0,
+				name: "Normalised Vec2",
+				type: "VECTOR2",
+				color: -7929601,
+				default_value: [0.0, 0.0]
 			}
 		],
 		buttons: []

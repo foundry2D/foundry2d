@@ -181,6 +181,12 @@ class NodeEditor {
 					if (ui.button("Get Object"))
 						pushNodeToSelectedGroup(FoundryNode.getObjectNode);
 				}
+				if (ui.panel(Id.handle(), "Physics")) {
+					if (ui.button("Apply Force To Rigidbody"))
+						pushNodeToSelectedGroup(FoundryNode.applyForceToRigidbodyNode);
+					if (ui.button("Apply Impulse To Rigidbody"))
+						pushNodeToSelectedGroup(FoundryNode.applyImpulseToRigidbodyNode);
+				}
 			}
 		}
 	}

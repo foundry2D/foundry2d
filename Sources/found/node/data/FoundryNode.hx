@@ -388,4 +388,94 @@ class FoundryNode {
 		],
 		color: -4962746
 	};
+	public static var applyForceToRigidbodyNode:TNode = {
+		id: 0,
+		name: "Apply Force To Rigidbody",
+		type: "ApplyForceToRigidbodyNode",
+		x: 200,
+		y: 200,
+		color: -4962746,
+		inputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name: "In",
+				type: "ACTION",
+				color: 0xffaa4444,
+				default_value: ""
+			},
+			{
+				id: 0,
+				node_id: 0,
+				name: "Object",
+				type: "STRING",
+				color: -4934476,
+				default_value: ""
+			},
+			{
+				id: 0,
+				node_id: 0,
+				name: "Vec2",
+				type: "VECTOR2",
+				color: -7929601,
+				default_value: new kha.math.FastVector2(0.0, 0.0)
+			}
+		],
+		outputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name: "Out",
+				type: "ACTION",
+				color: 0xffaa4444,
+				default_value: ""
+			}
+		],
+		buttons: []
+	};
+	public static var applyImpulseToRigidbodyNode:TNode = {
+		id: 0,
+		name: "Apply Impulse To Rigidbody",
+		type: "ApplyImpulseToRigidbodyNode",
+		x: 200,
+		y: 200,
+		color: -4962746,
+		inputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name: "In",
+				type: "ACTION",
+				color: 0xffaa4444,
+				default_value: ""
+			},
+			{
+				id: 0,
+				node_id: 0,
+				name: "Object",
+				type: "STRING",
+				color: -4934476,
+				default_value: ""
+			},
+			{
+				id: 0,
+				node_id: 0,
+				name: "Vec2",
+				type: "VECTOR2",
+				color: -7929601,
+				default_value: new kha.math.FastVector2(0.0, 0.0)
+			}
+		],
+		outputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name: "Out",
+				type: "ACTION",
+				color: 0xffaa4444,
+				default_value: ""
+			}
+		],
+		buttons: []
+	};
 }

@@ -188,6 +188,43 @@ class FoundryNode {
 		],
 		color: -4962746
 	};
+	public static var gamepadButtonInputNode:TNode = {
+		id: 0,
+		name: "Gamepad Button Input",
+		type: "GamepadButtonInputNode",
+		x: 200,
+		y: 200,
+		inputs: [],
+		outputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name: "Out",
+				type: "ACTION",
+				color: 0xffaa4444,
+				default_value: ""
+			}
+		],
+		buttons: [
+			{
+				name: "selectedButtonEventType",
+				type: "ENUM",
+				data: ["Pressed", "Down", "Released"],
+				output: 0,
+				default_value: 0
+			},
+			{
+				name: "selectedButtonName",
+				type: "ENUM",
+				data: [
+					"a", "b", "x", "y", "l1", "r1", "l2", "r2", "share", "options", "l3", "r3", "up", "down", "left", "right", "home", "touchpad"
+				],
+				output: 0,
+				default_value: 0
+			}
+		],
+		color: -4962746
+	};
 	public static var setObjectLocNode:TNode = {
 		id: 0,
 		name: "Set Object Location",

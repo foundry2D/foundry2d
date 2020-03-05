@@ -137,6 +137,9 @@ class State extends Scene {
 	public function notifyOnGamepadButton(fn:(Int,Float)->Void) {
 		gamepadButton.push(fn);
 	}
+	public function removeOnGamepadButton(fn:(Int,Float)->Void){
+		gamepadButton.remove(fn);
+	}
 	public function onGamepadButton(button:Int, value:Float){
 		for(fn in gamepadButton){
 			fn(button, value);

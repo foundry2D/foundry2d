@@ -27,7 +27,7 @@ typedef TSceneFormat = {
 #else
 @:structInit class TSceneFormat {
 #end
-    @:optional public var name:String;
+    public var name:String;
     @:optional public var  _entities:Array<TObj>;
     @:optional public var _depth:Bool;
     @:optional public var _Zsort:Bool;
@@ -78,7 +78,7 @@ typedef TSpriteData = {
     
     public var imagePath: String;
     @:optional public var flip:Vector2;
-    @:optional public var anims:Array<TAnimation>;
+    public var anims:Array<TAnimation>;
 }
 #if js
 typedef TTileData = {

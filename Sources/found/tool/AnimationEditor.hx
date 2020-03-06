@@ -129,8 +129,9 @@ class AnimationEditor {
                 }
 
                 if(animIndex > -1){
-                    fpsHandle.value = curSprite.data.animation._speeddiv;
-                    curSprite.data.animation._speeddiv = Std.int(Ext.floatInput(ui,fpsHandle,"Fps: "));
+                    var editable = false;
+                    fpsHandle.text = ""+curSprite.data.animation._speeddiv;
+                    curSprite.data.animation._speeddiv = Std.parseInt(ui.textInput(fpsHandle,"Fps: ",Align.Left,editable));
                 }
                 ui.row([0.5,0.5]);
                 if(delta > numberOfFrames){
@@ -225,7 +226,7 @@ class AnimationEditor {
             if(animIndex < 0) return;
             for(frame in  curFrames){
                 if(frame.start == delta){
-                    //@TODO: Implement popup in zui or in editor
+                    //@TODO: Implement warning popup in zui or in editor
                     return;
                 }
             }
@@ -239,6 +240,11 @@ class AnimationEditor {
 
             frameHandles.push(handles);
             frame.id = id;
+
+            if( curFrames.length > 1){
+                var lastFrame = curFrames[id-1];
+                fpsHandle.text = ""+(frame.start-lastFrame.start);
+            }
 
             timelineHandle.redraws = 2;
         }
@@ -284,16 +290,19 @@ class AnimationEditor {
             cur.th = Std.int(Ext.floatInput(ui,hHandle,"Tile Height"));
 
         }
+        @:access(found.anim.Sprite,found.data.SpriteData,found.anim.Animation)
         public function update(dt:Float) {
             if(!visible)return;
 
-            if(doUpdate){
-                delta+=dt;
+            if(doUpdate && curSprite != null){
+                var currentCount = fpsHandle.value - (curSprite.data.animation._count % fpsHandle.value); 
+                delta = currentCount/fpsHandle.value;
                 timelineHandle.redraws = windowHandle.redraws = 2;//redraw
             }
         }
         var canvas:kha.Image;
         var origDimensions:Vec2 = new Vec2();
+        @:access(found.anim.Sprite,found.data.SpriteData,found.anim.Animation)
         function animationPreview(delta:Float,width:Int,height:Int,oldY:Float){
 
             var size = (width > height ? width:height)*0.25;
@@ -316,6 +325,9 @@ class AnimationEditor {
                 curSprite.scale.x = scale;
                 curSprite.scale.y = scale;
                 canvas.g2.pushTranslation(-curSprite.position.x+rx+size*0.25,-curSprite.position.y+oldY+size*0.25);
+                if(!doUpdate){
+                    curSprite.data.animation._count = 0;
+                }
                 curSprite.render(canvas); //@TODO: Fix timeline playback, presently works with render which updates the count of speeddiv we should do it manually
                 canvas.g2.popTransformation();
 
@@ -387,7 +399,8 @@ class AnimationEditor {
                         exists = true;
                     }
                 }
-                if(!exists){
+                var isWholeImage = anim._frames.length == 1 && anim._frames[0].tw == curSprite.data.image.width && anim._frames[0].th == curSprite.data.image.height;   
+                if(!exists && !isWholeImage){
                     var out:TAnimation = {name: anim.name,frames: anim._frames,fps: anim._speeddiv,time:0.0};
                     for( frame in out.frames){
                         if(out.time < frame.start) out.time = frame.start;

@@ -119,10 +119,6 @@ class Sprite extends Entity {
 	}
 
 	override function set_raw(data:TObj):TObj {
-		var obj = super.set_raw(data);
-		for(field in Reflect.fields(obj)){
-			Reflect.setProperty(this.data.raw,field,Reflect.field(obj,field));
-		}
-		return this.data.raw;
+		return this.data.raw = cast(super.set_raw(data));
 	}
 }

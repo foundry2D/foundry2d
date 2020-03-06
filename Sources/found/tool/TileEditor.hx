@@ -4,6 +4,7 @@ import kha.math.Vector2;
 import found.data.SpriteData;
 import kha.graphics4.Graphics2;
 import found.anim.Tilemap;
+import found.math.Util;
 import zui.Zui;
 import zui.Id;
 import zui.Ext;
@@ -57,8 +58,8 @@ class TileEditor {
 				ui.indent();
 				ui.text("Text");
                 newSelection = Ext.list(ui, Id.handle(), tilemapIds);
-                map.w = Std.int(ui.slider(Id.handle({value: map.w}), "Map Width",0,Math.pow(256,2),false,1/map.tw));
-                map.h = Std.int(ui.slider(Id.handle({value: map.h}), "Map Height",0,Math.pow(256,2),false,1/map.th));
+                map.w = Std.int(ui.slider(Id.handle({value: map.w}), "Map Width",0,Util.pow(256,2),false,1/map.tw));
+                map.h = Std.int(ui.slider(Id.handle({value: map.h}), "Map Height",0,Util.pow(256,2),false,1/map.th));
                 map.tw = Std.int(Ext.floatInput(ui, Id.handle({value: 64.0}), "Tile Width"));
                 map.th = Std.int(Ext.floatInput(ui, Id.handle({value: 64.0}), "Tile Height"));
 				

@@ -13,6 +13,7 @@
             "depth": 0.0,
             "active": true,
             "imagePath": "loading",
+            "anims": [],
             "traits":[
                 {
                     "type": "Script",

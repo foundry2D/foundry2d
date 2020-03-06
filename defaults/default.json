@@ -26,6 +26,7 @@
             "depth":0,
             "active":true,
             "imagePath":"platformerPack_character",
+            "anims": [],
             "traits":
             [
                 {
@@ -45,4 +46,5 @@
             }
         }
     ]
+
 }

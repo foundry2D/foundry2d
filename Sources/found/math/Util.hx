@@ -1,5 +1,11 @@
 package found.math;
 
+import haxe.macro.Expr;
+
+/**
+ * Some copy pasta from: https://github.com/deepnight/deepnightLibs/blob/master/src/dn/M.hx
+*/
+
 class Util {
 	public static function randomInt(value:Int):Int {
 		return Math.floor(Math.random() * value);
@@ -21,17 +27,104 @@ class Util {
 		return min + (max - min) * value;
 	}
 
+	inline public static var PI = 3.141592653589793;
+
+	inline static var d2r = PI / 180 ;
 	public static function degToRad(degrees:Float):Float {
-		return degrees * Math.PI / 180;
+		return degrees * d2r;
 	}
 
+	inline static var r2d = 180 / PI;
 	public static function radToDeg(radians:Float):Float {
-		return radians * 180 / Math.PI;
+		return radians * r2d;
 	}
+
 	public static function fround( value : Float, precision : Int): Float {
 		value = value * Math.pow(10, precision);
 		value = Math.round( value ) / Math.pow(10, precision);
 		return value;
+	}
+
+	inline public static function fclamp(x:Float, min:Float, max:Float):Float
+	{
+		return (x < min) ? min : (x > max) ? max : x;
+	}
+
+	/**
+	 * Default system epsilon.
+	 */
+	inline public static var EPS = 1e-6;
+
+	inline public static function slerp(from:Float, to:Float, t:Float)
+	{
+		var m = Math;
+
+		var c1 = m.sin(from * .5);
+		var r1 = m.cos(from * .5);
+		var c2 = m.sin(to * .5);
+		var r2 = m.cos(to * .5);
+
+		var c = r1 * r2 + c1 * c2;
+
+		if( c < 0.)
+		{
+			if( (1. + c) > Util.EPS)
+			{
+				var o = m.acos(-c);
+				var s = m.sin(o);
+				var s0 = m.sin((1 - t) * o) / s;
+				var s1 = m.sin(t * o) / s;
+				return m.atan2(s0 * c1 - s1 * c2, s0 * r1 - s1 * r2) * 2.;
+			}
+			else
+			{
+				var s0 = 1 - t;
+				var s1 = t;
+				return m.atan2(s0 * c1 - s1 * c2, s0 * r1 - s1 * r2) * 2;
+			}
+		}
+		else
+		{
+			if( (1 - c) > Util.EPS)
+			{
+				var o = m.acos(c);
+				var s = m.sin(o);
+				var s0 = m.sin((1 - t) * o) / s;
+				var s1 = m.sin(t * o) / s;
+				return m.atan2(s0 * c1 + s1 * c2, s0 * r1 + s1 * r2) * 2.;
+			}
+			else
+			{
+				var s0 = 1 - t;
+				var s1 = t;
+				return m.atan2(s0 * c1 + s1 * c2, s0 * r1 + s1 * r2) * 2;
+			}
+		}
+	}
+
+	/**
+	 * Replaces pow(v, 3) by v * v * v at compilation time (macro), 17x faster results
+	 * Limitations: "power" must be a constant Int [0-256], no variable allowed
+	 */
+	 macro public static function pow(v:Expr, power:Expr) {
+		var pos = haxe.macro.Context.currentPos();
+		var v = { expr:EParenthesis(v), pos:pos }
+
+		var ipow = switch( power.expr ) {
+			case EConst(CInt(v)) : Std.parseInt(v);
+			default : haxe.macro.Context.error("You can only use a constant Int here", power.pos);
+		}
+
+		if( ipow<=0 || ipow>256 )
+			haxe.macro.Context.error("Only values between [0-256] are supported", power.pos);
+
+		function recur(n:Int) : Expr {
+			if( n>1 )
+				return {expr:EBinop(OpMult, v, recur(n-1)), pos:pos}
+			else
+				return v;
+		}
+		return recur(ipow);
 	}
 }
 

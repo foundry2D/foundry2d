@@ -37,7 +37,7 @@ class SpriteData {
 			this.image = img;
 			anims = [];
 			name = this.raw.imagePath;
-			if(raw.anims!= null){
+			if(raw.anims.length != 0){
 				for(a in raw.anims){
 					animLoad(a);
 				}

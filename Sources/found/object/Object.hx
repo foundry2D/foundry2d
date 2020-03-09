@@ -38,12 +38,17 @@ class Object {
 		if(State.active != null && State.active.physics_world != null && data.rigidBody != null){
             if(data.rigidBody.x == null) data.rigidBody.x = data.position.x;
 			if(data.rigidBody.y == null) data.rigidBody.y = data.position.y;
+<<<<<<< HEAD
 			if(data.rigidBody.shapes != null){
 				if(data.rigidBody.shapes[0].width == null) data.rigidBody.shapes[0].width = data.width;
             	if(data.rigidBody.shapes[0].height == null) data.rigidBody.shapes[0].height = data.height;
+=======
+			if(data.rigidBody.shapes != null) {
+				if(data.rigidBody.shapes[0].width == null) data.rigidBody.shapes[0].width = data.width;
+				if(data.rigidBody.shapes[0].height == null) data.rigidBody.shapes[0].height = data.height;
+>>>>>>> master
 			}
 			body = State.active.physics_world.add(new echo.Body(data.rigidBody));
-			body.on_move = on_physics_move;
 		}
 		return this.raw;
 	}
@@ -51,7 +56,14 @@ class Object {
 	public final uid:Int;
 	public var active(default, set):Bool = true;
 
-	public var body:echo.Body =null;
+	public var body(default, set):echo.Body = null;
+	function set_body(b:echo.Body) {
+		if(b != null){
+			b.on_move = on_physics_move;
+		}
+		return body = b;
+	}
+
 	function on_physics_move(x:Float,y:Float){
 		translate(function(data:MoveData){
 			data._positions.x = x;

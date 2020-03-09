@@ -174,8 +174,8 @@ class NodeEditor {
 						pushNodeToSelectedGroup(FoundryNode.joinVec2Node);
 				}
 				if (ui.panel(Id.handle(), "Transform")) {
-					if (ui.button("Set Object Loc"))
-						pushNodeToSelectedGroup(FoundryNode.setObjectLocNode);
+					if (ui.button("Set Object Location"))
+						pushNodeToSelectedGroup(FoundryNode.setObjectLocationNode);
 					if (ui.button("Translate Object"))
 						pushNodeToSelectedGroup(FoundryNode.translateObjectNode);
 				}

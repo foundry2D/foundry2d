@@ -225,51 +225,6 @@ class FoundryNode {
 		],
 		color: -4962746
 	};
-	public static var setObjectLocNode:TNode = {
-		id: 0,
-		name: "Set Object Location",
-		type: "SetObjLocNode",
-		x: 200,
-		y: 200,
-		color: -4962746,
-		inputs: [
-			{
-				id: 0,
-				node_id: 0,
-				name: "In",
-				type: "ACTION",
-				color: 0xffaa4444,
-				default_value: ""
-			},
-			{
-				id: 0,
-				node_id: 0,
-				name: "Object",
-				type: "STRING",
-				color: -4934476,
-				default_value: ""
-			},
-			{
-				id: 0,
-				node_id: 0,
-				name: "Vec2",
-				type: "VECTOR2",
-				color: -7929601,
-				default_value: new kha.math.FastVector2(0.0, 0.0)
-			}
-		],
-		outputs: [
-			{
-				id: 0,
-				node_id: 0,
-				name: "Out",
-				type: "ACTION",
-				color: 0xffaa4444,
-				default_value: ""
-			}
-		],
-		buttons: []
-	};
 	public static var splitVec2Node:TNode = {
 		id: 0,
 		name: "Split Vec2",
@@ -303,59 +258,6 @@ class FoundryNode {
 				type: "VALUE",
 				color: -10183681,
 				default_value: 0.0
-			}
-		],
-		buttons: []
-	};
-	public static var translateObjectNode:TNode = {
-		id: 0,
-		name: "Translate Object",
-		type: "TranslateObjectNode",
-		x: 200,
-		y: 200,
-		color: -4962746,
-		inputs: [
-			{
-				id: 0,
-				node_id: 0,
-				name: "In",
-				type: "ACTION",
-				color: 0xffaa4444,
-				default_value: ""
-			},
-			{
-				id: 0,
-				node_id: 0,
-				name: "Object",
-				type: "STRING",
-				color: -4934476,
-				default_value: ""
-			},
-			{
-				id: 0,
-				node_id: 0,
-				name: "Vec2",
-				type: "VECTOR2",
-				color: -7929601,
-				default_value: new kha.math.FastVector2(0.0, 0.0)
-			},
-			{
-				id: 0,
-				node_id: 0,
-				name: "Speed",
-				type: "VALUE",
-				color: -10183681,
-				default_value: 1.0
-			}
-		],
-		outputs: [
-			{
-				id: 0,
-				node_id: 0,
-				name: "Out",
-				type: "ACTION",
-				color: 0xffaa4444,
-				default_value: ""
 			}
 		],
 		buttons: []
@@ -397,21 +299,136 @@ class FoundryNode {
 		],
 		buttons: []
 	};
+	public static var setObjectLocationNode:TNode = {
+		id: 0,
+		name: "Set Object Location",
+		type: "SetObjectLocationNode",
+		x: 200,
+		y: 200,
+		color: -4962746,
+		inputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name: "In",
+				type: "ACTION",
+				color: 0xffaa4444,
+				default_value: ""
+			},
+			{
+				id: 0,
+				node_id: 0,
+				name: "Object",
+				type: "OBJECT",
+				color: -4934476,
+				default_value: null
+			},
+			{
+				id: 0,
+				node_id: 0,
+				name: "Vec2",
+				type: "VECTOR2",
+				color: -7929601,
+				default_value: new kha.math.FastVector2(0.0, 0.0)
+			}
+		],
+		outputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name: "Out",
+				type: "ACTION",
+				color: 0xffaa4444,
+				default_value: ""
+			}
+		],
+		buttons: []
+	};
+	public static var translateObjectNode:TNode = {
+		id: 0,
+		name: "Translate Object",
+		type: "TranslateObjectNode",
+		x: 200,
+		y: 200,
+		color: -4962746,
+		inputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name: "In",
+				type: "ACTION",
+				color: 0xffaa4444,
+				default_value: ""
+			},
+			{
+				id: 0,
+				node_id: 0,
+				name: "Object",
+				type: "OBJECT",
+				color: -4934476,
+				default_value: null
+			},
+			{
+				id: 0,
+				node_id: 0,
+				name: "Vec2",
+				type: "VECTOR2",
+				color: -7929601,
+				default_value: new kha.math.FastVector2(0.0, 0.0)
+			},
+			{
+				id: 0,
+				node_id: 0,
+				name: "Speed",
+				type: "VALUE",
+				color: -10183681,
+				default_value: 1.0
+			}
+		],
+		outputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name: "Out",
+				type: "ACTION",
+				color: 0xffaa4444,
+				default_value: ""
+			}
+		],
+		buttons: []
+	};
 	public static var getObjectNode:TNode = {
 		id: 0,
 		name: "Get Object",
 		type: "GetObjectNode",
 		x: 200,
 		y: 200,
-		inputs: [],
+		inputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name: "In",
+				type: "ACTION",
+				color: 0xffaa4444,
+				default_value: ""
+			}
+		],
 		outputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name: "Out",
+				type: "ACTION",
+				color: 0xffaa4444,
+				default_value: ""
+			},
 			{
 				id: 0,
 				node_id: 0,
 				name: "Selected Object",
 				type: "OBJECT",
-				color: 0xffaa4444,
-				default_value: ""
+				color: -4934476,
+				default_value: null
 			}
 		],
 		buttons: [
@@ -445,9 +462,9 @@ class FoundryNode {
 				id: 0,
 				node_id: 0,
 				name: "Object",
-				type: "STRING",
+				type: "OBJECT",
 				color: -4934476,
-				default_value: ""
+				default_value: null
 			},
 			{
 				id: 0,
@@ -490,9 +507,9 @@ class FoundryNode {
 				id: 0,
 				node_id: 0,
 				name: "Object",
-				type: "STRING",
+				type: "OBJECT",
 				color: -4934476,
-				default_value: ""
+				default_value: null
 			},
 			{
 				id: 0,

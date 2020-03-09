@@ -181,7 +181,9 @@ class Scene {
     if(Found.collisionsDraw && physics_world != null){
       for(body in physics_world.members){
         canvas.g2.color = kha.Color.fromBytes(255,0,0,64);
-        drawShape(canvas.g2,body.shape,body.x,body.y);
+        for(shape in body.shapes) {
+          drawShape(canvas.g2,shape,shape.x,shape.y);
+        }
         canvas.g2.color = kha.Color.fromBytes(0,0,255,128);
       }
       canvas.g2.color = kha.Color.White;
@@ -207,7 +209,7 @@ class Scene {
     switch(shape.type){
       case echo.data.Types.ShapeType.RECT:
         var bounds = shape.bounds();
-        g.fillRect(shape.x,shape.y,bounds.width,bounds.height);
+        g.fillRect(x + shape.x, y + shape.y,bounds.width,bounds.height);
       default:
     }
   } 

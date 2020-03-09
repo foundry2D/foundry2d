@@ -57,9 +57,7 @@ class Scene {
     // root = new Object();
 
     if(raw.physicsWorld != null){
-      physics_world = echo.Echo.start(raw.physicsWorld);
-      physics_world.listen();
-      physicsUpdate = physics_world.step;
+      addPhysicsWorld(raw.physicsWorld);
     }
     
 
@@ -120,6 +118,12 @@ class Scene {
       }
   }
 
+  function addPhysicsWorld(opts:echo.data.Options.WorldOptions) {
+    physics_world = echo.Echo.start(opts);
+    physics_world.listen();
+    physicsUpdate = physics_world.step;
+  }
+
   @:access(found.App,found.object.Object)
   public function update(dt:Float){
     if(!Scene.ready && raw._entities.length == _entities.length)
@@ -160,7 +164,7 @@ class Scene {
     //@:Incomplete: We should maybe add the possibility to have multithreaded
     // calls in LateUpdate and execute them after. For now we will focus on having this in the normal update.
 
-    #if debug
+    #if debug_physics
     if(physics_world != null)
       echo.util.Debug.log(physics_world);
     #end

@@ -31,6 +31,7 @@ typedef TSceneFormat = {
     @:optional public var  _entities:Array<TObj>;
     @:optional public var _depth:Bool;
     @:optional public var _Zsort:Bool;
+    @:optional public var cullOffset:Int;
     @:optional public var traits:Array<TTrait>; // Scene root traits
     @:optional public var physicsWorld: echo.data.Options.WorldOptions;
 }

@@ -7,7 +7,6 @@ import found.anim.Tilemap;
 #if editor
 import found.math.Util.Cli;
 #end
-import found.collide.Rectangle;
 import found.anim.Sprite;
 import haxe.ds.ArraySort;
 import kha.Canvas;
@@ -88,12 +87,12 @@ class Scene {
               createTraits(data.traits,s);
               _entities.push(s);
           });
-        case "rect_object":
-          var data:TRectData = SceneFormat.getData(e);
-          var out = new Rectangle(data.position.x,data.position.y,Std.int(data.width),Std.int(data.height));
-          out.raw = data;
-          createTraits(data.traits,out);
-          _entities.push(out);
+        // case "rect_object":
+        //   var data:TRectData = SceneFormat.getData(e);
+        //   var out = new Rectangle(data.position.x,data.position.y,Std.int(data.width),Std.int(data.height));
+        //   out.raw = data;
+        //   createTraits(data.traits,out);
+        //   _entities.push(out);
         case "tilemap_object":
           var data:TTilemapData = SceneFormat.getData(e);
           new Tilemap(data,function(tilemap:Tilemap){
@@ -181,7 +180,9 @@ class Scene {
     if(Found.collisionsDraw && physics_world != null){
       for(body in physics_world.members){
         canvas.g2.color = kha.Color.fromBytes(255,0,0,64);
-        drawShape(canvas.g2,body.shape,body.x,body.y);
+        for(shape in body.shapes){
+          drawShape(canvas.g2,shape,body.x,body.y);
+        }
         canvas.g2.color = kha.Color.fromBytes(0,0,255,128);
       }
       canvas.g2.color = kha.Color.White;
@@ -207,7 +208,7 @@ class Scene {
     switch(shape.type){
       case echo.data.Types.ShapeType.RECT:
         var bounds = shape.bounds();
-        g.fillRect(shape.x,shape.y,bounds.width,bounds.height);
+        g.fillRect(x + shape.x,y + shape.y,bounds.width,bounds.height);
       default:
     }
   } 

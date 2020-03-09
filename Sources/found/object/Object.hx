@@ -37,9 +37,11 @@ class Object {
 		this.raw = data;
 		if(State.active != null && State.active.physics_world != null && data.rigidBody != null){
             if(data.rigidBody.x == null) data.rigidBody.x = data.position.x;
-            if(data.rigidBody.y == null) data.rigidBody.y = data.position.y;
-            if(data.rigidBody.shape.width == null) data.rigidBody.shape.width = data.width;
-            if(data.rigidBody.shape.height == null) data.rigidBody.shape.height = data.height;
+			if(data.rigidBody.y == null) data.rigidBody.y = data.position.y;
+			if(data.rigidBody.shapes != null){
+				if(data.rigidBody.shapes[0].width == null) data.rigidBody.shapes[0].width = data.width;
+            	if(data.rigidBody.shapes[0].height == null) data.rigidBody.shapes[0].height = data.height;
+			}
 			body = State.active.physics_world.add(new echo.Body(data.rigidBody));
 			body.on_move = on_physics_move;
 		}
@@ -121,10 +123,6 @@ class Object {
 		return _height;
 	}
 	public var center:Vector2;
-	public var velocity:Vector2 = new Vector2();
-	// public var speed = 3.0;
-	// public var acceleration = 0.3;
-	// public var friction = 3.6;
 
 	public var depth:Float = 0.0;
 

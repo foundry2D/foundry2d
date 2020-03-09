@@ -10,10 +10,12 @@ import kha.math.Vector2;
 
 class Tilemap extends Object{
     
-    /* width */         public var w : Int;
-    /* height */        public var h : Int;
-    /* tile width */    public var tw : Int;
-    /* tile height */   public var th : Int;
+    //@TODO: Set data array to new array 
+    //when changing the width or height of the tilemap
+    public var w : Int;
+    public var h : Int;
+    public var tw : Int;
+    public var th : Int;
     public var data : Array<Int>;
     var tiles:Map<Int,Tile>;
     public var imageData:Array<SpriteData>;
@@ -102,21 +104,19 @@ class Tilemap extends Object{
     override public function render(canvas:Canvas) {
         var x = 0;
         var y = 0;
-        while(x+position.x < w){
+        while(x < w){
             var pos = posXY2Id(x,y);
             if(pos != -1){
                 var tileId = data[pos];
-                // trace('Tileid was: $tileId');
                 if(tileId != -1){
                     var tile = tiles[tileId];
                     if(tile != null){
-                        // trace('Tile was not null');
                         tile.render(canvas,new Vector2(x+position.x,y+position.y));
                     }
                 }
             }
             x+=tw;
-            if(x+position.x >= w && y < h){
+            if(x>= w && y < h){
                 y+=th;
                 x = 0;
             }

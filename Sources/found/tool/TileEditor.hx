@@ -51,7 +51,7 @@ class TileEditor {
         }
         var newSelection = selectedMap;
         var vec:kha.math.Vector2 =  new Vector2();
-        if (ui.window(zui.Id.handle(),x,y, width, height, true)) {
+        if (ui.window(Id.handle(),x,y, width, height, true)) {
 
             endHeight = ui._y;
 			if (ui.panel(Id.handle({selected: true}), "Tilemap editor")) {
@@ -109,33 +109,7 @@ class TileEditor {
 
                 ui.g.color = kha.Color.White;
                 // ui.textInput(Id.handle({text: "Hello"}), "Input");
-				
-
-                ui.check(Id.handle(), "Cull");
-                ui.slider(Id.handle({value: 1.0}), "Cull offset", 0, 500);
-                // var hradio = Id.handle();
-                // ui.radio(hradio, 0, "Radio 1");
-                // ui.radio(hradio, 1, "Radio 2");
-                // ui.radio(hradio, 2, "Radio 3");
-                // Ext.inlineRadio(ui, Id.handle(), ["High", "Medium", "Low"]);
-                // ui.combo(Id.handle(), ["Item 1", "Item 2", "Item 3"], "Combo", true);
-                // if (ui.panel(Id.handle({selected: false}), "Nested Panel")) {
-                //     ui.indent();
-                //     ui.text("Row");
-                //     ui.row([2/5, 2/5, 1/5]);
-                //     ui.button("A");
-                //     ui.button("B");
-                //     ui.check(Id.handle(), "C");
-                //     ui.text("Simple list");
-                    
-                //     ui.unindent();
-                // }
-                // Ext.floatInput(ui, Id.handle({value: 42.0}), "Float Input");
-                // ui.slider(Id.handle({value: 0.2}), "Slider", 0, 1);
-                // if (ui.isHovered) ui.tooltip("Slider tooltip");
-                // ui.slider(Id.handle({value: 0.4}), "Slider 2", 0, 1.2, true);
-                // Ext.colorPicker(ui, Id.handle());
-                ui.separator();
+            
                 ui.unindent();
             }
             endHeight = Math.abs(endHeight-ui._y);
@@ -173,7 +147,7 @@ class TileEditor {
             curTile = null;
         }
     }
-    @:access(found.anim.Tilemap,found.anim.Tile)
+    @:access(found.anim.Tilemap,found.anim.Tile,found.App)
     public function addTile(){
         if(!visible || selectedMap < 0 || !isInScreen())return;
         
@@ -187,6 +161,8 @@ class TileEditor {
         }
         var px:Float =0.0;
         var py:Float = 0.0;
+        var addX = map.position.x > 0 ? -map.position.x : Math.abs(map.position.x); 
+        var addY = map.position.y > 0 ? -map.position.y : Math.abs(map.position.y);  
         #if editor
         if(!Found.fullscreen){
             px = Found.mouseX;
@@ -194,20 +170,22 @@ class TileEditor {
             
             var pos:kha.math.FastVector2 = new kha.math.FastVector2(px,py);  
             pos = utilities.Conversion.ScreenToWorld(pos);
-            px = pos.x;
-            py = pos.y;
+            px = pos.x + addX;
+            py = pos.y + addY;
         }
         else{
         #end
         px = Math.abs(Found.mouseX) < Found.GRID*0.75 ? Found.mouseX-curTile._w*2: Found.mouseX-curTile._w;
         py = Math.abs(Found.mouseY) < Found.GRID*0.75 ? Found.mouseY-curTile._h*2:Found.mouseY-curTile._h;
-        px = Math.floor(px);
+        px = Math.floor(px+addX+found.State.active.cam.position.x);
         px += (Found.GRID-(px % Found.GRID));
-        py = Math.floor(py);
+        py = Math.floor(py+addY+found.State.active.cam.position.y);
         py += (Found.GRID-(py % Found.GRID));
         #if editor } #end
-
-        map.data[map.posXY2Id(px,py)] = tileSelected.index;
+        var index  = map.posXY2Id(px,py);
+        if(index > -1){
+            map.data[index] = tileSelected.index;
+        }
 
     }
 

@@ -4,8 +4,6 @@ import kha.math.FastMatrix3;
 import kha.Canvas;
 import kha.math.Vector2;
 
-import found.object.Entity;
-
 import found.data.SpriteData;
 import found.data.SceneFormat;
 

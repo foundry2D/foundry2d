@@ -18,15 +18,14 @@ import kha.Canvas;
 import kha.Color;
 import kha.math.Vector2;
 import kha.Assets;
-
-import found.object.Entity;
+import found.object.Object;
 import found.math.Util;
 import found.data.Data;
 import found.data.SpriteData;
 import found.data.SceneFormat;
 
 
-class Sprite extends Entity {
+class Sprite extends Object {
 	private var data:SpriteData;
 	private var _w: Float;
 	private var _h: Float;

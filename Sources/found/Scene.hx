@@ -1,5 +1,6 @@
 package found;
 
+import kha.simd.Float32x4;
 import found.node.Logic;
 import found.node.Logic.TNodeCanvas;
 import kha.Blob;
@@ -34,6 +35,13 @@ class Scene {
   public var traitRemoves:Array<Void->Void> = [];
   
   public var physicsUpdate:Float->Void = function(f:Float){};
+
+  public var cullOffset(get,null):Int = 0;
+  function get_cullOffset(){
+    if(cullOffset == 0 && raw.cullOffset != null) cullOffset = raw.cullOffset;
+    return cullOffset;
+  }
+
   static var STEP = 16/1000;
 
   private var _depth:Bool = true;
@@ -172,6 +180,16 @@ class Scene {
   @:access(found.App)
   public function render(canvas:Canvas){
     var ordered = _entities.copy();
+    if(cullOffset != 0){
+      var data:Float32x4 = Float32x4.loadFast(cam.position.x,cam.position.y,Found.WIDTH,Found.HEIGHT);
+      var objects:Array<Object> = [];
+      for(i in 0...ordered.length) {
+        if(ordered[i].isVisible(cullOffset,data)){
+          objects.push(ordered[i]);
+        }
+      }
+      ordered = objects;
+    }
     if (_depth) depth(ordered);
 
     for (entity in ordered) entity.render(canvas);

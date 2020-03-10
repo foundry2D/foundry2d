@@ -12,8 +12,16 @@ class Tilemap extends Object{
     
     //@TODO: Set data array to new array 
     //when changing the width or height of the tilemap
-    public var w : Int;
-    public var h : Int;
+    public var w(default,set) : Int;
+    function set_w(width:Int){
+        super.width = width;
+        return w = width;
+    }
+    public var h(default,set) : Int;
+    function set_h(height:Int){
+        super.height = height;
+        return h = height;
+    }
     public var tw : Int;
     public var th : Int;
     public var data : Array<Int>;

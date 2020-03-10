@@ -1,5 +1,7 @@
 package found.object;
 
+import kha.simd.Float32x4;
+import found.math.Vec2;
 import kha.Canvas;
 import kha.math.Vector2;
 import kha.math.Vector3;
@@ -38,15 +40,9 @@ class Object {
 		if(State.active != null && State.active.physics_world != null && data.rigidBody != null){
             if(data.rigidBody.x == null) data.rigidBody.x = data.position.x;
 			if(data.rigidBody.y == null) data.rigidBody.y = data.position.y;
-<<<<<<< HEAD
-			if(data.rigidBody.shapes != null){
-				if(data.rigidBody.shapes[0].width == null) data.rigidBody.shapes[0].width = data.width;
-            	if(data.rigidBody.shapes[0].height == null) data.rigidBody.shapes[0].height = data.height;
-=======
 			if(data.rigidBody.shapes != null) {
 				if(data.rigidBody.shapes[0].width == null) data.rigidBody.shapes[0].width = data.width;
 				if(data.rigidBody.shapes[0].height == null) data.rigidBody.shapes[0].height = data.height;
->>>>>>> master
 			}
 			body = State.active.physics_world.add(new echo.Body(data.rigidBody));
 		}
@@ -181,6 +177,18 @@ class Object {
 
 	public function render(canvas:Canvas){
 		if (!active || !Scene.ready) return;
+	}
+
+	public function isVisible(offset:Int,cam:Float32x4): Bool {
+		if (!active || !Scene.ready) return false;
+		
+		var x = Float32x4.get(cam,0);
+		var y = Float32x4.get(cam,1);
+		var w = Float32x4.get(cam,2);
+		var h = Float32x4.get(cam,3);
+		if(position.x < x + offset + w && position.x > x - offset - width && position.y > y-offset -height && position.y < y +h+offset) return true;
+
+		return false;
 	}
 
 	public function activate(?x:Float, ?y:Float){

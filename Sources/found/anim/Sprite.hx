@@ -103,10 +103,6 @@ class Sprite extends Object {
 		}
 	}
 	
-	public function outOfView(): Void {
-		
-	}
-	
 	override function set_width(value: Float): Float {
 		super.set_width(value);
 		return _w = value;

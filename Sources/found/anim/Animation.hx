@@ -1,6 +1,7 @@
 package found.anim;
 
 
+import found.data.SceneFormat.TAnimation;
 import found.data.SceneFormat.TFrame;
 
 class Animation {
@@ -14,7 +15,7 @@ class Animation {
 		return new Animation([frame], 1);
 	}
 	
-	public static function createFrames(width:Int,height:Int,maxindex: Int, speeddiv: Int,?step:Float = 0.1): Animation {
+	public static function createFrames(width:Int,height:Int,maxindex: Int, speeddiv: Int,?step:Float = 1.0): Animation {
 		var frames = new Array<TFrame>();
 		for (i in 0...maxindex) frames.push({id:i,start:step*i,tw:width,th:height});
 		return new Animation(frames, speeddiv);
@@ -25,11 +26,18 @@ class Animation {
 		_index = 0;
 		this._speeddiv = speeddiv;
 	}
+	public static function fromDefinition(def:TAnimation){
+		var anim = new Animation(def.frames, def.fps);
+		anim._index = 0;
+		anim.name = def.name;
+		return anim;
+	}
 	
 	public function take(animation: Animation) {
 		if (_frames == animation._frames) return;
 		_frames = animation._frames;
 		_speeddiv = animation._speeddiv;
+		name  = animation.name;
 		reset();
 	}
 	

@@ -54,6 +54,6 @@ class SpriteData {
 		return anims.push(Animation.create(frame))-1;
 	}
 	function animLoad(anim:TAnimation) {
-		anims.push(new Animation(anim.frames,anim.fps));
+		anims.push(Animation.fromDefinition(anim));
 	}
 }

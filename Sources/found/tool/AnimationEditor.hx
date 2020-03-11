@@ -4,6 +4,7 @@ package found.tool;
 import found.math.Vec2;
 import found.math.Util;
 import found.data.SceneFormat;
+import found.anim.Animation;
 
 import zui.Id;
 import zui.Zui;
@@ -50,10 +51,12 @@ class AnimationEditor {
                 }
                 else {
                     selectedUID = -1;
+                    curFrames.resize(0);
+                    animations.resize(0);
                 }
             }
             if(oldUid != selectedUID){
-                windowHandle.redraws = 2;
+                timelineHandle.redraws = windowHandle.redraws = 2;
             }
             return selectedUID;
         }
@@ -85,16 +88,17 @@ class AnimationEditor {
             ui.begin(g);
             if(curSprite != null && lastImage != curSprite.data.raw.imagePath){
                 lastImage = curSprite.data.raw.imagePath;
-                // if(curSprite.data.raw.anims != null){
-                //     curFrames =  curSprite.data.raw.anims[0].frames;
-                //     for(anim in curSprite.data.raw.anims){
-                //         animations.push(anim.name);
-                //     }
-                // }
-                // else {
+                if(curSprite.data.raw.anims.length > 0){
+                    for(anim in curSprite.data.raw.anims){
+                        animations.push(anim.name);
+                    }
+                    animIndex = curSprite.data.curAnim;
+                    curFrames = curSprite.data.animation._frames;
+                }
+                else {
                     curFrames.resize(0);
                     animations.resize(0);
-                // }
+                }
                  
                 frameHandles = []; 
                 timelineHandle.redraws = windowHandle.redraws = 2;//redraw
@@ -104,21 +108,31 @@ class AnimationEditor {
                 ui.row([0.5,0.25,0.25]);
                 animHandle.position = animIndex;
                 animIndex = ui.combo(animHandle,animations);
-            
+                if(curSprite != null && animHandle.changed){
+                    curSprite.data.curAnim = animIndex;
+                }
                 if(ui.button("New Animation") && curSprite != null){
                     var id = animations.length;
                     animIndex = animations.push('Animation $id')-1;
                     if(animIndex == 0){
+                        var frame:TFrame = {id:0,start:0.0,tw:Std.int(curSprite.data.raw.width),th:Std.int(curSprite.data.raw.height)};
+                        curSprite.data.animation.take(Animation.create(frame));
+                        curFrames = curSprite.data.animation._frames;
+
+                    }
+                    else {
                         curSprite.data.curAnim = curSprite.data.addSubSprite(0);
                         curFrames = curSprite.data.animation._frames;
-                        for(frame in curFrames){
-                            var handles = [];
-                            for(i in 0...5){
-                                handles.push(new zui.Zui.Handle({value:0}));
-                            }
-                            frameHandles.push(handles);
-                        }
                     }
+                    for(frame in curFrames){
+                        var handles = [];
+                        for(i in 0...5){
+                            handles.push(new zui.Zui.Handle({value:0}));
+                        }
+                        frameHandles.push(handles);
+                    }
+                    curSprite.data.animation.name = animations[animIndex];
+                    timelineHandle.redraws = 2;
                 }
 
                 if(ui.button("Save Animations") && curSprite != null){
@@ -154,6 +168,7 @@ class AnimationEditor {
                 if(ui.button("Reset")){
                     delta = 0.0;
                     doUpdate = false;
+                    timelineHandle.redraws = 2;
                 }
 
                 ui.row([0.75,0.25]);
@@ -221,7 +236,7 @@ class AnimationEditor {
 		    g.begin(false);
         }
         
-
+        @:access(found.anim.Sprite,found.anim.Animation)
         function addItem(name:String){
             if(animIndex < 0) return;
             for(frame in  curFrames){
@@ -232,7 +247,7 @@ class AnimationEditor {
             }
 
             var frame:TFrame =  {id:0,start:delta,tw: 0,th:0};
-            var id = curFrames.push(frame)-1;
+            var id = curFrames.push(frame)-1; // @:TODO: We seem to add the frames back when we reload( I.e. doubling the frames we should investigate here)
             var handles = [];
             for(i in 0...5){
                 handles.push(new zui.Zui.Handle({value:0}));
@@ -242,8 +257,8 @@ class AnimationEditor {
             frame.id = id;
 
             if( curFrames.length > 1){
-                var lastFrame = curFrames[id-1];
-                fpsHandle.text = ""+(frame.start-lastFrame.start);
+                var firstFrame = curFrames[0];
+                curSprite.data.animation._speeddiv = Std.int(Math.abs(firstFrame.start-frame.start)*10);
             }
 
             timelineHandle.redraws = 2;
@@ -295,9 +310,9 @@ class AnimationEditor {
             if(!visible)return;
 
             if(doUpdate && curSprite != null){
-                var currentCount = fpsHandle.value - (curSprite.data.animation._count % fpsHandle.value); 
-                delta = currentCount/fpsHandle.value;
-                timelineHandle.redraws = windowHandle.redraws = 2;//redraw
+                var currentCount = curSprite.data.animation._speeddiv - (curSprite.data.animation._count % curSprite.data.animation._speeddiv); 
+                delta = currentCount/curSprite.data.animation._speeddiv;
+                timelineHandle.redraws = windowHandle.redraws = 1;//redraw
             }
         }
         var canvas:kha.Image;
@@ -327,8 +342,13 @@ class AnimationEditor {
                 canvas.g2.pushTranslation(-curSprite.position.x+rx+size*0.25,-curSprite.position.y+oldY+size*0.25);
                 if(!doUpdate){
                     curSprite.data.animation._count = 0;
+                    curSprite.data.animation._index = 0;
                 }
-                curSprite.render(canvas); //@TODO: Fix timeline playback, presently works with render which updates the count of speeddiv we should do it manually
+                curSprite.render(canvas);
+                if( doUpdate && curSprite.data.animation._index == 0){
+                    this.delta = 0.0;
+                    timelineHandle.redraws = 2;
+                }
                 canvas.g2.popTransformation();
 
                 curSprite.scale.x = origDimensions.x;
@@ -387,25 +407,26 @@ class AnimationEditor {
             if(curSprite == null)return;
 
             for(anim in curSprite.data.anims){
-                var exists = false;
-                for( a in curSprite.data.raw.anims){
-                    if(a.name == anim.name){
-                        a.frames.resize(0);
-                        a.fps = anim._speeddiv;
-                        for( frame in anim._frames){
-                            if(a.time < frame.start) a.time = frame.start;
-                            a.frames.push(frame);
-                        }
-                        exists = true;
-                    }
-                }
+                // var exists = false;
+                // for( a in curSprite.data.raw.anims){
+                //     if(a.name == anim.name){
+                //         a.frames.resize(0);
+                //         a.fps = anim._speeddiv;
+                //         for( frame in anim._frames){
+                //             if(a.time < frame.start) a.time = frame.start;
+                //             a.frames.push(frame);
+                //         }
+                //         exists = true;
+                //     }
+                // }
                 var isWholeImage = anim._frames.length == 1 && anim._frames[0].tw == curSprite.data.image.width && anim._frames[0].th == curSprite.data.image.height;   
-                if(!exists && !isWholeImage){
+                if(!isWholeImage){
                     var out:TAnimation = {name: anim.name,frames: anim._frames,fps: anim._speeddiv,time:0.0};
                     for( frame in out.frames){
                         if(out.time < frame.start) out.time = frame.start;
                     }
                     curSprite.data.raw.anims.push(out);
+                    curSprite.dataChanged = true;
                 }
             }
         }

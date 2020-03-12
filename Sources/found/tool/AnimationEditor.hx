@@ -405,29 +405,19 @@ class AnimationEditor {
         @:access(found.anim.Sprite,found.data.SpriteData,found.anim.Animation)
         public function saveAnimations(){
             if(curSprite == null)return;
-
+            var animations:Array<TAnimation> = [];
             for(anim in curSprite.data.anims){
-                // var exists = false;
-                // for( a in curSprite.data.raw.anims){
-                //     if(a.name == anim.name){
-                //         a.frames.resize(0);
-                //         a.fps = anim._speeddiv;
-                //         for( frame in anim._frames){
-                //             if(a.time < frame.start) a.time = frame.start;
-                //             a.frames.push(frame);
-                //         }
-                //         exists = true;
-                //     }
-                // }
                 var isWholeImage = anim._frames.length == 1 && anim._frames[0].tw == curSprite.data.image.width && anim._frames[0].th == curSprite.data.image.height;   
                 if(!isWholeImage){
                     var out:TAnimation = {name: anim.name,frames: anim._frames,fps: anim._speeddiv,time:0.0};
                     for( frame in out.frames){
                         if(out.time < frame.start) out.time = frame.start;
                     }
-                    curSprite.data.raw.anims.push(out);
+                    animations.push(out);
                     curSprite.dataChanged = true;
                 }
             }
+
+            curSprite.data.raw.anims = animations;
         }
 }

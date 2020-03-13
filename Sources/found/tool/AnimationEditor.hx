@@ -38,6 +38,7 @@ class AnimationEditor {
             height = h;
         }
 
+        @:access(found.anim.Sprite,found.anim.Animation)
         function set_selectedUID(value:Int):Int{
             var oldUid = selectedUID;
             if(value < 0 && value > found.State.active._entities.length){
@@ -51,6 +52,12 @@ class AnimationEditor {
                 }
                 else {
                     selectedUID = -1;
+                    if(curSprite != null){
+                        curFrames = curSprite.data.animation._frames.copy();
+                        lastImage = "";
+                        curSprite = null;
+                        animIndex = -1;
+                    }
                     curFrames.resize(0);
                     animations.resize(0);
                 }
@@ -66,7 +73,20 @@ class AnimationEditor {
         var doUpdate:Bool = false;
         var numberOfFrames:Float = 67.0;
         var animAction:Array<Float> = [];
-        var curFrames:Array<TFrame> = [];
+        var curFrames(default,set):Array<TFrame> = [];
+        function set_curFrames(data:Array<TFrame>){
+            if(curFrames.length != data.length){
+                for(frame in data){
+                    var handles = [];
+                    for(i in 0...5){
+                        handles.push(new zui.Zui.Handle({value:0}));
+                    }
+      
+                    frameHandles.push(handles);
+                }
+            }
+            return curFrames = data; 
+        }
         var animations:Array<String> = [];
         var animIndex:Int  = -1;
         var animHandle:zui.Zui.Handle = new zui.Zui.Handle();
@@ -88,6 +108,7 @@ class AnimationEditor {
             ui.begin(g);
             if(curSprite != null && lastImage != curSprite.data.raw.imagePath){
                 lastImage = curSprite.data.raw.imagePath;
+                frameHandles = []; 
                 if(curSprite.data.raw.anims.length > 0){
                     for(anim in curSprite.data.raw.anims){
                         animations.push(anim.name);
@@ -96,11 +117,10 @@ class AnimationEditor {
                     curFrames = curSprite.data.animation._frames;
                 }
                 else {
-                    curFrames.resize(0);
+                    // curFrames.resize(0);
                     animations.resize(0);
                 }
                  
-                frameHandles = []; 
                 timelineHandle.redraws = windowHandle.redraws = 2;//redraw
             }
             var viewHeight = AnimationEditor.height - timeline.height;

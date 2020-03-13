@@ -106,6 +106,7 @@ class App {
 
 		#if editor
 		if(!Found.fullscreen){
+			if(!editorui.visible) editorui.visible =true;
 			Found.backbuffer.g2.begin();
 
 			if (Found.scenebuffer == null) Found.scenebuffer = kha.Image.createRenderTarget(Found.backbuffer.width, Found.backbuffer.height);
@@ -119,6 +120,7 @@ class App {
 			#end
 
 		}else{
+			if(editorui.visible) editorui.visible =false;
 			Found.BUFFERWIDTH = Found.backbuffer.width;
 			Found.BUFFERHEIGHT = Found.backbuffer.height;
 		#end

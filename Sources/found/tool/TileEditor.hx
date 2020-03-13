@@ -32,10 +32,50 @@ class TileEditor {
     var curTile:found.anim.Tile;
     public function new(visible = true) {
         this.visible = visible;
-        ui = new zui.Zui({font: kha.Assets.fonts.font_default});
+        ui = new zui.Zui({font: kha.Assets.fonts.font_default,autoNotifyInput: false});
         width = Std.int(Found.WIDTH*0.175);
         height = Std.int(Found.HEIGHT*0.8);
+
+        kha.input.Mouse.get().notify(onMouseDownTE, onMouseUpTE, onMouseMoveTE, onMouseWheelTE);
+		kha.input.Keyboard.get().notify(onKeyDownTE, onKeyUpTE, onKeyPressTE);
+		#if (kha_android || kha_ios)
+		if (kha.input.Surface.get() != null) kha.input.Surface.get().notify(onTouchDownTE, onTouchUpTE, onTouchMoveTE);
+		#end
     }
+    function onMouseDownTE(button: Int, x: Int, y: Int) {
+        ui.onMouseDown(button,x,y);
+    }
+    function onMouseUpTE(button: Int, x: Int, y: Int) {
+        ui.onMouseUp(button,x,y);
+    }
+    function onMouseMoveTE(x: Int, y: Int, movementX: Int, movementY: Int) {
+        ui.onMouseMove(x,y,movementX,movementY);
+    }
+    function onMouseWheelTE(delta: Int) {
+        ui.onMouseWheel(delta);
+    }
+    function onKeyDownTE(code: kha.input.KeyCode) {
+        ui.onKeyDown(code);
+    }
+    function onKeyUpTE(code: kha.input.KeyCode) {
+        ui.onKeyUp(code);
+    }
+    function onKeyPressTE(char: String) {
+        ui.onKeyPress(char);
+    }
+
+    #if (kha_android || kha_ios)
+	function onTouchDownTE(index: Int, x: Int, y: Int) {
+		// Two fingers down - right mouse button
+		if (index == 1) { ui.onMouseDown(0, x, y); ui.onMouseDown(1, x, y); }
+	}
+
+	function onTouchUpTE(index: Int, x: Int, y: Int) {
+		if (index == 1) ui.onMouseUp(1, x, y);
+	}
+
+	function onTouchMoveTE(index: Int, x: Int, y: Int) {}
+	#end
     var map:Tilemap = null;
     var tileSelected:Selection = null;
     var tileHandle = Id.handle({value: 0});

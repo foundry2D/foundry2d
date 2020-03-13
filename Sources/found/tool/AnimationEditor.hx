@@ -24,9 +24,9 @@ class AnimationEditor {
         public var selectedUID(default,set):Int = -1;
         var windowHandle:zui.Zui.Handle = Id.handle();
         var timelineHandle:zui.Zui.Handle = Id.handle();
-        public function new(px:Int,py:Int,w:Int,h:Int) {
+        public function new(ui:Zui,px:Int,py:Int,w:Int,h:Int) {
             this.visible = false;
-            ui = new Zui({font: kha.Assets.fonts.font_default});
+            this.ui = ui;
             setAll(px,py,w,h);
             windowHandle.scrollEnabled = true;
         }

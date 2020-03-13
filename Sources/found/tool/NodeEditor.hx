@@ -27,9 +27,9 @@ class NodeEditor {
 	public static var x:Int;
 	public static var y:Int;
 
-	public function new(px:Int, py:Int, w:Int, h:Int) {
+	public function new(ui:Zui,px:Int, py:Int, w:Int, h:Int) {
 		this.visible = false;
-		ui = new Zui({font: kha.Assets.fonts.font_default});
+		this.ui = ui;
 		setAll(px, py, w, h);
 	}
 

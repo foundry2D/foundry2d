@@ -92,9 +92,8 @@ class AnimationEditor {
         var animHandle:zui.Zui.Handle = new zui.Zui.Handle();
         var fpsHandle:zui.Zui.Handle =  new zui.Zui.Handle();
         @:access(found.anim.Sprite,found.anim.Animation)
-        public function render(g:kha.graphics2.Graphics){
+        public function render(ui:zui.Zui){
             if(!visible)return;
-            g.end();
             var sc = ui.SCALE();
             var timelineLabelsHeight = Std.int(30 * sc);
             var timelineFramesHeight = Std.int(40 * sc);
@@ -105,7 +104,7 @@ class AnimationEditor {
             }
 
             numberOfFrames = timeline.width / (11 * sc)-1;
-            ui.begin(g);
+
             if(curSprite != null && lastImage != curSprite.data.raw.imagePath){
                 lastImage = curSprite.data.raw.imagePath;
                 frameHandles = []; 
@@ -230,7 +229,7 @@ class AnimationEditor {
                 }
                 ui.g.fillRect(delta * 11 * sc + 5 * sc - frameIndicatorWidth / 2,frameIndicatorMargin, frameIndicatorWidth, frameIndicatorHeight);
                 ui.g.color = 0xffffffff;
-                ui.g.drawString("" + Util.fround(delta,2), delta * 11 * sc + 5 * sc - frameTextWidth / 2,timelineLabelsHeight / 2 - g.fontSize / 2);
+                ui.g.drawString("" + Util.fround(delta,2), delta * 11 * sc + 5 * sc - frameTextWidth / 2,timelineLabelsHeight / 2 - ui.g.fontSize / 2);
 
                 ui.g.color = kha.Color.fromBytes(255,100,100,255);
                 var old = new Vec2(ui._x,ui._y);
@@ -252,8 +251,6 @@ class AnimationEditor {
                 ui.imageScrollAlign =true;
             }
             
-            ui.end();
-		    g.begin(false);
         }
         
         @:access(found.anim.Sprite,found.anim.Animation)

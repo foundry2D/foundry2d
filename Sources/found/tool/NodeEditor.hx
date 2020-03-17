@@ -18,7 +18,6 @@ import found.State;
 
 @:access(zui.Zui)
 class NodeEditor {
-	var ui:Zui;
 
 	public var visible:Bool;
 
@@ -27,10 +26,10 @@ class NodeEditor {
 	public static var x:Int;
 	public static var y:Int;
 
-	public function new(ui:Zui,px:Int, py:Int, w:Int, h:Int) {
+	public function new(px:Int, py:Int, w:Int, h:Int) {
 		this.visible = false;
-		this.ui = ui;
 		setAll(px, py, w, h);
+		drawGrid();
 	}
 
 	public function setAll(px:Int, py:Int, w:Int, h:Int) {
@@ -46,15 +45,9 @@ class NodeEditor {
 	public static var nodeHandle = Id.handle();
 	public static var nodeTabHandle = Id.handle();
 
-	public function render(g:kha.graphics2.Graphics) {
+	public function render(ui:zui.Zui) {
 		if (!visible)
 			return;
-
-		if (grid == null) {
-			g.end();
-			drawGrid();
-			g.begin();
-		}
 
 		var nodePanX:Float = 0.0;
 		var nodePanY:Float = 0.0;
@@ -77,16 +70,12 @@ class NodeEditor {
 				}
 			}
 		}
-		g.end();
-		ui.begin(g);
 		if (ui.window(Id.handle(), NodeEditor.x, NodeEditor.y, NodeEditor.width, NodeEditor.height)) {
 			ui.g.color = kha.Color.White;
 			ui.g.drawImage(grid, nodePanX, nodePanY);
 			renderNodes(ui);
 		}
 		renderNodesMenu(ui);
-		ui.end();
-		g.begin(false);
 	}
 
 	public static function renderNodes(ui:Zui) {

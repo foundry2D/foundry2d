@@ -308,10 +308,10 @@ class Scene {
 		if (traits == null) return;
 		for (t in traits) {
       if (t.type == "VisualScript") {
-        Data.getBlob(t.class_name, function(blob:kha.Blob) {
+        Data.getBlob(t.classname, function(blob:kha.Blob) {
           var node:LogicTreeData = haxe.Json.parse(blob.toString());
           var visualTrait = Logic.parse(node);
-          visualTrait.name = t.class_name;
+          visualTrait.name = t.classname;
           var existentTrait = object.getTrait(Type.getClass(visualTrait), visualTrait.name);
           if (existentTrait != null) {
             object.removeTrait(existentTrait);
@@ -328,9 +328,9 @@ class Scene {
 						args.push(parseArg(param));
 					}
 				}
-				var traitInst = createTraitClassInstance(t.class_name, args);
+				var traitInst = createTraitClassInstance(t.classname, args);
 				if (traitInst == null) {
-					trace("Error: Trait '" + t.class_name + "' referenced in object '" + object.name + "' not found");
+					trace("Error: Trait '" + t.classname + "' referenced in object '" + object.name + "' not found");
 					continue;
 				}
 				if (t.props != null) {

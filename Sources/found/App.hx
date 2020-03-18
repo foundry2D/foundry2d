@@ -120,6 +120,10 @@ class App {
 			frameCounter.addFrame();
 			#end
 
+			if(zui.Popup.show) {            
+				zui.Popup.render(Found.backbuffer.g2);
+			}
+
 		}else{
 			if(editorui.visible) editorui.visible =false;
 			Found.BUFFERWIDTH = Found.backbuffer.width;

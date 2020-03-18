@@ -168,7 +168,7 @@ typedef TTrait = {
 @:structInit class TTrait {
 #end
 	public var type:String;
-	public var class_name:String;
+	public var classname:String;
 	@:optional public var parameters:Array<String>; // constructor params
 	@:optional public var props:Array<String>; // name - value list
 }

@@ -130,7 +130,7 @@ class Tilemap extends Object{
             }
         }
         #if tile_editor
-        if(TileEditor.selectedMap != -1 && TileEditor.tilemapIds[TileEditor.selectedMap] == this.uid){
+        if(TileEditor.selectedTilemapIdIndex != -1 && TileEditor.tilemapIds[TileEditor.selectedTilemapIdIndex] == this.uid){
             drawCountour(canvas);
         }
         #end

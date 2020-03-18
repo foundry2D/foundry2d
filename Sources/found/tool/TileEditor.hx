@@ -27,7 +27,7 @@ class TileEditor {
     public var x:Int = 512;
     public var y:Int = 256;
     public var visible:Bool;
-    static var selectedMap:Int = -1;
+    static var selectedTilemapIdIndex:Int = -1;
     static var tilemapIds:Array<Int> = []; 
     var curTile:found.anim.Tile;
     public function new(visible = true) {
@@ -82,14 +82,14 @@ class TileEditor {
     var unusedIds:Array<Int> = [];
     @:access(zui.Zui,found.anim.Tilemap,found.anim.Tile)
     public function render(canvas:kha.Canvas): Void {
-        if(!visible || selectedMap < 0)return;
+        if(!visible || selectedTilemapIdIndex < 0)return;
         ui.begin(canvas.g2);
         
         if(map == null){
-            map = cast(found.State.active._entities[tilemapIds[selectedMap]]);
+            map = cast(found.State.active._entities[tilemapIds[selectedTilemapIdIndex]]);
             curTile = map.tiles[0];
         }
-        var newSelection = selectedMap;
+        var newSelection = selectedTilemapIdIndex;
         var vec:kha.math.Vector2 =  new Vector2();
         if (ui.window(Id.handle(),x,y, width, height, true)) {
 
@@ -182,14 +182,14 @@ class TileEditor {
             kha.input.Mouse.get(0).showSystemCursor();
         }
 
-        if(selectedMap != newSelection){
+        if(selectedTilemapIdIndex != newSelection){
             map = null;
             curTile = null;
         }
     }
     @:access(found.anim.Tilemap,found.anim.Tile,found.App)
     public function addTile(){
-        if(!visible || selectedMap < 0 || !isInScreen())return;
+        if(!visible || selectedTilemapIdIndex < 0 || !isInScreen())return;
         
         // @Incomplete: Make sure that we remove the unusedIds from the tile raw usedIds
         // when saving the tilemap.
@@ -229,16 +229,16 @@ class TileEditor {
 
     }
 
-    public function selectMap(uid:Int){
-        if(uid < 0){selectedMap = -1;return;}
-        selectedMap = -1;
+    public function selectTilemap(uid:Int){
+        if(uid < 0){selectedTilemapIdIndex = -1;return;}
+        selectedTilemapIdIndex = -1;
         for(i in 0...tilemapIds.length){
             if(tilemapIds[i] == uid){
-                selectedMap = i;
+                selectedTilemapIdIndex = i;
             }
         }
-        if(selectedMap ==-1){
-            selectedMap = tilemapIds.push(uid)-1;
+        if(selectedTilemapIdIndex ==-1){
+            selectedTilemapIdIndex = tilemapIds.push(uid)-1;
         }
     }
 

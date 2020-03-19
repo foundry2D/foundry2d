@@ -1,5 +1,6 @@
 package found;
 
+import kha.math.FastMatrix3;
 import kha.simd.Float32x4;
 import found.node.Logic;
 import found.node.Logic.TNodeCanvas;
@@ -190,9 +191,22 @@ class Scene {
       }
       ordered = objects;
     }
+
     if (_depth) depth(ordered);
 
-    for (entity in ordered) entity.render(canvas);
+    var lastz = -1;
+    for (entity in ordered){
+      if(entity.depth != lastz){
+        if(lastz > -1)
+          canvas.g2.popTransformation();
+        lastz = Std.int(entity.depth);
+        var layer = raw.layers != null ? raw.layers[lastz]: {name: "No layers",zIndex: 0, speed:1.0};
+        canvas.g2.pushTransformation(FastMatrix3.translation(-cam.position.x * layer.speed,-cam.position.y * layer.speed));
+
+      }
+      entity.render(canvas);
+    }
+    canvas.g2.popTransformation();
 
     #if debug
     if(Found.collisionsDraw && physics_world != null){

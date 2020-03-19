@@ -110,7 +110,7 @@ class App {
 			Found.backbuffer.g2.begin();
 
 			if (Found.scenebuffer == null) Found.scenebuffer = kha.Image.createRenderTarget(Found.backbuffer.width, Found.backbuffer.height);
-			Found.scenebuffer.g2.pushTransformation(FastMatrix3.translation(-screenOffsetX, -screenOffsetY));
+
 			if(Found.renderfunc != null)
 				Found.renderfunc(Found.backbuffer.g2);
 			Found.backbuffer.g2.end();
@@ -132,11 +132,9 @@ class App {
 			Found.backbuffer.g2.begin();
 			canvas.g2.color = Found.backgroundcolor;
 			canvas.g2.fillRect(0, 0, Found.backbuffer.width, Found.backbuffer.height);
-			Found.backbuffer.g2.pushTransformation(FastMatrix3.translation(-screenOffsetX, -screenOffsetY));
 			if (State.active != null){
 				State.active.render(Found.backbuffer);
 			}
-			Found.backbuffer.g2.popTransformation();
 			Found.backbuffer.g2.end();
 			#if tile_editor
 			Found.tileeditor.render(Found.backbuffer);
@@ -348,10 +346,12 @@ private class FPS {
 		}
 		return fps;
 	}
-	
+
 	public function render(canvas:kha.Canvas,inEditor = true): Void {
 		if(canvas.g2 == null || State.active.cam == null) return;
 		if(ui == null)ui = new zui.Zui({font: kha.Assets.fonts.font_default});
+
+		canvas.g2.pushTransformation(FastMatrix3.translation(-State.active.cam.position.x,-State.active.cam.position.y));
 		var oldScale = ui.SCALE();
 		var width = 60;
 		var height = 20;
@@ -365,11 +365,12 @@ private class FPS {
 		var accentCol = ui.t.ACCENT_COL;
 		var windowBgColor = ui.t.WINDOW_BG_COL;
 		ui.t.ACCENT_COL =ui.t.WINDOW_BG_COL= kha.Color.Transparent;
-		if(ui.window( zui.Id.handle(),Std.int(cam.x),Std.int(cam.y), width, height,false))ui.text('Fps: $fps');
+		if(ui.window(zui.Id.handle(),Std.int(cam.x),Std.int(cam.y), width, height,false))ui.text('Fps: $fps');
 		ui.end();
 		ui.setScale(oldScale);
 		ui.t.ACCENT_COL = accentCol;
 		ui.t.WINDOW_BG_COL = windowBgColor;
+		canvas.g2.popTransformation();
 	}
 
 	public inline function addFrame():Void frames++;

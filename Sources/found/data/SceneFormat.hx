@@ -33,6 +33,7 @@ typedef TSceneFormat = {
     @:optional public var _Zsort:Bool;
     @:optional public var cullOffset:Int;
     @:optional public var traits:Array<TTrait>; // Scene root traits
+    @:optional public var layers:Array<TLayer>; // Scene root traits
     @:optional public var physicsWorld: echo.data.Options.WorldOptions;
 }
 
@@ -171,6 +172,17 @@ typedef TTrait = {
 	public var classname:String;
 	@:optional public var parameters:Array<String>; // constructor params
 	@:optional public var props:Array<String>; // name - value list
+}
+
+#if js
+typedef TLayer = {
+#else
+@:structInit class TLayer {
+#end
+    public var name:String;
+    public var zIndex:Int;
+    public var speed:FastFloat;
+
 }
 
 #if js

@@ -104,8 +104,6 @@ typedef TTilemapData = {
     public var tileHeight: Int;
     public var map:Array<Int>;
     public var images:Array<TTileData>;
-    public var cull:Bool;
-    public var cullOffset:Int;
     @:optional public var flip:Vector2;
 }
 #if js
@@ -190,7 +188,7 @@ typedef LogicTreeData = {
 #else
 @:structInit class LogicTreeData {
 #end
-	var name: String;
-	var nodes: Nodes;
-	var nodeCanvas: TNodeCanvas;
+    public var name: String;
+    public var nodes: Nodes;
+    public var nodeCanvas: TNodeCanvas;
 }

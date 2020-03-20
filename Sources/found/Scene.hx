@@ -200,7 +200,7 @@ class Scene {
         if(lastz > -1)
           canvas.g2.popTransformation();
         lastz = Std.int(entity.depth);
-        var layer = raw.layers != null ? raw.layers[lastz]: {name: "No layers",zIndex: 0, speed:1.0};
+        var layer:TLayer = raw.layers != null ? raw.layers[lastz]: {name: "No layers",zIndex: 0, speed:1.0};
         canvas.g2.pushTransformation(FastMatrix3.translation(-cam.position.x * layer.speed,-cam.position.y * layer.speed));
 
       }

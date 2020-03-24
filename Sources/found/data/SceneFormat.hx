@@ -49,14 +49,14 @@ typedef TObj = {
     @:optional public var velocity:Vector2;
 	public var width:FastFloat;
 	public var height:FastFloat;
-    @:optional public var scale:Vector2;
+    @:optional public var scale:Null<Vector2>;
     public var center:Vector2;
     // @TODO: Add layer Int field to make it possible to have depth in a layer
     public var depth:Float;
     public var active:Bool;
-    @:optional public var rigidBody: echo.data.Options.BodyOptions;
-    @:optional public var children:Array<TObj>;
-    @:optional public var traits:Array<TTrait>;
+    @:optional public var rigidBody: Null<echo.data.Options.BodyOptions>;
+    @:optional public var children:Null<Array<TObj>>;
+    @:optional public var traits:Null<Array<TTrait>>;
 }
 
 
@@ -80,7 +80,7 @@ typedef TSpriteData = {
 #end
     
     public var imagePath: String;
-    @:optional public var flip:Vector2;
+    @:optional public var flip:Null<Vector2>;
     public var anims:Array<TAnimation>;
 }
 #if js
@@ -89,10 +89,11 @@ typedef TTileData = {
 #else
 @:structInit class TTileData extends TSpriteData{
 #end
+    public var id:Int;
     public var usedIds:Array<Int>;
     public var tileWidth: Int;
     public var tileHeight: Int;
-    @:optional public var tileAnims:Array<Array<Int>>;
+    @:optional public var tileAnims:Null<Array<Array<Int>>>;
 }
 #if js
 typedef TTilemapData = {
@@ -100,12 +101,11 @@ typedef TTilemapData = {
 #else
 @:structInit class TTilemapData extends TObj{
 #end
-    
     public var tileWidth: Int;
     public var tileHeight: Int;
     public var map:Array<Int>;
     public var images:Array<TTileData>;
-    @:optional public var flip:Vector2;
+    @:optional public var flip:Null<Vector2>;
 }
 #if js
 typedef TCameraData = {
@@ -147,12 +147,12 @@ typedef TFrame = {
     //@TODO: reevaluate these assumptions later
     public var id:Int;
     public var start:Float;
-    @:optional public var end:Float;
-    @:optional public var tx:Int;
-    @:optional public var ty:Int;
+    @:optional public var end:Null<Float>;
+    @:optional public var tx:Null<Int>;
+    @:optional public var ty:Null<Int>;
     public var tw:Int;
     public var th:Int;
-    @:optional public var movement:Array<TPos>;
+    @:optional public var movement:Null<Array<TPos>>;
 }
 #if js
 typedef TPos = {
@@ -169,8 +169,8 @@ typedef TTrait = {
 #end
 	public var type:String;
 	public var classname:String;
-	@:optional public var parameters:Array<String>; // constructor params
-	@:optional public var props:Array<String>; // name - value list
+	@:optional public var parameters:Null<Array<String>>; // constructor params
+	@:optional public var props:Null<Array<String>>; // name - value list
 }
 
 #if js

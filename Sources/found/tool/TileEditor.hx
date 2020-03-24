@@ -32,6 +32,17 @@ class TileEditor {
     static var tilemapIds:Array<Int> = []; 
     var curTile:found.anim.Tile;
     var tilesheetListops:ListOpts;
+
+    var map:Tilemap = null;
+    var tileSelected:Selection = null;
+    var tileHandle = Id.handle({value: 0});
+    var unusedIds:Array<Int> = [];
+    var canDrawTile:Bool =false;
+    var editorWindowHandle:Handle = Id.handle();
+    var tilesheets:Array<TTileData> = [];
+    var tilsheetListHandle:Handle = Id.handle();
+    var fileBrowserOpen:Bool = false;
+
     public function new(visible = true) {
         this.visible = visible;
         ui = new zui.Zui({font: kha.Assets.fonts.font_default,autoNotifyInput: false});
@@ -54,49 +65,10 @@ class TileEditor {
 		if (kha.input.Surface.get() != null) kha.input.Surface.get().notify(onTouchDownTE, onTouchUpTE, onTouchMoveTE);
 		#end
     }
-    function onMouseDownTE(button: Int, x: Int, y: Int) {
-        ui.onMouseDown(button,x,y);
-    }
-    function onMouseUpTE(button: Int, x: Int, y: Int) {
-        ui.onMouseUp(button,x,y);
-    }
-    function onMouseMoveTE(x: Int, y: Int, movementX: Int, movementY: Int) {
-        ui.onMouseMove(x,y,movementX,movementY);
-    }
-    function onMouseWheelTE(delta: Int) {
-        ui.onMouseWheel(delta);
-    }
-    function onKeyDownTE(code: kha.input.KeyCode) {
-        ui.onKeyDown(code);
-    }
-    function onKeyUpTE(code: kha.input.KeyCode) {
-        ui.onKeyUp(code);
-    }
-    function onKeyPressTE(char: String) {
-        ui.onKeyPress(char);
-    }
 
-    #if (kha_android || kha_ios)
-	function onTouchDownTE(index: Int, x: Int, y: Int) {
-		// Two fingers down - right mouse button
-		if (index == 1) { ui.onMouseDown(0, x, y); ui.onMouseDown(1, x, y); }
-	}
-
-	function onTouchUpTE(index: Int, x: Int, y: Int) {
-		if (index == 1) ui.onMouseUp(1, x, y);
-	}
-
-	function onTouchMoveTE(index: Int, x: Int, y: Int) {}
-	#end
-    var map:Tilemap = null;
-    var tileSelected:Selection = null;
-    var tileHandle = Id.handle({value: 0});
-    var unusedIds:Array<Int> = [];
-    var canDrawTile:Bool =false;
-    var editorWindowHandle:Handle = Id.handle();
-    var tilesheets:Array<TTileData> = [];
-    var tilsheetListHandle:Handle = Id.handle();
-    var fileBrowserOpen:Bool = false;
+    public function redraw() {
+        editorWindowHandle.redraws = 2;
+    }
 
     @:access(zui.Zui,found.anim.Tilemap,found.anim.Tile)
     public function render(canvas:kha.Canvas): Void {
@@ -122,7 +94,9 @@ class TileEditor {
                 ui.unindent();
                 if(tilsheetListHandle.nest(0).changed){
                     curTile = map.pivotTiles[selected];
+                    tileSelected = null;
                 }
+
                 map.w = Std.int(ui.slider(Id.handle({value: map.w}), "Map Width",0,Util.pow(256,2),false,1/map.tw));
                 map.h = Std.int(ui.slider(Id.handle({value: map.h}), "Map Height",0,Util.pow(256,2),false,1/map.th));
                 map.tw = Std.int(Ext.floatInput(ui, Id.handle({value: 64.0}), "Tile Width"));
@@ -136,7 +110,6 @@ class TileEditor {
                 var state = ui.image(curImg);
                 var ratio = Math.abs((py-ui._y)/curImg.height);
                 var invRatio = Math.abs(curImg.height/(py-ui._y));
-                var maxTiles = (curImg.width /map.tw) * (curImg.height/map.th)-1;
 
                 ui.g.color = kha.Color.fromBytes(0,0,200,128);
                 if(tileSelected == null){
@@ -151,26 +124,29 @@ class TileEditor {
                     var y = Math.abs(ui._windowY-ui.inputY);
                     var imgX =(x-px)*invRatio;
                     var imgY = (y-py)*invRatio;
-                    imgX += map.tw - Math.floor(imgX) % map.tw;
-                    imgY += map.tw - Math.floor(imgY) % map.tw;
+                    imgX = Util.snap(imgX,map.tw);
+                    imgY = Util.snap(imgY,map.tw);
                     var widthIndicies = Std.int(curImg.width/map.tw);
                     var index = Std.int(tileHandle.value);
                     if(!tileHandle.changed){
-                        index = Std.int(widthIndicies-(curImg.width -imgX)/map.tw)-1;
+                        index = Std.int(Math.max(0.0,(widthIndicies-(curImg.width -imgX)/map.tw)-1));
                         index += widthIndicies*Std.int(curImg.height/map.tw - (curImg.height -imgY)/map.tw-1);
-                    }   
+                    }
+
                     x = (Std.int(index * map.tw) % (curImg.width))*ratio +px;
                     y = (Math.floor(index * map.tw/curImg.width)*(map.th))*ratio+py;
                     tileSelected = {index:index,x:x,y:y,w:map.tw*ratio,h:map.th*ratio};
-                    if(!map.tiles.exists(index)){
-                        var value = curTile.raw.usedIds.push(index)-1;
-                        unusedIds.push(index);
-                        curTile = found.anim.Tile.createTile(map,curTile.raw,value);
+                    var pivotTile = map.pivotTiles[curTile.dataId];
+                    if(!map.tiles.exists(pivotTile.tileId+index)){
+                        
+                        var value = pivotTile.raw.usedIds.push(pivotTile.tileId+index)-1;
+                        unusedIds.push(pivotTile.tileId+index);
+                        curTile = found.anim.Tile.createTile(map,pivotTile.raw,value);
                     }
                     
                 }
                 tileHandle.value = tileSelected.index;
-                ui.slider(tileHandle, "Selected Tile",0,maxTiles);
+                ui.slider(tileHandle, "Selected Tile",0,currentMaxTiles()-1);
 
                 ui.g.color = kha.Color.White;
                 // ui.textInput(Id.handle({text: "Hello"}), "Input");
@@ -197,9 +173,9 @@ class TileEditor {
             vec.x = px;
             vec.y = py;
             px = Math.floor(px);
-            px += (Found.GRID-(px % Found.GRID));
+            px = Util.snap(px,Found.GRID);
             py = Math.floor(py);
-            py += (Found.GRID-(py % Found.GRID));
+            py = Util.snap(py,Found.GRID);
 
             curTile.render(canvas,vec,kha.Color.fromBytes(255,255,255,128),new Vector2(temp.width,temp.height));
             canvas.g2.end();
@@ -215,14 +191,9 @@ class TileEditor {
     }
 
     @:access(found.anim.Tilemap,found.anim.Tile)
-    function numberOfTiles(){
-        var w = curTile.data.image.width;
-        var h = curTile.data.image.height;
-        var widthIndicies = Std.int(w/curTile.map.tw);
-        var heightIndicies = Std.int(h/curTile.map.th);
-        trace(widthIndicies);
-        trace(heightIndicies);
-        return widthIndicies*heightIndicies;
+    function currentMaxTiles(?tileToGetMaxOf:Null<Tile>){
+        var curTile =  tileToGetMaxOf != null ? tileToGetMaxOf: curTile;
+        return Std.int(curTile.data.image.width/curTile.map.tw)*Std.int(curTile.data.image.height/curTile.map.th);
     }
     function drawTilesheetItem(handle:Handle,index:Int){
         var data = tilesheets[index];
@@ -257,19 +228,21 @@ class TileEditor {
         if(name == "" || index == -1) return;
         tilesheets[index].name = name;
     }
-
+    @:access(found.anim.Tilemap,found.anim.Tile)
     function addTilesheet(title:String) {
         fileBrowserOpen = true;
         FileBrowserDialog.open(function(path:String){
             var tilesheet:TTileData = found.data.Creator.createType(title,"sprite_object");
-            tilesheet.usedIds = [numberOfTiles()];
+            var originId = curTile != null ? currentMaxTiles()+map.pivotTiles[curTile.dataId].tileId : 0;
+            tilesheet.usedIds = [originId];
             tilesheet.tileWidth = curTile.raw.tileWidth;
             tilesheet.tileHeight = curTile.raw.tileHeight;
             tilesheet.imagePath = path;
             tilesheets.push(tilesheet);
+            tileSelected = null;
             Tile.createTile(map,tilesheet,0,function(tmap:Tilemap){
                 fileBrowserOpen = false;
-                trace("done");
+                trace("done with file browser");
             });
         });
     }
@@ -277,7 +250,12 @@ class TileEditor {
     @:access(found.anim.Tilemap)
     function removeTilesheet(index:Int){
         tilesheets.splice(index,1);
-        map.tiles.remove(index);
+        var tile = map.pivotTiles[index];
+        for(i in tile.tileId...(tile.tileId+currentMaxTiles(tile))){
+            map.tiles.remove(i);
+        }
+        map.pivotTiles.splice(index,1);
+        
     }
 
     @:access(found.anim.Tilemap,found.anim.Tile,found.App)
@@ -372,5 +350,40 @@ class TileEditor {
         return {width: w, height: h};
         #end
     }
+
+    function onMouseDownTE(button: Int, x: Int, y: Int) {
+        ui.onMouseDown(button,x,y);
+    }
+    function onMouseUpTE(button: Int, x: Int, y: Int) {
+        ui.onMouseUp(button,x,y);
+    }
+    function onMouseMoveTE(x: Int, y: Int, movementX: Int, movementY: Int) {
+        ui.onMouseMove(x,y,movementX,movementY);
+    }
+    function onMouseWheelTE(delta: Int) {
+        ui.onMouseWheel(delta);
+    }
+    function onKeyDownTE(code: kha.input.KeyCode) {
+        ui.onKeyDown(code);
+    }
+    function onKeyUpTE(code: kha.input.KeyCode) {
+        ui.onKeyUp(code);
+    }
+    function onKeyPressTE(char: String) {
+        ui.onKeyPress(char);
+    }
+
+    #if (kha_android || kha_ios)
+	function onTouchDownTE(index: Int, x: Int, y: Int) {
+		// Two fingers down - right mouse button
+		if (index == 1) { ui.onMouseDown(0, x, y); ui.onMouseDown(1, x, y); }
+	}
+
+	function onTouchUpTE(index: Int, x: Int, y: Int) {
+		if (index == 1) ui.onMouseUp(1, x, y);
+	}
+
+	function onTouchMoveTE(index: Int, x: Int, y: Int) {}
+	#end
 }
 // #end

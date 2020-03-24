@@ -42,7 +42,7 @@ class Tilemap extends Object{
         this.raw = data;
         
         for(tile in data.images){
-            Tile.createTile(this,tile,0,done);
+            Tile.createTile(this,tile,tile.id,done);
         }
         if(data.images.length == 0){
             done(this);

@@ -126,6 +126,14 @@ class Util {
 		}
 		return recur(ipow);
 	}
+
+	/**
+	 * Snaps value to the grid.
+	 */
+	 inline public static function snap(value:Float, grid:Float):Float
+	{
+		return value += grid - Math.floor(value) % grid;
+	}
 }
 
 /**

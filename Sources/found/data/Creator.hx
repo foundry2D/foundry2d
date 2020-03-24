@@ -41,6 +41,7 @@ class Creator {
                 tilemap.tileHeight = 64;
                 tilemap.map = [];
                 var tile:TTileData = createType("Tile","sprite_object");
+                tile.id = 0;
                 tile.width = 896.0;
                 tile.height = 448.0;
                 tile.tileWidth = 64;

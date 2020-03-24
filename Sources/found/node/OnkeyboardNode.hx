@@ -58,7 +58,7 @@ class OnKeyboardNode extends LogicNode {
 	}
 
 	function getKeyboard(string:String):KeyCode {
-		var key:KeyCode = null;
+		var key:KeyCode = KeyCode.Unknown;
 		switch (string) {
 			case "Up":
 				key = Up;

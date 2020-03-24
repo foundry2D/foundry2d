@@ -81,7 +81,7 @@ class Data {
 		var isJson = file.endsWith('.json');
 		var ext = (compressed || isJson || file.endsWith('.arm')) ? '' : '.arm';
 
-		kha.FileSystem.getContent(file + ext, function(b:String) {
+		khafs.Fs.getContent(file + ext, function(b:String) {
 			if (compressed) {
 				#if arm_compress
 				#end
@@ -108,7 +108,7 @@ class Data {
 		loadingSceneRaws.remove(file);
 	}
 
-	static var getData = #if wasmfs kha.FileSystem.getData#else kha.Assets.loadBlobFromPath#end;
+	static var getData = #if wasmfs khafs.Fs.getData#else kha.Assets.loadBlobFromPath#end;
     // Raw assets
 	public static function getBlob(file:String, done:kha.Blob->Void, ?reload:Bool = false) {
 		

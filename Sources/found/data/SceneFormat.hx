@@ -28,13 +28,13 @@ typedef TSceneFormat = {
 @:structInit class TSceneFormat {
 #end
     public var name:String;
-    @:optional public var  _entities:Array<TObj>;
-    @:optional public var _depth:Bool;
-    @:optional public var _Zsort:Bool;
-    @:optional public var cullOffset:Int;
-    @:optional public var traits:Array<TTrait>; // Scene root traits
-    @:optional public var layers:Array<TLayer>; // Scene root traits
-    @:optional public var physicsWorld: echo.data.Options.WorldOptions;
+    @:optional public var  _entities:Null<Array<TObj>>;
+    @:optional public var _depth:Null<Bool>;
+    @:optional public var _Zsort:Null<Bool>;
+    @:optional public var cullOffset:Null<Int>;
+    @:optional public var traits:Null<Array<TTrait>>; // Scene root traits
+    @:optional public var layers:Null<Array<TLayer>>; // Scene root traits
+    @:optional public var physicsWorld: Null<echo.data.Options.WorldOptions>;
 }
 
 #if js

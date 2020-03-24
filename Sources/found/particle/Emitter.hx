@@ -6,11 +6,10 @@ import kha.Color;
 import kha.Assets;
 
 import found.Found;
-import found.object.Entity;
-import found.particle.Particle;
+import found.object.Object;
 import found.math.Util;
 
-class Emitter extends Entity {
+class Emitter extends Object {
 	public var arParticle:Array<Particle>;
 	public var amount:Int;
 	public var power = 3.0;
@@ -27,7 +26,7 @@ class Emitter extends Entity {
 		super.update(dt);
 		var p = arParticle.length;
 		while (p --> 0){
-			arParticle[p].update();
+			arParticle[p].update(dt);
 			if (arParticle[p].position.x <= 0 || arParticle[p].position.x >= Found.BUFFERWIDTH || arParticle[p].position.y <= 0 || arParticle[p].position.y >= Found.BUFFERHEIGHT){
 				arParticle.splice(p, 1);
 			}
@@ -44,9 +43,9 @@ class Emitter extends Entity {
 	public function spawn(?x:Float, ?y:Float, ?width:Float = 2.0, ?height:Float = 2.0){
 		for (i in 0 ... amount){
 			var particle = new Particle(x, y, width, height);
-			particle.acceleration = -0.5;
-			particle.velocity.x = Util.randomRangeFloat(-power, power);
-			particle.velocity.y = Util.randomRangeFloat(-power, power);
+			// particle.acceleration = -0.5;
+			// particle.velocity.x = Util.randomRangeFloat(-power, power);
+			// particle.velocity.y = Util.randomRangeFloat(-power, power);
 			arParticle.push(particle);
 		}
 	}

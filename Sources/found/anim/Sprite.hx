@@ -77,7 +77,7 @@ class Sprite extends Object {
 			var h = height*scale.y;
 			canvas.g2.color = Color.White;
 			canvas.g2.pushTranslation(position.x,position.y);
-			canvas.g2.rotate(Util.degToRad(rotation.z), position.x + w/ 2,position.y + h/ 2);
+			canvas.g2.rotate(Util.degToRad(rotation.z), position.x + w * 0.5,position.y + h * 0.5);
 			canvas.g2.drawScaledSubImage(data.image,tx , ty, frame.tw, frame.th, (flip.x > 0.0 ? w:0), (flip.y > 0.0 ? h:0), (flip.x > 0.0 ? -w:w), (flip.y > 0.0 ? -h:h));
 			canvas.g2.popTransformation();
 		}

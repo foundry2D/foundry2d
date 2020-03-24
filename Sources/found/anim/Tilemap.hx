@@ -26,6 +26,7 @@ class Tilemap extends Object{
     public var th : Int;
     public var data : Array<Int>;
     var tiles:Map<Int,Tile>;
+    var pivotTiles:Array<Tile>;
     public var imageData:Array<SpriteData>;
     
     public function new(data:TTilemapData,done:Tilemap->Void) {
@@ -37,6 +38,7 @@ class Tilemap extends Object{
         this.data = data.map.length == 0 ? [for (i in 0...w * h) -1]: data.map;
         this.imageData = [];
         this.tiles = [];
+        this.pivotTiles = [];
         this.raw = data;
         
         for(tile in data.images){
@@ -94,9 +96,8 @@ class Tilemap extends Object{
     }
     public function addData(data:SpriteData) {
         var id = -1;
-        var padding = 0;
         for(i in 0...imageData.length){
-            if(imageData[i] == data){
+            if(imageData[i].raw == data.raw){
                 id = i;
                 break;
             }
@@ -135,9 +136,12 @@ class Tilemap extends Object{
         }
         #end
     }
+    
+    #if tile_editor
     function drawCountour(canvas:Canvas){
         var g = canvas.g2;
         g.drawRect(position.x,position.y,w,h,3.0);
 
     }
+    #end
 }

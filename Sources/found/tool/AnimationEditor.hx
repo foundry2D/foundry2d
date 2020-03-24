@@ -1,6 +1,7 @@
 package found.tool;
 
 
+import kha.FastFloat;
 import found.math.Vec2;
 import found.math.Util;
 import found.data.SceneFormat;
@@ -334,6 +335,7 @@ class AnimationEditor {
         }
         var canvas:kha.Image;
         var origDimensions:Vec2 = new Vec2();
+        var oldRotation:FastFloat = 0.0;
         @:access(found.anim.Sprite,found.data.SpriteData,found.anim.Animation)
         function animationPreview(delta:Float,width:Int,height:Int,oldY:Float){
 
@@ -354,6 +356,8 @@ class AnimationEditor {
                 }
                 origDimensions.x = curSprite.scale.x;
                 origDimensions.y = curSprite.scale.y;
+                oldRotation = curSprite.rotation.z;
+                curSprite.rotation.z = 0.0;
                 curSprite.scale.x = scale;
                 curSprite.scale.y = scale;
                 canvas.g2.pushTranslation(-curSprite.position.x+rx+size*0.25,-curSprite.position.y+oldY+size*0.25);
@@ -370,6 +374,7 @@ class AnimationEditor {
 
                 curSprite.scale.x = origDimensions.x;
                 curSprite.scale.y = origDimensions.y;
+                curSprite.rotation.z = oldRotation;
             }
 
             ui.image(canvas,0xffffffff,size,Std.int(rx),Std.int(oldY));

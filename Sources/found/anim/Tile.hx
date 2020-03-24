@@ -42,6 +42,7 @@ class Tile {
 			new SpriteData(sprite,function(p_data){
 				dataId = map.addData(p_data);
 				Reflect.setField(this,"tileId",sprite.usedIds[index]);
+				map.pivotTiles.push(this);
 				done(this);
 				for(index in 0...sprite.usedIds.length){
 					if(index ==0)continue;

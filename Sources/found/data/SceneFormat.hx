@@ -50,7 +50,8 @@ typedef TObj = {
 	public var width:FastFloat;
 	public var height:FastFloat;
     @:optional public var scale:Vector2;
-	public var center:Vector2;
+    public var center:Vector2;
+    // @TODO: Add layer Int field to make it possible to have depth in a layer
     public var depth:Float;
     public var active:Bool;
     @:optional public var rigidBody: echo.data.Options.BodyOptions;

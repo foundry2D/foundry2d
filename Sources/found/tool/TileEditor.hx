@@ -1,5 +1,6 @@
 package found.tool;
 // #if tile_editor
+import found.anim.Tile;
 import kha.math.Vector2;
 import found.data.SpriteData;
 import kha.graphics4.Graphics2;
@@ -21,7 +22,7 @@ typedef Selection = {
 
 class TileEditor {
     var ui: Zui;
-    var itemList:Array<TTileData> = [];
+    // var itemList:Array<TTileData> = [];
     var width:Int;
     var height:Int;
     public var x:Int = 512;
@@ -30,11 +31,22 @@ class TileEditor {
     static var selectedTilemapIdIndex:Int = -1;
     static var tilemapIds:Array<Int> = []; 
     var curTile:found.anim.Tile;
+    var tilesheetListops:ListOpts;
     public function new(visible = true) {
         this.visible = visible;
         ui = new zui.Zui({font: kha.Assets.fonts.font_default,autoNotifyInput: false});
         width = Std.int(Found.WIDTH*0.175);
         height = Std.int(Found.HEIGHT*0.8);
+
+        tilesheetListops = {
+            addLabel: "New Tilesheet",
+            addCb: addTilesheet,
+            removeCb: removeTilesheet,
+            getNameCb: getTilesheetName,
+            setNameCb: setTilesheetName,
+            itemDrawCb: drawTilesheetItem,
+            showRadio: true
+        };
 
         kha.input.Mouse.get().notify(onMouseDownTE, onMouseUpTE, onMouseMoveTE, onMouseWheelTE);
 		kha.input.Keyboard.get().notify(onKeyDownTE, onKeyUpTE, onKeyPressTE);
@@ -80,6 +92,12 @@ class TileEditor {
     var tileSelected:Selection = null;
     var tileHandle = Id.handle({value: 0});
     var unusedIds:Array<Int> = [];
+    var canDrawTile:Bool =false;
+    var editorWindowHandle:Handle = Id.handle();
+    var tilesheets:Array<TTileData> = [];
+    var tilsheetListHandle:Handle = Id.handle();
+    var fileBrowserOpen:Bool = false;
+
     @:access(zui.Zui,found.anim.Tilemap,found.anim.Tile)
     public function render(canvas:kha.Canvas): Void {
         if(!visible || selectedTilemapIdIndex < 0)return;
@@ -88,16 +106,23 @@ class TileEditor {
         if(map == null){
             map = cast(found.State.active._entities[tilemapIds[selectedTilemapIdIndex]]);
             curTile = map.tiles[0];
+            var raw:TTilemapData = cast(map.raw); 
+            tilesheets = raw.images;
         }
         var newSelection = selectedTilemapIdIndex;
         var vec:kha.math.Vector2 =  new Vector2();
-        if (ui.window(Id.handle(),x,y, width, height, true)) {
-
+        if (ui.window(editorWindowHandle,x,y, width, height, true)) {
+            // zui.Popup.showCustom(Found.popupZuiInstance, objectCreationPopupDraw, -1, -1, 600, 500);
             endHeight = ui._y;
 			if (ui.panel(Id.handle({selected: true}), "Tilemap editor")) {
 				ui.indent();
-				ui.text("Text");
-                newSelection = Ext.list(ui, Id.handle(), tilemapIds);
+                ui.text("Tilesheets: ");
+                ui.indent();
+                var selected = Ext.list(ui,tilsheetListHandle,tilesheets,tilesheetListops);
+                ui.unindent();
+                if(tilsheetListHandle.nest(0).changed){
+                    curTile = map.pivotTiles[selected];
+                }
                 map.w = Std.int(ui.slider(Id.handle({value: map.w}), "Map Width",0,Util.pow(256,2),false,1/map.tw));
                 map.h = Std.int(ui.slider(Id.handle({value: map.h}), "Map Height",0,Util.pow(256,2),false,1/map.th));
                 map.tw = Std.int(Ext.floatInput(ui, Id.handle({value: 64.0}), "Tile Width"));
@@ -154,9 +179,10 @@ class TileEditor {
             }
             endHeight = Math.abs(endHeight-ui._y);
         }
+        canDrawTile = ui.dragHandle != editorWindowHandle && !fileBrowserOpen && isInScreen();
         ui.end();
         
-        if(isInScreen()){
+        if(canDrawTile){
             //Draw mouse Icon
             kha.input.Mouse.get(0).hideSystemCursor();
             canvas.g2.begin(false,0x00000000);
@@ -187,9 +213,76 @@ class TileEditor {
             curTile = null;
         }
     }
+
+    @:access(found.anim.Tilemap,found.anim.Tile)
+    function numberOfTiles(){
+        var w = curTile.data.image.width;
+        var h = curTile.data.image.height;
+        var widthIndicies = Std.int(w/curTile.map.tw);
+        var heightIndicies = Std.int(h/curTile.map.th);
+        trace(widthIndicies);
+        trace(heightIndicies);
+        return widthIndicies*heightIndicies;
+    }
+    function drawTilesheetItem(handle:Handle,index:Int){
+        var data = tilesheets[index];
+
+        var imagePathHandle = Id.handle();
+
+        imagePathHandle.text = data.imagePath;
+
+        ui.indent();
+        ui.row([0.8,0.2]);
+        var path = ui.textInput(imagePathHandle);
+        if(ui.button("...")){
+            fileBrowserOpen = true;
+            FileBrowserDialog.open(function(path:String){
+                // curTile.data.
+                fileBrowserOpen = false;
+            });
+        }
+        if(imagePathHandle.changed){
+            data.imagePath = path;
+        }
+
+        ui.unindent();
+
+    }
+
+    function getTilesheetName(index:Int){
+        return tilesheets[index].name;
+    }
+
+    function setTilesheetName(index:Int,name:String){
+        if(name == "" || index == -1) return;
+        tilesheets[index].name = name;
+    }
+
+    function addTilesheet(title:String) {
+        fileBrowserOpen = true;
+        FileBrowserDialog.open(function(path:String){
+            var tilesheet:TTileData = found.data.Creator.createType(title,"sprite_object");
+            tilesheet.usedIds = [numberOfTiles()];
+            tilesheet.tileWidth = curTile.raw.tileWidth;
+            tilesheet.tileHeight = curTile.raw.tileHeight;
+            tilesheet.imagePath = path;
+            tilesheets.push(tilesheet);
+            Tile.createTile(map,tilesheet,0,function(tmap:Tilemap){
+                fileBrowserOpen = false;
+                trace("done");
+            });
+        });
+    }
+
+    @:access(found.anim.Tilemap)
+    function removeTilesheet(index:Int){
+        tilesheets.splice(index,1);
+        map.tiles.remove(index);
+    }
+
     @:access(found.anim.Tilemap,found.anim.Tile,found.App)
     public function addTile(){
-        if(!visible || selectedTilemapIdIndex < 0 || !isInScreen())return;
+        if(!visible || selectedTilemapIdIndex < 0 || !canDrawTile)return;
         
         // @Incomplete: Make sure that we remove the unusedIds from the tile raw usedIds
         // when saving the tilemap.

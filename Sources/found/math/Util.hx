@@ -131,7 +131,7 @@ class Util {
 	 * Snaps value to the grid.
 	 */
 	 inline public static function snap(value:Float, grid:Float):Float
-	{
+	{	if(value % grid == 0) return value;
 		return value += grid - Math.floor(value) % grid;
 	}
 }

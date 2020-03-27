@@ -49,8 +49,10 @@ class SpriteData {
 			}
 		});
 	}
-	public function addSubSprite(index:Int){
-		var frame:TFrame = {id:index,start:0.0,tw:Std.int(raw.width),th:Std.int(raw.height)};
+	public function addSubSprite(index:Int,?width:Null<Int>,?height:Null<Int>){
+		var w = width != null  ? width: Std.int(raw.width);
+		var h = height != null ? height: Std.int(raw.height);
+		var frame:TFrame = {id:index,start:0.0,tw:w,th:h};
 		return anims.push(Animation.create(frame))-1;
 	}
 	function animLoad(anim:TAnimation) {

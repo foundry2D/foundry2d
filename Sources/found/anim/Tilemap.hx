@@ -94,18 +94,19 @@ class Tilemap extends Object{
         var ty = Std.int(y / th);
         return i(tx, ty);
     }
-    public function addData(data:SpriteData) {
+    public function addData(data:TSpriteData,onDone:Int->Void) {
         var id = -1;
         for(i in 0...imageData.length){
-            if(imageData[i].raw == data.raw){
-                id = i;
-                break;
+            if(imageData[i].raw == data){
+                onDone(i);
+                return;
             }
         }
         if(id == -1){
-            id = imageData.push(data)-1;
+            new SpriteData(data,function(p_data){
+                onDone(imageData.push(p_data)-1);
+            });
         }
-        return id;
     }
     #if tile_editor
     @:access(found.tool.TileEditor)

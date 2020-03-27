@@ -4,6 +4,7 @@ import kha.math.FastMatrix3;
 import kha.Canvas;
 import kha.math.Vector2;
 
+import found.math.Util;
 import found.data.SpriteData;
 import found.data.SceneFormat;
 
@@ -37,26 +38,25 @@ class Tile {
 		_w = sprite.tileWidth;
 		_h = sprite.tileHeight;
 		this.raw = sprite;
-		//Every tilesheet will have the 0 tile be created
-		if(index == 0){
-			new SpriteData(sprite,function(p_data){
-				dataId = map.addData(p_data);
+		map.addData(sprite,function(dataId:Int){
+			this.dataId = dataId; 
+			//Every tilesheet will have the 0 tile be created
+			if(index == 0){	
 				Reflect.setField(this,"tileId",sprite.usedIds[index]);
 				map.pivotTiles.push(this);
 				done(this);
-				for(index in 0...sprite.usedIds.length){
-					if(index ==0)continue;
-					createTile(map,sprite,index);
+				for(i in 0...sprite.usedIds.length){
+					if(i ==0)continue;
+					createTile(map,sprite,sprite.usedIds[i]);
 				}
-			});
-		} 
-		else{
-			dataId = map.addData(map.imageData[map.imageData.length-1]);
-			Reflect.setField(this,"tileId",sprite.usedIds[index]);
-			var value = data.addSubSprite(tileId);
-			Reflect.setField(this,"animIndex",value);
-			done(this);
-		}
+			} 
+			else{
+				Reflect.setField(this,"tileId",sprite.usedIds[index]);
+				var value = data.addSubSprite(tileId-map.pivotTiles[dataId].tileId,sprite.tileWidth,sprite.tileHeight);
+				Reflect.setField(this,"animIndex",value);
+				done(this);
+			}
+		});
 
 	}
 	@:access(found.anim.Tilemap)
@@ -79,16 +79,18 @@ class Tile {
 		setAnimation(animIndex);
 		if(data.animatable)
 			data.animation.next();
-		// super.render(canvas);
-		var width = _w;
-		var height =_h;
+
 		if (data.image != null) {
 			canvas.g2.color = color != null ? color:kha.Color.White;
 			if(scale != null)
 				canvas.g2.transformation = FastMatrix3.scale(scale.x,scale.y);
 			canvas.g2.pushTranslation(position.x,position.y);
 			// canvas.g2.rotate(Util.degToRad(rotation), position.x + width/ 2,position.y + height/ 2);
-			canvas.g2.drawScaledSubImage(data.image, offsetx+Std.int(data.animation.get().id * map.tw) % data.image.width, offsety+Math.floor(data.animation.get().id * map.tw / data.image.width) * _h, _w, _h, (flip.x > 0.0 ? width:0), (flip.y > 0.0 ? height:0), (flip.x > 0.0 ? -width:width), (flip.y > 0.0 ? -height:height));
+			var grid = map.tw;
+			var width = Util.snap(data.image.width,grid);
+			var x = Std.int(data.animation.get().id * grid) % width;
+            var y = Math.floor(data.animation.get().id * grid/width)*(map.th);
+			canvas.g2.drawScaledSubImage(data.image,x ,y,_w, _h, (flip.x > 0.0 ? _w:0), (flip.y > 0.0 ? _h:0), (flip.x > 0.0 ? -_w:_w), (flip.y > 0.0 ? -_h:_h));
 			canvas.g2.popTransformation();
 			if(scale != null)
 				canvas.g2.transformation = FastMatrix3.identity();

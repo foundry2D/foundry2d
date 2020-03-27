@@ -41,7 +41,6 @@ class TileEditor {
     var editorWindowHandle:Handle = Id.handle();
     var tilesheets:Array<TTileData> = [];
     var tilsheetListHandle:Handle = Id.handle();
-    var fileBrowserOpen:Bool = false;
 
     public function new(visible = true) {
         this.visible = visible;
@@ -70,6 +69,8 @@ class TileEditor {
         editorWindowHandle.redraws = 2;
     }
 
+    var mapWidthHandle:Handle = Id.handle();
+    var mapHeightHandle:Handle = Id.handle();
     @:access(zui.Zui,found.anim.Tilemap,found.anim.Tile)
     public function render(canvas:kha.Canvas): Void {
         if(!visible || selectedTilemapIdIndex < 0)return;
@@ -90,15 +91,26 @@ class TileEditor {
 				ui.indent();
                 ui.text("Tilesheets: ");
                 ui.indent();
-                var selected = Ext.list(ui,tilsheetListHandle,tilesheets,tilesheetListops);
+                var lastSelectedTilesheet = tilsheetListHandle.nest(0).position;
+                var tilesheetSelected = Ext.list(ui,tilsheetListHandle,tilesheets,tilesheetListops);
                 ui.unindent();
-                if(tilsheetListHandle.nest(0).changed){
-                    curTile = map.pivotTiles[selected];
+                if(lastSelectedTilesheet != tilesheetSelected){
+                    curTile = map.pivotTiles[tilesheetSelected];
                     tileSelected = null;
                 }
 
-                map.w = Std.int(ui.slider(Id.handle({value: map.w}), "Map Width",0,Util.pow(256,2),false,1/map.tw));
-                map.h = Std.int(ui.slider(Id.handle({value: map.h}), "Map Height",0,Util.pow(256,2),false,1/map.th));
+                mapWidthHandle.value = map.w;
+                var w = Ext.floatInput(ui,mapWidthHandle, "Map Width");
+                if(mapWidthHandle.changed){
+                    var w = Std.int(Util.snap(w,map.tw));
+                    resizeMapdata(w,map.h);                  
+                }
+                mapHeightHandle.value = map.h;
+                var h = Ext.floatInput(ui,mapHeightHandle, "Map Height");
+                if(mapHeightHandle.changed){
+                    var h = Std.int(Util.snap(h,map.tw));
+                    resizeMapdata(map.w,h);
+                }
                 map.tw = Std.int(Ext.floatInput(ui, Id.handle({value: 64.0}), "Tile Width"));
                 map.th = Std.int(Ext.floatInput(ui, Id.handle({value: 64.0}), "Tile Height"));
 				
@@ -124,17 +136,20 @@ class TileEditor {
                     var y = Math.abs(ui._windowY-ui.inputY);
                     var imgX =(x-px)*invRatio;
                     var imgY = (y-py)*invRatio;
-                    imgX = Util.snap(imgX,map.tw);
-                    imgY = Util.snap(imgY,map.tw);
-                    var widthIndicies = Std.int(curImg.width/map.tw);
+                    var grid = map.tw;
+                    imgX = Util.snap(imgX,grid);
+                    imgY = Util.snap(imgY,grid)-grid;
+                    var imgW = Util.snap(curImg.width,grid);
+                    var imgH = Util.snap(curImg.height,grid);
+                    var widthIndicies = Std.int(imgW/map.tw);
                     var index = Std.int(tileHandle.value);
                     if(!tileHandle.changed){
-                        index = Std.int(Math.max(0.0,(widthIndicies-(curImg.width -imgX)/map.tw)-1));
-                        index += widthIndicies*Std.int(curImg.height/map.tw - (curImg.height -imgY)/map.tw-1);
+                        index = Std.int(widthIndicies-(imgW -imgX)/grid);
+                        index += widthIndicies*Std.int(imgH/map.tw - (imgH -imgY)/grid)-1;
                     }
 
-                    x = (Std.int(index * map.tw) % (curImg.width))*ratio +px;
-                    y = (Math.floor(index * map.tw/curImg.width)*(map.th))*ratio+py;
+                    x = (Std.int(index * grid) % (imgW))*ratio +px;
+                    y = (Math.floor(index * grid/imgW)*(map.th))*ratio+py;
                     tileSelected = {index:index,x:x,y:y,w:map.tw*ratio,h:map.th*ratio};
                     var pivotTile = map.pivotTiles[curTile.dataId];
                     if(!map.tiles.exists(pivotTile.tileId+index)){
@@ -143,19 +158,26 @@ class TileEditor {
                         unusedIds.push(pivotTile.tileId+index);
                         curTile = found.anim.Tile.createTile(map,pivotTile.raw,value);
                     }
+                    else if(pivotTile.tileId+tileSelected.index != curTile.tileId){
+                        curTile = map.tiles.get(pivotTile.tileId+tileSelected.index);
+                    }
                     
                 }
                 tileHandle.value = tileSelected.index;
                 ui.slider(tileHandle, "Selected Tile",0,currentMaxTiles()-1);
-
+                if(tileHandle.changed){
+                    var index = Math.floor(tileHandle.value);
+                    var x = (Std.int(index * map.tw) % (curImg.width))*ratio +px;
+                    var y = (Math.floor(index * map.tw/curImg.width)*(map.th))*ratio+py;
+                    tileSelected = {index:index,x:x,y:y,w:map.tw*ratio,h:map.th*ratio};
+                }
                 ui.g.color = kha.Color.White;
-                // ui.textInput(Id.handle({text: "Hello"}), "Input");
             
                 ui.unindent();
             }
             endHeight = Math.abs(endHeight-ui._y);
         }
-        canDrawTile = ui.dragHandle != editorWindowHandle && !fileBrowserOpen && isInScreen();
+        canDrawTile = ui.dragHandle != editorWindowHandle && !zui.Popup.show && isInScreen();
         ui.end();
         
         if(canDrawTile){
@@ -190,6 +212,22 @@ class TileEditor {
         }
     }
 
+    function resizeMapdata(w:Int,h:Int){
+        var tiles:Array<{pos:Vector2,tileId:Int}> = [];       
+        for(i in 0...map.data.length){
+            if(map.data[i] != -1){
+                tiles.push({pos: new Vector2(map.x2p(map.x(i)),map.y2p(map.y(i))),tileId:map.data[i]});
+            }
+        }
+        if(map.w != w || map.h != h){
+            map.w = w;
+            map.h = h;
+        }
+        map.data = [for(i in 0...w*h)-1];
+        for(tile in tiles){
+            map.data[map.posXY2Id(tile.pos.x,tile.pos.y)] = tile.tileId;
+        }
+    }
     @:access(found.anim.Tilemap,found.anim.Tile)
     function currentMaxTiles(?tileToGetMaxOf:Null<Tile>){
         var curTile =  tileToGetMaxOf != null ? tileToGetMaxOf: curTile;
@@ -206,10 +244,8 @@ class TileEditor {
         ui.row([0.8,0.2]);
         var path = ui.textInput(imagePathHandle);
         if(ui.button("...")){
-            fileBrowserOpen = true;
             FileBrowserDialog.open(function(path:String){
                 // curTile.data.
-                fileBrowserOpen = false;
             });
         }
         if(imagePathHandle.changed){
@@ -230,19 +266,20 @@ class TileEditor {
     }
     @:access(found.anim.Tilemap,found.anim.Tile)
     function addTilesheet(title:String) {
-        fileBrowserOpen = true;
         FileBrowserDialog.open(function(path:String){
-            var tilesheet:TTileData = found.data.Creator.createType(title,"sprite_object");
-            var originId = curTile != null ? currentMaxTiles()+map.pivotTiles[curTile.dataId].tileId : 0;
-            tilesheet.usedIds = [originId];
-            tilesheet.tileWidth = curTile.raw.tileWidth;
-            tilesheet.tileHeight = curTile.raw.tileHeight;
-            tilesheet.imagePath = path;
-            tilesheets.push(tilesheet);
-            tileSelected = null;
-            Tile.createTile(map,tilesheet,0,function(tmap:Tilemap){
-                fileBrowserOpen = false;
-                trace("done with file browser");
+            found.data.Data.getImage(path,function(image:kha.Image){
+                var tilesheet:TTileData = found.data.Creator.createType(title,"sprite_object");
+                var originId = curTile != null ? currentMaxTiles()+map.pivotTiles[map.pivotTiles.length-1].tileId : 0;
+                tilesheet.usedIds = [originId];
+                tilesheet.width = image.width;
+                tilesheet.height = image.height;
+                tilesheet.tileWidth = curTile.raw.tileWidth;
+                tilesheet.tileHeight = curTile.raw.tileHeight;
+                tilesheet.imagePath = path;
+                tilesheets.push(tilesheet);
+                trace(tilesheet);
+                tileSelected = null;
+                Tile.createTile(map,tilesheet,0);
             });
         });
     }
@@ -295,7 +332,7 @@ class TileEditor {
         #if editor } #end
         var index  = map.posXY2Id(px,py);
         if(index > -1){
-            map.data[index] = tileSelected.index;
+            map.data[index] = curTile.tileId;
         }
 
     }

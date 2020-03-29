@@ -194,10 +194,10 @@ class TileEditor {
             var py:Float = Found.mouseY;//Math.abs(Found.mouseY) < Found.GRID*0.75 ? Found.mouseY-curTile._h*2:Found.mouseY-curTile._h;
             vec.x = px;
             vec.y = py;
-            px = Math.floor(px);
-            px = Util.snap(px,Found.GRID);
-            py = Math.floor(py);
-            py = Util.snap(py,Found.GRID);
+            // px = Math.floor(px);
+            // px = Util.snap(px,Found.GRID);
+            // py = Math.floor(py);
+            // py = Util.snap(py,Found.GRID);
 
             curTile.render(canvas,vec,kha.Color.fromBytes(255,255,255,128),new Vector2(temp.width,temp.height));
             canvas.g2.end();
@@ -326,9 +326,9 @@ class TileEditor {
         px = Math.abs(Found.mouseX) < Found.GRID*0.75 ? Found.mouseX-curTile._w*2: Found.mouseX-curTile._w;
         py = Math.abs(Found.mouseY) < Found.GRID*0.75 ? Found.mouseY-curTile._h*2:Found.mouseY-curTile._h;
         px = Math.floor(px+addX+found.State.active.cam.position.x);
-        px += (Found.GRID-(px % Found.GRID));
+        px = Util.snap(px,Found.GRID);
         py = Math.floor(py+addY+found.State.active.cam.position.y);
-        py += (Found.GRID-(py % Found.GRID));
+        py = Util.snap(py,Found.GRID);
         #if editor } #end
         var index  = map.posXY2Id(px,py);
         if(index > -1){

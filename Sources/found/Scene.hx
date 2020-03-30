@@ -221,11 +221,11 @@ class Scene {
     }
     #end
 
-    if (App.traitRenders2D.length > 0) {
+    if (App.traitRenders2D.length > 0 #if editor && App.editorui.isPlayMode #end) {
 			for (f in App.traitRenders2D) { App.traitRenders2D.length > 0 ? f(canvas.g2) : break; }
 		}
 
-    if (App.traitInits.length > 0) {
+    if (App.traitInits.length > 0 #if editor && App.editorui.isPlayMode #end) {
 			for (f in App.traitInits) { App.traitInits.length > 0 ? f() : break; }
 			App.traitInits.splice(0, App.traitInits.length);
       for(exe in Executor.executors){

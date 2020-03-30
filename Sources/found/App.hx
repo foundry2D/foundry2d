@@ -87,7 +87,11 @@ class App {
 	}
 
 	public function update(dt:Float):Void {
+		#if editor
+		if (State.active != null && editorui.isPlayMode){
+		#else
 		if (State.active != null){
+		#end
 			State.active.update(dt);
 			if(State.active.cam != null){
 				screenOffsetX = State.active.cam.position.x;

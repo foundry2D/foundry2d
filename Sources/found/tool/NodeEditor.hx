@@ -18,7 +18,6 @@ import found.State;
 
 @:access(zui.Zui)
 class NodeEditor {
-
 	public var visible:Bool;
 
 	public static var width:Int;
@@ -42,8 +41,13 @@ class NodeEditor {
 	public static var nodesArray:Array<LogicTreeData> = [];
 	public static var selectedNode:LogicTreeData = null;
 
-	public static var nodeHandle = Id.handle();
-	public static var nodeTabHandle = Id.handle();
+	public var nodeCanvasWindowHandle = Id.handle();
+	public var nodeMenuWindowHandle = Id.handle();
+	public var nodeMenuTabHandle = Id.handle();
+
+	public function redraw() {
+		nodeCanvasWindowHandle.redraws = nodeMenuWindowHandle.redraws = nodeMenuTabHandle.redraws = 2;
+	}
 
 	public function render(ui:zui.Zui) {
 		if (!visible)
@@ -70,7 +74,7 @@ class NodeEditor {
 				}
 			}
 		}
-		if (ui.window(Id.handle(), NodeEditor.x, NodeEditor.y, NodeEditor.width, NodeEditor.height)) {
+		if (ui.window(nodeCanvasWindowHandle, NodeEditor.x, NodeEditor.y, NodeEditor.width, NodeEditor.height)) {
 			ui.g.color = kha.Color.White;
 			ui.g.drawImage(grid, nodePanX, nodePanY);
 			renderNodes(ui);
@@ -78,17 +82,17 @@ class NodeEditor {
 		renderNodesMenu(ui);
 	}
 
-	public static function renderNodes(ui:Zui) {
+	public function renderNodes(ui:Zui) {
 		if (selectedNode != null)
 			selectedNode.nodes.nodeCanvas(ui, selectedNode.nodeCanvas);
 	}
 
-	public static function renderNodesMenu(ui:Zui) {
+	public function renderNodesMenu(ui:Zui) {
 		if (selectedNode == null)
 			return;
 
-		if (ui.window(nodeHandle, NodeEditor.x, NodeEditor.y, 150, Std.int(NodeEditor.height * 0.75), true)) {
-			if (ui.tab(nodeTabHandle, "Std")) {
+		if (ui.window(nodeMenuWindowHandle, NodeEditor.x, NodeEditor.y, 150, Std.int(NodeEditor.height * 0.75), true)) {
+			if (ui.tab(nodeMenuTabHandle, "Std")) {
 				if (ui.panel(Id.handle(), "Logic")) {
 					if (ui.button("Gate"))
 						pushNodeToSelectedGroup(LogicNode.gate);
@@ -137,7 +141,7 @@ class NodeEditor {
 						pushNodeToSelectedGroup(MathNode.randf);
 				}
 			}
-			if (ui.tab(nodeTabHandle, "Foundry2d")) {
+			if (ui.tab(nodeMenuTabHandle, "Foundry2d")) {
 				if (ui.panel(Id.handle(), "Event")) {
 					if (ui.button("On Init"))
 						pushNodeToSelectedGroup(FoundryNode.onInitNode);

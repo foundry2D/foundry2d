@@ -150,7 +150,7 @@ class Scene {
   public function update(dt:Float){
     if(!Scene.ready && raw._entities.length == _entities.length)
       Scene.ready = true;
-    if(!Scene.ready)
+    if(!Scene.ready || #if editor App.editorui.isPlayMode #end)
       return;
       
 
@@ -160,7 +160,7 @@ class Scene {
 
     var i = 0;
 		var l = App.traitUpdates.length;
-		while (i < l #if editor && App.editorui.isPlayMode #end) {
+		while (i < l) {
 			if (App.traitInits.length > 0) {
 				for (f in App.traitInits) { App.traitInits.length > 0 ? f() : break; }
 				App.traitInits.splice(0, App.traitInits.length);
@@ -179,7 +179,7 @@ class Scene {
 
 		i = 0;
 		l = App.traitLateUpdates.length;
-		while (i < l #if editor && App.editorui.isPlayMode #end) {
+		while (i < l) {
 			App.traitLateUpdates[i]();
 			l <= App.traitLateUpdates.length ? i++ : l = App.traitLateUpdates.length;
 		}
@@ -237,8 +237,9 @@ class Scene {
 
     if (App.traitRenders2D.length > 0 #if editor && App.editorui.isPlayMode #end) {
 			for (f in App.traitRenders2D) { App.traitRenders2D.length > 0 ? f(canvas.g2) : break; }
-		}
-
+    }
+    
+    //@TODO: Evaluate if we still need this in render... ?
     if (App.traitInits.length > 0 #if editor && App.editorui.isPlayMode #end) {
 			for (f in App.traitInits) { App.traitInits.length > 0 ? f() : break; }
 			App.traitInits.splice(0, App.traitInits.length);

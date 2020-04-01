@@ -244,9 +244,6 @@ class Object {
 				if (t._render2D != null) {
 					for (f in t._render2D) App.removeRender2D(f);
 				}
-				if (t._remove != null) {
-					for (f in t._remove) f();
-				}
 			}
 			if(Scene.ready){
 				State.active.activeEntities.remove(this);

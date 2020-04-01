@@ -150,7 +150,7 @@ class Scene {
   public function update(dt:Float){
     if(!Scene.ready && raw._entities.length == _entities.length)
       Scene.ready = true;
-    if(!Scene.ready || #if editor App.editorui.isPlayMode #end)
+    if(!Scene.ready || #if editor !App.editorui.isPlayMode #end)
       return;
       
 

@@ -29,6 +29,8 @@ class Scene {
   
   public var countEntities(get, null):Int;
   public var _entities:Array<Object>;
+  var activeEntities:Array<Object>;
+  var inactiveEntities:Array<Object>;
 
   public var physics_world: echo.World;
 
@@ -63,7 +65,8 @@ class Scene {
     this.raw = raw; 
     _entities = new Array<Object>();
     // root = new Object();
-
+    activeEntities = [];
+    inactiveEntities = [];
     if(raw.physicsWorld != null){
       addPhysicsWorld(raw.physicsWorld);
     }
@@ -81,6 +84,14 @@ class Scene {
 		// root.name = "Root";
     #end
   }
+  function addToStateArray(object:Object){
+      if(object.active){
+        activeEntities.push(object);
+      }
+      else{
+        inactiveEntities.push(object);
+      }
+  }
 
   #if editor
   public function addEntity(e:TObj,?isEditor = false){
@@ -95,6 +106,7 @@ class Scene {
           var out = new Sprite(data,function (s:Sprite){
               createTraits(data.traits,s);
               _entities.push(s);
+              addToStateArray(s);
           });
         // case "rect_object":
         //   var data:TRectData = SceneFormat.getData(e);
@@ -106,15 +118,17 @@ class Scene {
           var data:TTilemapData = SceneFormat.getData(e);
           new Tilemap(data,function(tilemap:Tilemap){
             _entities.push(tilemap);
+            addToStateArray(tilemap);
           });
         case "camera_object":
           var data:TCameraData = SceneFormat.getData(e);
           var out = new Camera(data);
-          if(cam == null)
+          if(out.uid == 0)
             cam = out;
           out.raw = data;
           createTraits(data.traits,out);
           _entities.push(out);
+          addToStateArray(out);
         case "emitter_object":
         default://Object
           // var data:TSpriteData = SceneFormat.getData(e);
@@ -140,16 +154,16 @@ class Scene {
       return;
       
 
-    for (entity in _entities) entity.update(dt);
+    for (entity in activeEntities) entity.update(dt);
 
     physicsUpdate(STEP);
 
     var i = 0;
 		var l = App.traitUpdates.length;
-		while (i < l) {
-			if (traitInits.length > 0) {
-				for (f in traitInits) { traitInits.length > 0 ? f() : break; }
-				traitInits.splice(0, traitInits.length);
+		while (i < l #if editor && App.editorui.isPlayMode #end) {
+			if (App.traitInits.length > 0) {
+				for (f in App.traitInits) { App.traitInits.length > 0 ? f() : break; }
+				App.traitInits.splice(0, App.traitInits.length);
    
 			}
 			App.traitUpdates[i](dt);
@@ -165,7 +179,7 @@ class Scene {
 
 		i = 0;
 		l = App.traitLateUpdates.length;
-		while (i < l) {
+		while (i < l #if editor && App.editorui.isPlayMode #end) {
 			App.traitLateUpdates[i]();
 			l <= App.traitLateUpdates.length ? i++ : l = App.traitLateUpdates.length;
 		}

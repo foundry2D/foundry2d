@@ -33,7 +33,7 @@ class Sprite extends Object {
 	public var flip:Vector2;
 	
 	public function new(sprite:TSpriteData,?done:Sprite->Void){
-		super(sprite.position.x, sprite.position.y, sprite.width, sprite.height);
+		super(sprite);
 		this.active = sprite.active;
 		this.flip = Reflect.hasField(sprite,"flip") ? sprite.flip:new Vector2();
 		new SpriteData(sprite,function(p_data){

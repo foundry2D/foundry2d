@@ -16,7 +16,7 @@ class Camera extends Object {
     var target:Null<Object> = null;
 
     public function new(data:TCameraData) {
-        super(data.position.x,data.position.y,data.width,data.height);
+        super(data);
         offsetX = data.offsetX;
         offsetY = data.offsetY;
         camSpeedX = data.speedX;

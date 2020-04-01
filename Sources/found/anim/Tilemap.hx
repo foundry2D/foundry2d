@@ -30,7 +30,7 @@ class Tilemap extends Object{
     public var imageData:Array<SpriteData>;
     
     public function new(data:TTilemapData,done:Tilemap->Void) {
-        super(data.position.x,data.position.y,data.width,data.height);
+        super(data);
         this.w = Std.int(data.width);
         this.h = Std.int(data.height);
         this.tw = data.tileWidth;

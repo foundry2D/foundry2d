@@ -50,7 +50,7 @@ class Object {
 	}
 	static var uidCounter = -1;
 	public final uid:Int;
-	public var active(default, set):Bool = true;
+	public var active(default, set):Bool;
 
 	public var body(default, set):echo.Body = null;
 	function set_body(b:echo.Body) {
@@ -136,31 +136,33 @@ class Object {
 
 	var traits:Array<Trait> = [];
 
-	public function new(?x:Float, ?y:Float, ?width:Float, ?height:Float){
+	public function new(p_raw:TObj){
 		if(_translations == null) _translations = new Executor<MoveData>("_positions");
 		if(_rotates == null) _rotates = new Executor<RotateData>("_rotations");
 		if(_scaler == null) _scaler = new Executor<Vector2>("_scales");
 		
 		uid = ++uidCounter;
 
-		_positions.push(new Vector2(x, y));
-		_rotations.push(new Vector3());
-		_scales.push(new Vector2(1.0,1.0));
+		_positions.push(Reflect.copy(p_raw.position));
+		_rotations.push(Reflect.copy(p_raw.rotation));
+		_scales.push( p_raw.scale != null ? Reflect.copy(p_raw.scale) : new Vector2(1.0,1.0));
 
-		this.width = width;
-		this.height = height;
+		this.width = p_raw.width;
+		this.height = p_raw.height;
 		
 		
 		
 		
 
 		center = new Vector2(width / 2, height / 2);
-
-		activate(x, y);
+		if(p_raw.active)
+			activate();
+		else
+			deactivate();
 	}
 
 	public function update(dt:Float){
-		if (!active || !Scene.ready) return;
+		if (!Scene.ready) return;
 		
 		if(body != null){
 			body.x = position.x;
@@ -176,11 +178,11 @@ class Object {
 	}
 
 	public function render(canvas:Canvas){
-		if (!active || !Scene.ready) return;
+		if (!Scene.ready) return;
 	}
 
 	public function isVisible(offset:Int,cam:Float32x4): Bool {
-		if (!active || !Scene.ready) return false;
+		if (!Scene.ready) return false;
 		
 		var x = Float32x4.get(cam,0);
 		var y = Float32x4.get(cam,1);
@@ -191,14 +193,14 @@ class Object {
 		return false;
 	}
 
-	public function activate(?x:Float, ?y:Float){
+	public function activate(){
 		active = true;
 	}
 
 	public function deactivate(){
 		active = false;
 	}
-	@:access(found.Trait,found.App)
+	@:access(found.Trait,found.App,found.Scene)
 	function set_active(value:Bool):Bool {
 		if(body != null)
 			body.active = value;
@@ -220,6 +222,10 @@ class Object {
 					for (f in t._render2D) App.notifyOnRender2D(f);
 				}
 			}
+			if(Scene.ready){
+				State.active.inactiveEntities.remove(this);
+				State.active.activeEntities.push(this);
+			}
 		}
 		else if(!value && active != value){
 			for(t in traits){
@@ -238,6 +244,10 @@ class Object {
 				if (t._render2D != null) {
 					for (f in t._render2D) App.removeRender2D(f);
 				}
+			}
+			if(Scene.ready){
+				State.active.activeEntities.remove(this);
+				State.active.inactiveEntities.push(this);
 			}
 		}
 		return active = value;

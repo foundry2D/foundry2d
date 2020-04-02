@@ -210,11 +210,11 @@ class Scene {
 
     var lastz = -1;
     for (entity in ordered){
-      if(entity.depth != lastz){
+      if(entity.layer != lastz){
         if(lastz > -1)
           canvas.g2.popTransformation();
-        lastz = Std.int(entity.depth);
-        var layer:TLayer = raw.layers != null ? raw.layers[lastz]: {name: "No layers",zIndex: 0, speed:1.0};
+        lastz = entity.layer;
+        var layer:TLayer = raw.layers != null && raw.layers.length > 0 ? raw.layers[lastz]: {name: "No layers",zIndex: 0, speed:1.0};
         canvas.g2.pushTransformation(FastMatrix3.translation(-cam.position.x * layer.speed,-cam.position.y * layer.speed));
 
       }
@@ -304,9 +304,9 @@ class Scene {
     if (entities.length == 0) return;
     if(zsort){
       ArraySort.sort(entities, function(ent1:Object, ent2:Object){
-        if (ent1.depth < ent2.depth){
+        if ((ent1.layer < ent2.layer || ent1.layer == ent2.layer)  && (ent1.depth < ent2.depth || ent1.depth == ent2.depth)){
           return -1;
-        } else if (Math.floor(ent1.depth) == Math.floor(ent2.depth)){
+        } else if (ent1.layer == ent2.layer && Math.floor(ent1.depth) == Math.floor(ent2.depth)){
           return 0;
         } else {
           return 1;
@@ -315,9 +315,9 @@ class Scene {
 
     }else {
       ArraySort.sort(entities, function(ent1:Object, ent2:Object){
-        if (ent1.position.y + ent1.height < ent2.position.y + ent2.height){
+        if ((ent1.layer < ent2.layer || ent1.layer == ent2.layer) && ent1.position.y + ent1.height < ent2.position.y + ent2.height){
           return -1;
-        } else if (ent1.position.y == ent2.position.y){
+        } else if (ent1.layer == ent2.layer && ent1.position.y == ent2.position.y){
           return 0;
         } else {
           return 1;

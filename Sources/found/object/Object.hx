@@ -132,6 +132,7 @@ class Object {
 	}
 	public var center:Vector2;
 
+	public var layer:Int = 0;
 	public var depth:Float = 0.0;
 
 	var traits:Array<Trait> = [];

@@ -33,7 +33,7 @@ typedef TSceneFormat = {
     @:optional public var _Zsort:Null<Bool>;
     @:optional public var cullOffset:Null<Int>;
     @:optional public var traits:Null<Array<TTrait>>; // Scene root traits
-    @:optional public var layers:Null<Array<TLayer>>; // Scene root traits
+    @:optional public var layers:Null<Array<TLayer>>;
     @:optional public var physicsWorld: Null<echo.data.Options.WorldOptions>;
 }
 
@@ -51,7 +51,7 @@ typedef TObj = {
 	public var height:FastFloat;
     @:optional public var scale:Null<Vector2>;
     public var center:Vector2;
-    // @TODO: Add layer Int field to make it possible to have depth in a layer
+    public var layer:Int;
     public var depth:Float;
     public var active:Bool;
     @:optional public var rigidBody: Null<echo.data.Options.BodyOptions>;

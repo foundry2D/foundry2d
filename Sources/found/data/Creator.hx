@@ -19,6 +19,7 @@ class Creator {
                     height:0.0,
                     scale: new Vector2(1.0,1.0),
                     center: new Vector2(),
+                    layer: 0,
                     depth: 0.0,
                     active: true
                 };

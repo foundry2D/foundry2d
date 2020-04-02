@@ -338,7 +338,7 @@ class TileEditor {
     }
 
     public function selectTilemap(uid:Int){
-        if(uid < 0){selectedTilemapIdIndex = -1;return;}
+        if(uid < 0){selectedTilemapIdIndex = -1;map = null;return;}
         selectedTilemapIdIndex = -1;
         for(i in 0...tilemapIds.length){
             if(tilemapIds[i] == uid){

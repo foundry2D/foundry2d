@@ -53,7 +53,8 @@
                 "layer": 0,
                 "depth":0,
                 "active":true,
-                "imagePath":"backgroundEmpty"
+                "imagePath":"backgroundEmpty",
+                "anims": []
             }
         ]
     }

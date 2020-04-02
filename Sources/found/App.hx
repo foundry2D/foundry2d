@@ -348,7 +348,7 @@ private class FPS {
 	}
 
 	public function render(canvas:kha.Canvas,inEditor = true): Void {
-		if(canvas.g2 == null || State.active.cam == null) return;
+		if(canvas.g2 == null || State.active == null || State.active.cam == null) return;
 		if(ui == null)ui = new zui.Zui({font: kha.Assets.fonts.font_default});
 
 		canvas.g2.pushTransformation(FastMatrix3.translation(-State.active.cam.position.x,-State.active.cam.position.y));

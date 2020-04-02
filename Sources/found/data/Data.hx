@@ -9,6 +9,7 @@ using StringTools;
 // Global data list and asynchronous data loading
 class Data {
 
+	public static var version = 0.1;
 	public static var cachedSceneRaws:Map<String, TSceneFormat> = new Map();
     public static var cachedSprites:Map<String, SpriteData> = new Map();
     public static var cachedRects:Map<String, RectData> = new Map();
@@ -90,7 +91,12 @@ class Data {
 			var parsed:TSceneFormat = null;
 			if (isJson) {
 				// var s = b.toString();
-				parsed = /*s.charAt(0) == "{" ? */Json.parse(b) /*: ArmPack.decode(b.toBytes())*/;
+				try{
+					parsed = /*s.charAt(0) == "{" ? */DataLoader.parse(b) /*: ArmPack.decode(b.toBytes())*/;
+				}
+				catch(e:Dynamic){
+					trace(e);
+				}
 			}
 			else {
 				// parsed = ArmPack.decode(b.toBytes());

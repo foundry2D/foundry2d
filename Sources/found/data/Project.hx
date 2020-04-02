@@ -2,6 +2,7 @@ package found.data;
 
 typedef TProject = {
     var name:String;
+    var dataVersion:Float;
     var path:String;
     var scenes:Array<String>;//path
     var type:Project.Type;

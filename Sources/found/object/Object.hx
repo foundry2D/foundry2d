@@ -185,8 +185,10 @@ class Object {
 	public function isVisible(offset:Int,cam:Float32x4): Bool {
 		if (!Scene.ready) return false;
 		
-		var x = Float32x4.get(cam,0);
-		var y = Float32x4.get(cam,1);
+		var layers = State.active.raw.layers;
+		var cullSpeed = layers != null && layers.length > 0 && raw.type != "camera_object" ? layers[this.layer]: {name: "No layers",zIndex: 0, speed:1.0}
+		var x = Float32x4.get(cam,0) * cullSpeed.speed;
+		var y = Float32x4.get(cam,1) * cullSpeed.speed;
 		var w = Float32x4.get(cam,2);
 		var h = Float32x4.get(cam,3);
 		if(position.x < x + offset + w && position.x > x - offset - width && position.y > y-offset -height && position.y < y +h+offset) return true;

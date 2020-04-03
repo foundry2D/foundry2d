@@ -220,7 +220,8 @@ class Scene {
       }
       entity.render(canvas);
     }
-    canvas.g2.popTransformation();
+    if(ordered.length > 0)
+      canvas.g2.popTransformation();
 
     #if debug
     if(Found.collisionsDraw && physics_world != null){

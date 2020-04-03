@@ -48,7 +48,7 @@ class Camera extends Object {
         }
     }
     public override function render(canvas:Canvas) {
-        if (!active || !Scene.ready) return;
+        if (!Scene.ready) return;
         #if debug
         canvas.g2.color = kha.Color.Red;
         canvas.g2.drawRect(0.5*Found.WIDTH-this.position.x,0.5*Found.HEIGHT-this.position.y,offsetX,offsetX);

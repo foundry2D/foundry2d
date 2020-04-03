@@ -150,6 +150,9 @@ class Object {
 
 		this.width = p_raw.width;
 		this.height = p_raw.height;
+
+		this.layer = p_raw.layer;
+		this.depth = p_raw.depth;
 		
 		
 		

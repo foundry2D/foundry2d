@@ -84,7 +84,14 @@ class Scene {
 		// root.name = "Root";
     #end
   }
+
+  @:access(found.object.Object)
   function addToStateArray(object:Object){
+
+      if(physics_world != null && object.raw.rigidBody != null){// Add rigidbody to Object
+        _entities[_entities.length-1].makeBody(this,object.raw); 
+      }
+
       if(object.active){
         activeEntities.push(object);
       }

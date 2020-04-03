@@ -38,13 +38,7 @@ class Object {
 	function set_raw(data:TObj) {
 		this.raw = data;
 		if(State.active != null && State.active.physics_world != null && data.rigidBody != null){
-            if(data.rigidBody.x == null) data.rigidBody.x = data.position.x;
-			if(data.rigidBody.y == null) data.rigidBody.y = data.position.y;
-			if(data.rigidBody.shapes != null) {
-				if(data.rigidBody.shapes[0].width == null) data.rigidBody.shapes[0].width = data.width;
-				if(data.rigidBody.shapes[0].height == null) data.rigidBody.shapes[0].height = data.height;
-			}
-			body = State.active.physics_world.add(new echo.Body(data.rigidBody));
+            makeBody(State.active,data);
 		}
 		return this.raw;
 	}
@@ -58,6 +52,16 @@ class Object {
 			b.on_move = on_physics_move;
 		}
 		return body = b;
+	}
+
+	function makeBody(scene:Scene,p_raw:TObj){
+		if(p_raw.rigidBody.x == null) p_raw.rigidBody.x = p_raw.position.x;
+		if(p_raw.rigidBody.y == null) p_raw.rigidBody.y = p_raw.position.y;
+		if(p_raw.rigidBody.shapes != null) {
+			if(p_raw.rigidBody.shapes[0].width == null) p_raw.rigidBody.shapes[0].width = p_raw.width;
+			if(p_raw.rigidBody.shapes[0].height == null) p_raw.rigidBody.shapes[0].height = p_raw.height;
+		}
+		this.body = scene.physics_world.add(new echo.Body(p_raw.rigidBody));
 	}
 
 	function on_physics_move(x:Float,y:Float){

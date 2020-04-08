@@ -32,7 +32,8 @@ class DataLoader {
 
 				case TClass(haxe.ds.StringMap), TClass(haxe.ds.IntMap), TClass(haxe.ds.EnumValueMap) :
 					return "__hser__" + Serializer.run(v);
-
+				case TClass(kha.math.Vector2) | TClass(kha.math.Vector3):
+					return "__hser__" + Serializer.run(v);
 				case TClass(String), TClass(Array) :
 					return v;
 

@@ -78,15 +78,28 @@ class Scene {
       }
     }
 
-
     // createTraits(raw.traits,root);
     #if debug
 		// root.name = "Root";
     #end
   }
 
+  function onReady(){
+    var sort = function(ent0:Object,ent1:Object){
+      if(ent0.uid < ent1.uid){
+        return -1;
+      }
+      else {
+        return 1;
+      }
+    };
+    ArraySort.sort(_entities,sort);
+  }
+
   @:access(found.object.Object)
   function addToStateArray(object:Object){
+
+      _entities.push(object);
 
       if(physics_world != null && object.raw.rigidBody != null){// Add rigidbody to Object
         _entities[_entities.length-1].makeBody(this,object.raw); 
@@ -97,6 +110,11 @@ class Scene {
       }
       else{
         inactiveEntities.push(object);
+      }
+
+      if(!Scene.ready && raw._entities.length == _entities.length){
+        Scene.ready = true;
+        onReady();
       }
   }
 
@@ -112,7 +130,6 @@ class Scene {
           var data:TSpriteData = SceneFormat.getData(e);
           var out = new Sprite(data,function (s:Sprite){
               createTraits(data.traits,s);
-              _entities.push(s);
               addToStateArray(s);
           });
         // case "rect_object":
@@ -124,7 +141,6 @@ class Scene {
         case "tilemap_object":
           var data:TTilemapData = SceneFormat.getData(e);
           new Tilemap(data,function(tilemap:Tilemap){
-            _entities.push(tilemap);
             addToStateArray(tilemap);
           });
         case "camera_object":
@@ -134,7 +150,6 @@ class Scene {
             cam = out;
           out.raw = data;
           createTraits(data.traits,out);
-          _entities.push(out);
           addToStateArray(out);
         case "emitter_object":
         default://Object
@@ -155,8 +170,6 @@ class Scene {
 
   @:access(found.App,found.object.Object)
   public function update(dt:Float){
-    if(!Scene.ready && raw._entities.length == _entities.length)
-      Scene.ready = true;
     if(!Scene.ready || #if editor !App.editorui.isPlayMode #end)
       return;
       
@@ -201,6 +214,9 @@ class Scene {
 
   @:access(found.App)
   public function render(canvas:Canvas){
+    if(raw._entities.length != _entities.length)
+      return;// This scene is not ready to render
+
     var ordered = _entities.copy();
     if(cullOffset != 0){
       var data:Float32x4 = Float32x4.loadFast(cam.position.x,cam.position.y,Found.WIDTH,Found.HEIGHT);

@@ -109,8 +109,6 @@ class App {
 			if(!editorui.visible) editorui.visible =true;
 			Found.backbuffer.g2.begin();
 
-			if (Found.scenebuffer == null) Found.scenebuffer = kha.Image.createRenderTarget(Found.backbuffer.width, Found.backbuffer.height);
-
 			if(Found.renderfunc != null)
 				Found.renderfunc(Found.backbuffer.g2);
 			Found.backbuffer.g2.end();

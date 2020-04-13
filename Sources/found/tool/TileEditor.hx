@@ -116,21 +116,28 @@ class TileEditor {
 				
                 //Tilemap drawing with selection
                 var r = ui.curRatio == -1 ? 1.0 : ui.ratios[ui.curRatio];
-                var px = ui._x+ui.buttonOffsetY+ui.SCROLL_W() * r*0.5;
+                var px = ui._x+ui.buttonOffsetY;
                 var py = ui._y;
                 var curImg = curTile.data.image;
                 var state = ui.image(curImg);
+                var scroll = ui.currentWindow != null ? ui.currentWindow.scrollEnabled : false;
+                if (!scroll) {
+                    px += ui.SCROLL_W() * r * 0.5;
+                }
+
                 var ratio = Math.abs((py-ui._y)/curImg.height);
                 var invRatio = Math.abs(curImg.height/(py-ui._y));
 
                 ui.g.color = kha.Color.fromBytes(0,0,200,128);
+                var scrollOffset = ui.currentWindow.scrollOffset;
                 if(tileSelected == null){
                     //We always select the tile at index 0
                     tileSelected = {index:0,x:px,y:py,w:map.tw*ratio,h:map.th*ratio};
-                    ui.g.fillRect(tileSelected.x,tileSelected.y,tileSelected.w,tileSelected.h);
+                    ui.g.fillRect(tileSelected.x,tileSelected.y+scrollOffset,tileSelected.w,tileSelected.h);
                 }else{
-                    ui.g.fillRect(tileSelected.x,tileSelected.y,tileSelected.w,tileSelected.h);
+                    ui.g.fillRect(tileSelected.x,tileSelected.y+scrollOffset,tileSelected.w,tileSelected.h);
                 }
+                py += scrollOffset;
                 if(state == zui.Zui.State.Down || tileHandle.changed ){
                     var x = Math.abs(ui._windowX-ui.inputX);
                     var y = Math.abs(ui._windowY-ui.inputY);

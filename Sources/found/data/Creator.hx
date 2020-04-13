@@ -28,10 +28,8 @@ class Creator {
                 sprite.width = 250.0;
                 sprite.height = 250.0;
                 sprite.imagePath = "basic";
-                sprite.c_width = 0.0;
-                sprite.c_height = 0.0;
-                sprite.c_center = new Vector2();
-                sprite.shape = "";
+                sprite.shape = 0;//Rect
+                sprite.points = [new Vector2(),new Vector2(sprite.width,0),new Vector2(sprite.width,sprite.height),new Vector2(0,sprite.height)];
                 sprite.anims = [];
                 data = sprite;
             case "tilemap_object":
@@ -47,6 +45,7 @@ class Creator {
                 tile.height = 448.0;
                 tile.tileWidth = 64;
                 tile.tileHeight = 64;
+                tile.points = [new Vector2(),new Vector2(64,0),new Vector2(64,64),new Vector2(0,64)];
                 tile.imagePath = "tilesheet";
                 tile.usedIds = [0];
 

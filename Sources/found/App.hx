@@ -66,11 +66,6 @@ class App {
 		Surface.get().notify(onTouchDown, onTouchUp, onTouchMove);
 		#if editor
 		editorui = new EditorUi();
-			#if kha_html5
-			js.Browser.document.addEventListener("contextmenu", function(e){
-				e.preventDefault();
-			}, false);
-			#end
 		#end
 	}
 	@:access(found.object.Executor)

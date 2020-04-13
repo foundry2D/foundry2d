@@ -61,22 +61,20 @@ typedef TObj = {
 
 
 #if js
-typedef TRectData = {
+typedef TCollisionData = {
     >TObj,
 #else
-@:structInit class TRectData extends TObj {
+@:structInit class TCollisionData extends TObj {
 #end
-    public var c_width:FastFloat;
-	public var c_height:FastFloat;
-    public var c_center:Vector2;
-    public var shape:String;
+    public var shape:Int;// Rect = 0; Circle = 1; Polygon = 2;
+    public var points:Array<Vector2>;// Center = 0;
 }
 
 #if js
 typedef TSpriteData = {
-    >TRectData,
+    >TCollisionData,
 #else
-@:structInit class TSpriteData extends TRectData{
+@:structInit class TSpriteData extends TCollisionData{
 #end
     
     public var imagePath: String;

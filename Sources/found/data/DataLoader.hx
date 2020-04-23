@@ -22,7 +22,7 @@ class DataLoader {
 
 
 	public function serialize(o:Dynamic, ?pretty=false) : Void {
-		var raw = Json.stringify(o, function(k:Dynamic, v:Dynamic) : Dynamic {
+		var raw = Json.stringify(o/*, function(k:Dynamic, v:Dynamic) : Dynamic {
 			switch( Type.typeof(v) ) {
 				case TEnum(_) :
 					return "__hser__" + Serializer.run(v);
@@ -43,7 +43,7 @@ class DataLoader {
 				default :
 					throw k+" has an unsupported type ("+Type.typeof(v)+")";
 			}
-		});
+		}*/);
 
 		raw = '{"version":$version, "data":$raw}';
 
@@ -58,28 +58,29 @@ class DataLoader {
 	}
 
 
-
+	//@TODO: We have issues with the data loader when saving scenes.... with new objects 
+	//it says cannot access read only field ???!!
 	public function unserialize(raw:String) : Void {
 		var o = Json.parse(raw);
 		objVersion = Reflect.field(o, "version");
-		parseRec(o, function(k:String, v:Dynamic) : Dynamic {
+		// parseRec(o, function(k:String, v:Dynamic) : Dynamic {
 
-			switch( Type.typeof(v) ) {
+		// 	switch( Type.typeof(v) ) {
 
-				case TClass(String) :
-					// Rebuild special types
-					var s : String = cast v;
+		// 		case TClass(String) :
+		// 			// Rebuild special types
+		// 			var s : String = cast v;
 
-					// Serialized field
-					if( s.indexOf("__hser__")==0 )
-						return Unserializer.run( s.substr(8) );
+		// 			// Serialized field
+		// 			if( s.indexOf("__hser__")==0 )
+		// 				return Unserializer.run( s.substr(8) );
 
-				default :
-			}
+		// 		default :
+		// 	}
 
-			return v;
+		// 	return v;
 
-		});
+		// });
 
 		o = Reflect.field(o, "data");
 
@@ -151,7 +152,7 @@ class DataLoader {
 		return hj.getUnserialized();
 	}
 
-	public static function stringify(o:Dynamic, ?pretty=false) {
+	public static function stringify(o:Dynamic,#if debug ?pretty=true #else?pretty=false#end) {
 		var hj = new DataLoader(Data.version);
 		hj.serialize(o, pretty);
 		return hj.getSerialized();

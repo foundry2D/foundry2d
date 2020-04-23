@@ -103,13 +103,19 @@ class TileEditor {
                 var w = Ext.floatInput(ui,mapWidthHandle, "Map Width");
                 if(mapWidthHandle.changed){
                     var w = Std.int(Util.snap(w,map.tw));
-                    resizeMapdata(w,map.h);                  
+                    resizeMapdata(w,map.h);  
+                    #if editor
+                    map.dataChanged = true;
+                    #end                
                 }
                 mapHeightHandle.value = map.h;
                 var h = Ext.floatInput(ui,mapHeightHandle, "Map Height");
                 if(mapHeightHandle.changed){
                     var h = Std.int(Util.snap(h,map.tw));
                     resizeMapdata(map.w,h);
+                    #if editor
+                    map.dataChanged = true;
+                    #end
                 }
                 map.tw = Std.int(Ext.floatInput(ui, Id.handle({value: 64.0}), "Tile Width"));
                 map.th = Std.int(Ext.floatInput(ui, Id.handle({value: 64.0}), "Tile Height"));
@@ -137,7 +143,7 @@ class TileEditor {
                 }else{
                     ui.g.fillRect(tileSelected.x,tileSelected.y+scrollOffset,tileSelected.w,tileSelected.h);
                 }
-                py += scrollOffset;
+                py -= scrollOffset * 1.5;
                 if(state == zui.Zui.State.Down || tileHandle.changed ){
                     var x = Math.abs(ui._windowX-ui.inputX);
                     var y = Math.abs(ui._windowY-ui.inputY);
@@ -234,6 +240,8 @@ class TileEditor {
         for(tile in tiles){
             map.data[map.posXY2Id(tile.pos.x,tile.pos.y)] = tile.tileId;
         }
+        var temp:TTilemapData = cast(map.raw);
+        temp.map = map.data;
     }
     @:access(found.anim.Tilemap,found.anim.Tile)
     function currentMaxTiles(?tileToGetMaxOf:Null<Tile>){
@@ -277,6 +285,7 @@ class TileEditor {
             found.data.Data.getImage(path,function(image:kha.Image){
                 var tilesheet:TTileData = found.data.Creator.createType(title,"sprite_object");
                 var originId = curTile != null ? currentMaxTiles()+map.pivotTiles[map.pivotTiles.length-1].tileId : 0;
+                tilesheet.id = originId;
                 tilesheet.usedIds = [originId];
                 tilesheet.width = image.width;
                 tilesheet.height = image.height;
@@ -287,6 +296,9 @@ class TileEditor {
                 trace(tilesheet);
                 tileSelected = null;
                 Tile.createTile(map,tilesheet,0);
+                #if editor
+                map.dataChanged = true;
+                #end
             });
         });
     }
@@ -340,6 +352,11 @@ class TileEditor {
         var index  = map.posXY2Id(px,py);
         if(index > -1){
             map.data[index] = curTile.tileId;
+            var temp:TTilemapData = cast(map.raw);
+            temp.map[index] = curTile.tileId; 
+            #if editor
+            map.dataChanged = true;
+            #end
         }
 
     }

@@ -35,14 +35,14 @@ class Tilemap extends Object{
         this.h = Std.int(data.height);
         this.tw = data.tileWidth;
         this.th = data.tileHeight;
-        this.data = data.map.length == 0 ? [for (i in 0...w * h) -1]: data.map;
+        this.data = data.map.length == 0 ? data.map = [for (i in 0...w * h) -1]: data.map;
         this.imageData = [];
         this.tiles = [];
         this.pivotTiles = [];
         this.raw = data;
         
         for(tile in data.images){
-            Tile.createTile(this,tile,tile.id,done);
+            Tile.createTile(this,tile,tile.id,true,done);
         }
         if(data.images.length == 0){
             done(this);

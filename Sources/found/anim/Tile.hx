@@ -60,13 +60,17 @@ class Tile {
 		});
 
 	}
+	static var onStaticDone:Tilemap->Void = null;
 	@:access(found.anim.Tilemap)
 	public static function createTile(map:Tilemap,sprite:TTileData,index:Int,?isPivot=false,?done:Tilemap->Void){
+		if(done != null)
+			onStaticDone = done;
 		return new Tile(map,sprite,index,isPivot,function(tile:Tile){
 			map.tiles.set(tile.tileId,tile);
-			if(tile.raw.usedIds.length == index+1 && done != null){
+			if(tile.raw.usedIds[tile.raw.usedIds.length-1] == index && onStaticDone != null){
 				trace('done was called $index');
-				done(map);
+				onStaticDone(map);
+				onStaticDone = null;
 			}
 			
 		});

@@ -350,7 +350,7 @@ class TileEditor {
         py = Util.snap(py,Found.GRID);
         #if editor } #end
         var index  = map.posXY2Id(px,py);
-        if(index > -1){
+        if(index > -1 && curTile.tileId != null){
             map.data[index] = curTile.tileId;
             var temp:TTilemapData = cast(map.raw);
             temp.map[index] = curTile.tileId; 

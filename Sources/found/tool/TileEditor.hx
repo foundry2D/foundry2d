@@ -119,78 +119,80 @@ class TileEditor {
                 }
                 map.tw = Std.int(Ext.floatInput(ui, Id.handle({value: 64.0}), "Tile Width"));
                 map.th = Std.int(Ext.floatInput(ui, Id.handle({value: 64.0}), "Tile Height"));
-				
-                //Tilemap drawing with selection
-                var r = ui.curRatio == -1 ? 1.0 : ui.ratios[ui.curRatio];
-                var px = ui._x+ui.buttonOffsetY;
-                var py = ui._y;
-                var curImg = curTile.data.image;
-                var state = ui.image(curImg);
-                var scroll = ui.currentWindow != null ? ui.currentWindow.scrollEnabled : false;
-                if (!scroll) {
-                    px += ui.SCROLL_W() * r * 0.5;
-                }
-
-                var ratio = Math.abs((py-ui._y)/curImg.height);
-                var invRatio = Math.abs(curImg.height/(py-ui._y));
-
-                ui.g.color = kha.Color.fromBytes(0,0,200,128);
-                var scrollOffset = ui.currentWindow.scrollOffset;
-                if(tileSelected == null){
-                    //We always select the tile at index 0
-                    tileSelected = {index:0,x:px,y:py,w:map.tw*ratio,h:map.th*ratio};
-                    ui.g.fillRect(tileSelected.x,tileSelected.y+scrollOffset,tileSelected.w,tileSelected.h);
-                }else{
-                    ui.g.fillRect(tileSelected.x,tileSelected.y+scrollOffset,tileSelected.w,tileSelected.h);
-                }
-                py -= scrollOffset * 1.5;
-                if(state == zui.Zui.State.Down || tileHandle.changed ){
-                    var x = Math.abs(ui._windowX-ui.inputX);
-                    var y = Math.abs(ui._windowY-ui.inputY);
-                    var imgX =(x-px)*invRatio;
-                    var imgY = (y-py)*invRatio;
-                    var grid = map.tw;
-                    imgX = Util.snap(imgX,grid);
-                    imgY = Util.snap(imgY,grid)-grid;
-                    var imgW = Util.snap(curImg.width,grid);
-                    var imgH = Util.snap(curImg.height,grid);
-                    var widthIndicies = Std.int(imgW/map.tw);
-                    var index = Std.int(tileHandle.value);
-                    if(!tileHandle.changed){
-                        index = Std.int(widthIndicies-(imgW -imgX)/grid);
-                        index += widthIndicies*Std.int(imgH/map.tw - (imgH -imgY)/grid)-1;
+                
+				if(curTile != null){
+                    //Tilemap drawing with selection
+                    var r = ui.curRatio == -1 ? 1.0 : ui.ratios[ui.curRatio];
+                    var px = ui._x+ui.buttonOffsetY;
+                    var py = ui._y;
+                    var curImg = curTile.data.image;
+                    var state = ui.image(curImg);
+                    var scroll = ui.currentWindow != null ? ui.currentWindow.scrollEnabled : false;
+                    if (!scroll) {
+                        px += ui.SCROLL_W() * r * 0.5;
                     }
 
-                    x = (Std.int(index * grid) % (imgW))*ratio +px;
-                    y = (Math.floor(index * grid/imgW)*(map.th))*ratio+py;
-                    tileSelected = {index:index,x:x,y:y,w:map.tw*ratio,h:map.th*ratio};
-                    var pivotTile = map.pivotTiles[curTile.dataId];
-                    if(!map.tiles.exists(pivotTile.tileId+index)){
+                    var ratio = Math.abs((py-ui._y)/curImg.height);
+                    var invRatio = Math.abs(curImg.height/(py-ui._y));
+
+                    ui.g.color = kha.Color.fromBytes(0,0,200,128);
+                    var scrollOffset = ui.currentWindow.scrollOffset;
+                    if(tileSelected == null){
+                        //We always select the tile at index 0
+                        tileSelected = {index:0,x:px,y:py,w:map.tw*ratio,h:map.th*ratio};
+                        ui.g.fillRect(tileSelected.x,tileSelected.y+scrollOffset,tileSelected.w,tileSelected.h);
+                    }else{
+                        ui.g.fillRect(tileSelected.x,tileSelected.y+scrollOffset,tileSelected.w,tileSelected.h);
+                    }
+                    py -= scrollOffset * 1.5;
+                    if(state == zui.Zui.State.Down || tileHandle.changed ){
+                        var x = Math.abs(ui._windowX-ui.inputX);
+                        var y = Math.abs(ui._windowY-ui.inputY);
+                        var imgX =(x-px)*invRatio;
+                        var imgY = (y-py)*invRatio;
+                        var grid = map.tw;
+                        imgX = Util.snap(imgX,grid);
+                        imgY = Util.snap(imgY,grid)-grid;
+                        var imgW = Util.snap(curImg.width,grid);
+                        var imgH = Util.snap(curImg.height,grid);
+                        var widthIndicies = Std.int(imgW/map.tw);
+                        var index = Std.int(tileHandle.value);
+                        if(!tileHandle.changed){
+                            index = Std.int(widthIndicies-(imgW -imgX)/grid);
+                            index += widthIndicies*Std.int(imgH/map.tw - (imgH -imgY)/grid)-1;
+                        }
+
+                        x = (Std.int(index * grid) % (imgW))*ratio +px;
+                        y = (Math.floor(index * grid/imgW)*(map.th))*ratio+py;
+                        tileSelected = {index:index,x:x,y:y,w:map.tw*ratio,h:map.th*ratio};
+                        var pivotTile = map.pivotTiles[curTile.dataId];
+                        if(!map.tiles.exists(pivotTile.tileId+index)){
+                            
+                            var id = pivotTile.tileId+index;
+                            pivotTile.raw.usedIds.push(id)-1;
+                            unusedIds.push(id);
+                            curTile = found.anim.Tile.createTile(map,pivotTile.raw,id);
+                        }
+                        else if(pivotTile.tileId+tileSelected.index != curTile.tileId){
+                            curTile = map.tiles.get(pivotTile.tileId+tileSelected.index);
+                        }
                         
-                        var value = pivotTile.raw.usedIds.push(pivotTile.tileId+index)-1;
-                        unusedIds.push(pivotTile.tileId+index);
-                        curTile = found.anim.Tile.createTile(map,pivotTile.raw,value);
                     }
-                    else if(pivotTile.tileId+tileSelected.index != curTile.tileId){
-                        curTile = map.tiles.get(pivotTile.tileId+tileSelected.index);
+                    tileHandle.value = tileSelected.index;
+                    ui.slider(tileHandle, "Selected Tile",0,currentMaxTiles()-1);
+                    if(tileHandle.changed){
+                        var index = Math.floor(tileHandle.value);
+                        var x = (Std.int(index * map.tw) % (curImg.width))*ratio +px;
+                        var y = (Math.floor(index * map.tw/curImg.width)*(map.th))*ratio+py;
+                        tileSelected = {index:index,x:x,y:y,w:map.tw*ratio,h:map.th*ratio};
                     }
-                    
+                    ui.g.color = kha.Color.White;
                 }
-                tileHandle.value = tileSelected.index;
-                ui.slider(tileHandle, "Selected Tile",0,currentMaxTiles()-1);
-                if(tileHandle.changed){
-                    var index = Math.floor(tileHandle.value);
-                    var x = (Std.int(index * map.tw) % (curImg.width))*ratio +px;
-                    var y = (Math.floor(index * map.tw/curImg.width)*(map.th))*ratio+py;
-                    tileSelected = {index:index,x:x,y:y,w:map.tw*ratio,h:map.th*ratio};
-                }
-                ui.g.color = kha.Color.White;
-            
                 ui.unindent();
             }
             endHeight = Math.abs(endHeight-ui._y);
         }
-        canDrawTile = ui.dragHandle != editorWindowHandle && !zui.Popup.show && isInScreen();
+        canDrawTile = ui.dragHandle != editorWindowHandle && !zui.Popup.show && isInScreen() && curTile != null;
         ui.end();
         
         if(canDrawTile){
@@ -249,6 +251,7 @@ class TileEditor {
         return Std.int(curTile.data.image.width/curTile.map.tw)*Std.int(curTile.data.image.height/curTile.map.th);
     }
     function drawTilesheetItem(handle:Handle,index:Int){
+        if(index == -1)return;
         var data = tilesheets[index];
 
         var imagePathHandle = Id.handle();
@@ -284,18 +287,23 @@ class TileEditor {
         FileBrowserDialog.open(function(path:String){
             found.data.Data.getImage(path,function(image:kha.Image){
                 var tilesheet:TTileData = found.data.Creator.createType(title,"sprite_object");
-                var originId = curTile != null ? currentMaxTiles()+map.pivotTiles[map.pivotTiles.length-1].tileId : 0;
+                var curPivot = map.pivotTiles[map.pivotTiles.length-1];
+                var originId = curPivot != null ? currentMaxTiles(curPivot)+curPivot.tileId : 0;
                 tilesheet.id = originId;
                 tilesheet.usedIds = [originId];
                 tilesheet.width = image.width;
                 tilesheet.height = image.height;
-                tilesheet.tileWidth = curTile.raw.tileWidth;
-                tilesheet.tileHeight = curTile.raw.tileHeight;
+                tilesheet.tileWidth = map.tw;
+                tilesheet.tileHeight = map.th;
                 tilesheet.imagePath = path;
                 tilesheets.push(tilesheet);
                 trace(tilesheet);
                 tileSelected = null;
-                Tile.createTile(map,tilesheet,0);
+                var tile = Tile.createTile(map,tilesheet,originId,true);
+                if(curTile == null){
+                    curTile  = tile;
+                    tilsheetListHandle.nest(0).position = -1;
+                }
                 #if editor
                 map.dataChanged = true;
                 #end
@@ -303,15 +311,27 @@ class TileEditor {
         });
     }
 
-    @:access(found.anim.Tilemap)
+    @:access(found.anim.Tilemap,found.anim.Tile)
     function removeTilesheet(index:Int){
         tilesheets.splice(index,1);
         var tile = map.pivotTiles[index];
+        var indicies:Array<Int> = [];
         for(i in tile.tileId...(tile.tileId+currentMaxTiles(tile))){
             map.tiles.remove(i);
+            indicies.push(i);
+        }
+        for(i in 0...map.data.length){
+            for(y in 0...indicies.length){
+                if(indicies[y] == map.data[i]){
+                    map.data[i] = -1;
+                }
+            }
         }
         map.pivotTiles.splice(index,1);
-        
+        map.imageData.splice(index,1);
+        if(curTile != null && curTile.dataId == index){
+            curTile = null;
+        }
     }
 
     @:access(found.anim.Tilemap,found.anim.Tile,found.App)

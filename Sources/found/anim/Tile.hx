@@ -43,7 +43,7 @@ class Tile {
 			trace(index);
 			//Every tilesheet will have the 0 tile be created
 			if(index == 0 || isPivot){	
-				Reflect.setField(this,"tileId",sprite.usedIds[index]);
+				Reflect.setField(this,"tileId",index);
 				map.pivotTiles.push(this);
 				done(this);
 				for(i in 0...sprite.usedIds.length){
@@ -52,7 +52,7 @@ class Tile {
 				}
 			} 
 			else{
-				Reflect.setField(this,"tileId",sprite.usedIds[index]);
+				Reflect.setField(this,"tileId",index);
 				var value = data.addSubSprite(tileId-map.pivotTiles[dataId].tileId,sprite.tileWidth,sprite.tileHeight);
 				Reflect.setField(this,"animIndex",value);
 				done(this);

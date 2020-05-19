@@ -101,21 +101,46 @@ class Scene {
 
       _entities.push(object);
 
-      if(physics_world != null && object.raw.rigidBody != null){// Add rigidbody to Object
-        _entities[_entities.length-1].makeBody(this,object.raw); 
+      if(physics_world != null){// Add rigidbody to Object
+        if(object.raw.rigidBody != null){
+          _entities[_entities.length-1].makeBody(this,object.raw);
+        } 
+        if(Std.is(object, Tilemap)){
+          var map:Tilemap = cast(object,Tilemap);
+          var x = 0;
+          var y = 0;
+          while(x < map.w){
+              var pos = map.posXY2Id(x,y);
+              if(pos != -1){
+                  var tileId = map.data[pos];
+                  if(tileId != -1){
+                      var tile = map.tiles[tileId];
+                      if(tile != null){
+                        var p_raw = Reflect.copy(tile.raw);
+                        p_raw.position = new Vector2(x+map.position.x,y+map.position.y);
+                        this.physics_world.add(new echo.Body(p_raw.rigidBody));
+                      }
+                  }
+              }
+              x+=map.tw;
+              if(x>= map.w && y < map.h){
+                  y+=map.th;
+                  x = 0;
+              }
+          }
       }
+        if(object.active){
+          activeEntities.push(object);
+        }
+        else{
+          inactiveEntities.push(object);
+        }
 
-      if(object.active){
-        activeEntities.push(object);
-      }
-      else{
-        inactiveEntities.push(object);
-      }
-
-      if(!Scene.ready && raw._entities.length == _entities.length){
-        Scene.ready = true;
-        onReady();
-      }
+        if(!Scene.ready && raw._entities.length == _entities.length){
+          Scene.ready = true;
+          onReady();
+        }
+    }
   }
 
   #if editor

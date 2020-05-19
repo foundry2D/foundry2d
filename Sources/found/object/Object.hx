@@ -162,7 +162,7 @@ class Object {
 		
 		
 
-		center = new Vector2(width / 2, height / 2);
+		center = new Vector2(width * 0.5, height * 0.5);
 		if(p_raw.active)
 			activate();
 		else
@@ -180,8 +180,8 @@ class Object {
 		if(!Scene.zsort)
 			depth = position.y + height;
 
-		center.x = position.x+width / 2;
-		center.y = position.y+height / 2;
+		center.x = position.x+width * 0.5;
+		center.y = position.y+height * 0.5;
 
 	}
 

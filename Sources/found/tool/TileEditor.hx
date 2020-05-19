@@ -187,6 +187,9 @@ class TileEditor {
                         tileSelected = {index:index,x:x,y:y,w:map.tw*ratio,h:map.th*ratio};
                     }
                     ui.g.color = kha.Color.White;
+                    if(ui.button("Edit Selected Tile Collisions") && curTile != null && !tileHandle.changed){
+                        // CollisionEditorDialog.open(cast(currentObject));
+                    }
                 }
                 ui.unindent();
             }

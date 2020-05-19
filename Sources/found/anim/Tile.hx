@@ -60,6 +60,20 @@ class Tile {
 		});
 
 	}
+
+	public var body:echo.Body = null;
+
+
+	function makeBody(scene:Scene,p_raw:TObj){
+		if(p_raw.rigidBody.x == null) p_raw.rigidBody.x = p_raw.position.x;
+		if(p_raw.rigidBody.y == null) p_raw.rigidBody.y = p_raw.position.y;
+		if(p_raw.rigidBody.shapes != null) {
+			if(p_raw.rigidBody.shapes[0].width == null) p_raw.rigidBody.shapes[0].width = p_raw.width;
+			if(p_raw.rigidBody.shapes[0].height == null) p_raw.rigidBody.shapes[0].height = p_raw.height;
+		}
+		this.body = new echo.Body(p_raw.rigidBody);
+	}
+
 	static var onStaticDone:Tilemap->Void = null;
 	@:access(found.anim.Tilemap)
 	public static function createTile(map:Tilemap,sprite:TTileData,index:Int,?isPivot=false,?done:Tilemap->Void){
@@ -94,7 +108,7 @@ class Tile {
 			var grid = map.tw;
 			var width = Util.snap(data.image.width,grid);
 			var x = Std.int(data.animation.get().id * grid) % width;
-            var y = Math.floor(data.animation.get().id * grid/width)*(map.th);
+			var y = Math.floor(data.animation.get().id * grid/width)*(map.th);
 			canvas.g2.drawScaledSubImage(data.image,x ,y,_w, _h, (flip.x > 0.0 ? _w:0), (flip.y > 0.0 ? _h:0), (flip.x > 0.0 ? -_w:_w), (flip.y > 0.0 ? -_h:_h));
 			canvas.g2.popTransformation();
 			if(scale != null)

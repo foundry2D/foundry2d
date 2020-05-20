@@ -181,6 +181,11 @@ class State extends Scene {
 	}
 	private static function loadState(raw:TSceneFormat){
 		App.reset();
+		//@TODO: Evaluate if we need a dispose function for the Scene class to dispose the last created Scene ?
+		if(State.active.physics_world != null){
+			State.active.physicsUpdate = null;
+			State.active.physics_world.dispose();
+		}
 		active = new State(raw);
 	}
 	// Hooks

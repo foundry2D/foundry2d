@@ -37,6 +37,7 @@ class Object {
 	public var raw(default,set):TObj;
 	function set_raw(data:TObj) {
 		this.raw = data;
+		//@TODO: Evaluate if we really need to do this in release mode; if not add an #if editor
 		if(State.active != null && State.active.physics_world != null && data.rigidBody != null){
             makeBody(State.active,data);
 		}
@@ -51,10 +52,15 @@ class Object {
 		if(b != null){
 			b.on_move = on_physics_move;
 		}
+		else if(body != null){
+			body.on_move = null;
+		}
+
 		return body = b;
 	}
 
 	function makeBody(scene:Scene,p_raw:TObj){
+		if(body != null)return;
 		if(p_raw.rigidBody.x == null) p_raw.rigidBody.x = p_raw.position.x;
 		if(p_raw.rigidBody.y == null) p_raw.rigidBody.y = p_raw.position.y;
 		if(p_raw.rigidBody.shapes != null) {

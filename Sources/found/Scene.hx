@@ -129,17 +129,17 @@ class Scene {
               }
           }
       }
-        if(object.active){
-          activeEntities.push(object);
-        }
-        else{
-          inactiveEntities.push(object);
-        }
+    }
+    if(object.active){
+      activeEntities.push(object);
+    }
+    else{
+      inactiveEntities.push(object);
+    }
 
-        if(!Scene.ready && raw._entities.length == _entities.length){
-          Scene.ready = true;
-          onReady();
-        }
+    if(!Scene.ready && raw._entities.length == _entities.length){
+      Scene.ready = true;
+      onReady();
     }
   }
 
@@ -195,7 +195,7 @@ class Scene {
 
   @:access(found.App,found.object.Object)
   public function update(dt:Float){
-    if(!Scene.ready || #if editor !App.editorui.isPlayMode #end)
+    if(!Scene.ready #if editor ||  !App.editorui.isPlayMode #end)
       return;
       
 

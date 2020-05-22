@@ -532,4 +532,40 @@ class FoundryNode {
 		],
 		buttons: []
 	};
+	public static var topDownControllerNode:TNode = {
+		id: 0,
+		name: "Top-down Controller",
+		type: "TopDownControllerNode",
+		x: 200,
+		y: 200,
+		inputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name: "Input Vec2",
+				type: "VECTOR2",
+				color: -7929601,
+				default_value: new kha.math.FastVector2(0.0, 0.0)
+			},
+			{
+				id: 1,
+				node_id: 0,
+				name: "Speed",
+				type: "VALUE",
+				color: -10183681,
+				default_value: 300.0
+			}
+		],
+		outputs: [],
+		buttons: [
+			{
+				name: "inputType",
+				type: "ENUM",
+				data: ["Use default input", "Use custom input"],
+				output: 0,
+				default_value: 0
+			}
+		],
+		color: -4962746
+	};
 }

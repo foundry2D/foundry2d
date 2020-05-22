@@ -182,6 +182,10 @@ class NodeEditor {
 					if (ui.button("Apply Impulse To Rigidbody"))
 						pushNodeToSelectedGroup(FoundryNode.applyImpulseToRigidbodyNode);
 				}
+				if (ui.panel(Id.handle(), "Controllers")) {
+					if (ui.button("Top-down Controller"))
+						pushNodeToSelectedGroup(FoundryNode.topDownControllerNode);
+				}
 			}
 		}
 	}

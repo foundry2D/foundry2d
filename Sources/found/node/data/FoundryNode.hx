@@ -542,7 +542,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Input Vec2",
+				name: "Custom Input Vec2",
 				type: "VECTOR2",
 				color: -7929601,
 				default_value: new kha.math.FastVector2(0.0, 0.0)
@@ -564,6 +564,46 @@ class FoundryNode {
 				data: ["Use default input", "Use custom input"],
 				output: 0,
 				default_value: 0
+			},
+			{
+				name: "defaultUpKeyCode",
+				type: "ENUM",
+				data: [
+					"Up", "Down", "Left", "Right", "Space", "Return", "Shift", "Tab", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O",
+					"P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
+				],
+				output: 0,
+				default_value: 0
+			},
+			{
+				name: "defaultDownKeyCode",
+				type: "ENUM",
+				data: [
+					"Up", "Down", "Left", "Right", "Space", "Return", "Shift", "Tab", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O",
+					"P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
+				],
+				output: 0,
+				default_value: 1
+			},
+			{
+				name: "defaultLeftKeyCode",
+				type: "ENUM",
+				data: [
+					"Up", "Down", "Left", "Right", "Space", "Return", "Shift", "Tab", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O",
+					"P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
+				],
+				output: 0,
+				default_value: 2
+			},
+			{
+				name: "defaultRightKeyCode",
+				type: "ENUM",
+				data: [
+					"Up", "Down", "Left", "Right", "Space", "Return", "Shift", "Tab", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O",
+					"P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
+				],
+				output: 0,
+				default_value: 3
 			}
 		],
 		color: -4962746

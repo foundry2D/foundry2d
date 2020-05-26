@@ -568,4 +568,78 @@ class FoundryNode {
 		],
 		color: -4962746
 	};
+	public static var platformer2DControllerNode:TNode = {
+		id: 0,
+		name: "Platformer 2D Controller",
+		type: "Platformer2DControllerNode",
+		x: 200,
+		y: 200,
+		inputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name: "Custom Input Vec2",
+				type: "VECTOR2",
+				color: -7929601,
+				default_value: new kha.math.FastVector2(0.0, 0.0)
+			},
+			{
+				id: 1,
+				node_id: 0,
+				name: "Speed",
+				type: "VALUE",
+				color: -10183681,
+				default_value: 300.0
+			},
+			{
+				id: 2,
+				node_id: 0,
+				name: "Jump Force",
+				type: "VALUE",
+				color: -10183681,
+				default_value: 1000.0
+			}
+		],
+		outputs: [],
+		buttons: [
+			{
+				name: "inputType",
+				type: "ENUM",
+				data: ["Use default input", "Use custom input"],
+				output: 0,
+				default_value: 0
+			},
+			{
+				name: "defaultLeftKeyCode",
+				type: "ENUM",
+				data: [
+					"Up", "Down", "Left", "Right", "Space", "Return", "Shift", "Tab", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O",
+					"P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
+				],
+				output: 0,
+				default_value: 2
+			},
+			{
+				name: "defaultRightKeyCode",
+				type: "ENUM",
+				data: [
+					"Up", "Down", "Left", "Right", "Space", "Return", "Shift", "Tab", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O",
+					"P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
+				],
+				output: 0,
+				default_value: 3
+			},
+			{
+				name: "defaultJumpKeyCode",
+				type: "ENUM",
+				data: [
+					"Up", "Down", "Left", "Right", "Space", "Return", "Shift", "Tab", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O",
+					"P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
+				],
+				output: 0,
+				default_value: 4
+			}
+		],
+		color: -4962746
+	};
 }

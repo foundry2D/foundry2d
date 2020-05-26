@@ -185,6 +185,8 @@ class NodeEditor {
 				if (ui.panel(Id.handle(), "Controllers")) {
 					if (ui.button("Top-down Controller"))
 						pushNodeToSelectedGroup(FoundryNode.topDownControllerNode);
+					if (ui.button("Platformer 2D Controller"))
+						pushNodeToSelectedGroup(FoundryNode.platformer2DControllerNode);
 				}
 			}
 		}

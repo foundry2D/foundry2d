@@ -304,7 +304,7 @@ class Scene {
     switch(shape.type){
       case echo.data.Types.ShapeType.RECT:
         var bounds = shape.bounds();
-        g.fillRect(x + shape.x, y + shape.y,bounds.width,bounds.height);
+        g.fillRect(x - State.active.cam.position.x, y - State.active.cam.position.y,bounds.width,bounds.height);
       default:
     }
   } 

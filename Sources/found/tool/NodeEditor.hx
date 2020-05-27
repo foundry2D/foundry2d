@@ -188,6 +188,12 @@ class NodeEditor {
 					if (ui.button("Platformer 2D Controller"))
 						pushNodeToSelectedGroup(FoundryNode.platformer2DControllerNode);
 				}
+				if (ui.panel(Id.handle(), "Camera")) {
+					if (ui.button("Set Camera Position"))
+						pushNodeToSelectedGroup(FoundryNode.setCameraTargetPositionNode);
+					if (ui.button("Set Camera Follow Target"))
+						pushNodeToSelectedGroup(FoundryNode.setCameraFollowTargetNode);
+				}
 			}
 		}
 	}

@@ -85,6 +85,9 @@ class Object {
 	function get_position() {
 		return _positions[uid];
 	}
+	function getCenterPosition() {
+		return new Vector2(get_position().x + 0.5 * get_width(), get_position().y + 0.5 * get_height());
+	}
 	/**
 	 * Add a translation function to be executed in another thread. 
 	 *

@@ -682,4 +682,78 @@ class FoundryNode {
 		],
 		color: -4962746
 	};
+	public static var setCameraTargetPositionNode:TNode = {
+		id: 0,
+		name: "Set Camera Target Position",
+		type: "SetCameraTargetPositionNode",
+		x: 200,
+		y: 200,
+		inputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name: "In",
+				type: "ACTION",
+				color: 0xffaa4444,
+				default_value: ""
+			},
+			{
+				id: 1,
+				node_id: 0,
+				name: "Target Position Vec2",
+				type: "VECTOR2",
+				color: -7929601,
+				default_value: new kha.math.FastVector2(0.0, 0.0)
+			},
+		],
+		outputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name: "Out",
+				type: "ACTION",
+				color: 0xffaa4444,
+				default_value: ""
+			}
+		],
+		buttons: [],
+		color: -4962746
+	};
+	public static var setCameraFollowTargetNode:TNode = {
+		id: 0,
+		name: "Set Camera Follow Target",
+		type: "SetCameraFollowTargetNode",
+		x: 200,
+		y: 200,
+		inputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name: "In",
+				type: "ACTION",
+				color: 0xffaa4444,
+				default_value: ""
+			},
+			{
+				id: 0,
+				node_id: 0,
+				name: "Object",
+				type: "OBJECT",
+				color: -4934476,
+				default_value: null
+			}
+		],
+		outputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name: "Out",
+				type: "ACTION",
+				color: 0xffaa4444,
+				default_value: ""
+			}
+		],
+		buttons: [],
+		color: -4962746
+	};
 }

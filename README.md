@@ -1,3 +1,6 @@
-For animations have a look at https://youtu.be/JyJlqL9wR7g?t=370;
-Image size is 2048 x 768
-Use this tutorial to setup a local test http://www.running-system.com/local-s3-object-storage-test-minio/
+# Foundry2D
+
+Foundry is a real-time and all in one game engine. The goal is performance, ease of use and portability. 
+
+- docs
+- For building locally and engine developpement have a look at the Empty project repository.

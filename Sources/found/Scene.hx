@@ -107,28 +107,8 @@ class Scene {
         } 
         if(Std.is(object, Tilemap)){
           var map:Tilemap = cast(object,Tilemap);
-          var x = 0;
-          var y = 0;
-          while(x < map.w){
-              var pos = map.posXY2Id(x,y);
-              if(pos != -1){
-                  var tileId = map.data[pos];
-                  if(tileId != -1){
-                      var tile = map.tiles[tileId];
-                      if(tile != null){
-                        var p_raw = Reflect.copy(tile.raw);
-                        p_raw.position = new Vector2(x+map.position.x,y+map.position.y);
-                        this.physics_world.add(new echo.Body(p_raw.rigidBody));
-                      }
-                  }
-              }
-              x+=map.tw;
-              if(x>= map.w && y < map.h){
-                  y+=map.th;
-                  x = 0;
-              }
-          }
-      }
+          map.makeBodies(this);
+        }
     }
     if(object.active){
       activeEntities.push(object);

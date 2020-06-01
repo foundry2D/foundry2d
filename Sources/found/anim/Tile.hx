@@ -20,6 +20,11 @@ class Tile {
 	}
 	private var offsetx:Int = 0;
 	private var offsety:Int = 0;
+	//@TODO: make this editor only ?
+	public var width:Float;
+
+	public var height:Float;
+
 	private var _w: Float;
 	private var _h: Float;
 
@@ -35,8 +40,8 @@ class Tile {
 		this.map = tilemap;
 		// this.active = sprite.active;
 		this.flip = Reflect.hasField(sprite,"flip") ? sprite.flip:new Vector2();
-		_w = sprite.tileWidth;
-		_h = sprite.tileHeight;
+		width = _w = sprite.tileWidth;
+		height = _h = sprite.tileHeight;
 		this.raw = sprite;
 		map.addData(sprite,function(dataId:Int){
 			this.dataId = dataId; 
@@ -60,19 +65,8 @@ class Tile {
 		});
 
 	}
-
+	//initialized in makeBodies of Tilemap
 	public var body:echo.Body = null;
-
-
-	function makeBody(scene:Scene,p_raw:TObj){
-		if(p_raw.rigidBody.x == null) p_raw.rigidBody.x = p_raw.position.x;
-		if(p_raw.rigidBody.y == null) p_raw.rigidBody.y = p_raw.position.y;
-		if(p_raw.rigidBody.shapes != null) {
-			if(p_raw.rigidBody.shapes[0].width == null) p_raw.rigidBody.shapes[0].width = p_raw.width;
-			if(p_raw.rigidBody.shapes[0].height == null) p_raw.rigidBody.shapes[0].height = p_raw.height;
-		}
-		this.body = new echo.Body(p_raw.rigidBody);
-	}
 
 	static var onStaticDone:Tilemap->Void = null;
 	@:access(found.anim.Tilemap)

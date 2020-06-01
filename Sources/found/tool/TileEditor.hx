@@ -1,5 +1,7 @@
 package found.tool;
 // #if tile_editor
+import found.math.Vec2;
+import echo.Body;
 import found.anim.Tile;
 import kha.math.Vector2;
 import found.data.SpriteData;
@@ -188,7 +190,14 @@ class TileEditor {
                     }
                     ui.g.color = kha.Color.White;
                     if(ui.button("Edit Selected Tile Collisions") && curTile != null && !tileHandle.changed){
-                        // CollisionEditorDialog.open(cast(currentObject));
+                        if(curTile.body == null){
+                            if(curTile.raw.rigidBody == null){
+                                curTile.raw.rigidBody = echo.Body.defaults;
+                                curTile.raw.rigidBody.mass = 0;//Make the body static
+                            }
+                            curTile.body = new echo.Body(curTile.raw.rigidBody);
+                        }
+                        CollisionEditorDialog.open(null,cast(curTile));
                     }
                 }
                 ui.unindent();
@@ -337,18 +346,8 @@ class TileEditor {
         }
     }
 
-    @:access(found.anim.Tilemap,found.anim.Tile,found.App)
-    public function addTile(){
-        if(!visible || selectedTilemapIdIndex < 0 || !canDrawTile)return;
-        
-        // @Incomplete: Make sure that we remove the unusedIds from the tile raw usedIds
-        // when saving the tilemap.
-        for(i in 0...unusedIds.length){
-            if(curTile.tileId == unusedIds[i]){
-                unusedIds.splice(i,1);
-                break;
-            }
-        }
+    @:access(found.anim.Tile)
+    function getTilePos() {
         var px:Float =0.0;
         var py:Float = 0.0;
         var addX = map.position.x > 0 ? -map.position.x : Math.abs(map.position.x); 
@@ -372,12 +371,35 @@ class TileEditor {
         py = Math.floor(py+addY+found.State.active.cam.position.y);
         py = Util.snap(py,Found.GRID);
         #if editor } #end
-        var index  = map.posXY2Id(px,py);
+        return new Vec2(px,py);
+    }
+
+    @:access(found.anim.Tilemap,found.anim.Tile,found.App)
+    public function addTile(){
+        if(!visible || selectedTilemapIdIndex < 0 || !canDrawTile)return;
+        
+        // @Incomplete: Make sure that we remove the unusedIds from the tile raw usedIds
+        // when saving the tilemap.
+        for(i in 0...unusedIds.length){
+            if(curTile.tileId == unusedIds[i]){
+                unusedIds.splice(i,1);
+                break;
+            }
+        }
+        var pos = getTilePos();
+        var index  = map.pos2Id(cast(pos));
+        
         if(index > -1 && curTile.tileId != null){
             map.data[index] = curTile.tileId;
             var temp:TTilemapData = cast(map.raw);
-            temp.map[index] = curTile.tileId; 
+            temp.map[index] = curTile.tileId;
+            if(curTile.raw.rigidBody != null){
+                curTile.raw.rigidBody.x = map.x(index);
+                curTile.raw.rigidBody.y = map.y(index);
+                found.State.active.physics_world.add(new echo.Body(curTile.raw.rigidBody));
+            }
             #if editor
+            EditorHierarchy.makeDirty();
             map.dataChanged = true;
             #end
         }

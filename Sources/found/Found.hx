@@ -41,7 +41,8 @@ class Found {
   public static var popupZuiInstance:zui.Zui;
 
   #if debug
-  public static var collisionsDraw:Bool = true;
+  public static var collisionsDraw:Bool = false;
+  public static var drawGrid:Bool = true;
   #end
 
   public static var mouseX:Int = 0;

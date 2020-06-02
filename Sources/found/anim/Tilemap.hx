@@ -121,7 +121,13 @@ class Tilemap extends Object{
                 if(tileId != -1){
                     var tile = tiles[tileId];
                     if(tile != null){
-                        tile.render(canvas,new Vector2(x+position.x,y+position.y));
+                        var pos:Vector2 = new Vector2(x+position.x,y+position.y);
+                        tile.render(canvas,pos);
+                        #if debug
+                        if(tile.body != null){
+                            Object.physicsDraw(canvas,tile.raw.rigidBody.shapes,pos);
+                        }
+                        #end
                     }
                 }
             }

@@ -20,10 +20,6 @@ class Tile {
 	}
 	private var offsetx:Int = 0;
 	private var offsety:Int = 0;
-	//@TODO: make this editor only ?
-	public var width:Float;
-
-	public var height:Float;
 
 	private var _w: Float;
 	private var _h: Float;
@@ -40,8 +36,8 @@ class Tile {
 		this.map = tilemap;
 		// this.active = sprite.active;
 		this.flip = Reflect.hasField(sprite,"flip") ? sprite.flip:new Vector2();
-		width = _w = sprite.tileWidth;
-		height = _h = sprite.tileHeight;
+		_w = sprite.tileWidth;
+		_h = sprite.tileHeight;
 		this.raw = sprite;
 		map.addData(sprite,function(dataId:Int){
 			this.dataId = dataId; 
@@ -58,7 +54,7 @@ class Tile {
 			} 
 			else{
 				Reflect.setField(this,"tileId",index);
-				var value = data.addSubSprite(tileId-map.pivotTiles[dataId].tileId,sprite.tileWidth,sprite.tileHeight);
+				var value = data.addSubSprite(this.tileId-map.pivotTiles[dataId].tileId,sprite.tileWidth,sprite.tileHeight);
 				Reflect.setField(this,"animIndex",value);
 				done(this);
 			}

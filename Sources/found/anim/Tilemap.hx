@@ -97,7 +97,7 @@ class Tilemap extends Object{
     public function addData(data:TSpriteData,onDone:Int->Void) {
         var id = -1;
         for(i in 0...imageData.length){
-            if(imageData[i].raw == data){
+            if(imageData[i].raw.imagePath == data.imagePath){
                 onDone(i);
                 return;
             }
@@ -124,7 +124,7 @@ class Tilemap extends Object{
                         var pos:Vector2 = new Vector2(x+position.x,y+position.y);
                         tile.render(canvas,pos);
                         #if debug
-                        if(tile.body != null){
+                        if(tile.body != null && tile.raw.rigidBody != null){
                             Object.physicsDraw(canvas,tile.raw.rigidBody.shapes,pos);
                         }
                         #end

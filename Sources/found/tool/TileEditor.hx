@@ -90,6 +90,7 @@ class TileEditor {
             // zui.Popup.showCustom(Found.popupZuiInstance, objectCreationPopupDraw, -1, -1, 600, 500);
             endHeight = ui._y;
 			if (ui.panel(Id.handle({selected: true}), "Tilemap editor")) {
+                var changed = false;
 				ui.indent();
                 ui.text("Tilesheets: ");
                 ui.indent();
@@ -105,19 +106,16 @@ class TileEditor {
                 var w = Ext.floatInput(ui,mapWidthHandle, "Map Width");
                 if(mapWidthHandle.changed){
                     var w = Std.int(Util.snap(w,map.tw));
-                    resizeMapdata(w,map.h);  
-                    #if editor
-                    map.dataChanged = true;
-                    #end                
+                    resizeMapdata(w,map.h);
+                    changed = true;  
+                                   
                 }
                 mapHeightHandle.value = map.h;
                 var h = Ext.floatInput(ui,mapHeightHandle, "Map Height");
                 if(mapHeightHandle.changed){
                     var h = Std.int(Util.snap(h,map.tw));
                     resizeMapdata(map.w,h);
-                    #if editor
-                    map.dataChanged = true;
-                    #end
+                    changed = true;
                 }
                 map.tw = Std.int(Ext.floatInput(ui, Id.handle({value: 64.0}), "Tile Width"));
                 map.th = Std.int(Ext.floatInput(ui, Id.handle({value: 64.0}), "Tile Height"));
@@ -173,7 +171,7 @@ class TileEditor {
                             var id = pivotTile.tileId+index;
                             pivotTile.raw.usedIds.push(id)-1;
                             unusedIds.push(id);
-                            curTile = found.anim.Tile.createTile(map,pivotTile.raw,id);
+                            curTile = found.anim.Tile.createTile(map,Reflect.copy(pivotTile.raw),id);
                         }
                         else if(pivotTile.tileId+tileSelected.index != curTile.tileId){
                             curTile = map.tiles.get(pivotTile.tileId+tileSelected.index);
@@ -187,18 +185,34 @@ class TileEditor {
                         var x = (Std.int(index * map.tw) % (curImg.width))*ratio +px;
                         var y = (Math.floor(index * map.tw/curImg.width)*(map.th))*ratio+py;
                         tileSelected = {index:index,x:x,y:y,w:map.tw*ratio,h:map.th*ratio};
+                        changed = true;
                     }
                     ui.g.color = kha.Color.White;
-                    if(ui.button("Edit Selected Tile Collisions") && curTile != null && !tileHandle.changed){
-                        if(curTile.body == null){
-                            if(curTile.raw.rigidBody == null){
-                                curTile.raw.rigidBody = echo.Body.defaults;
-                                curTile.raw.rigidBody.mass = 0;//Make the body static
+                    if(found.State.active.physics_world != null){
+                        if(ui.button("Edit Selected Tile Collisions") && curTile != null && !tileHandle.changed){
+                            if(curTile.body == null){
+                                if(curTile.raw.rigidBody == null){
+                                    curTile.raw.rigidBody = echo.Body.defaults;
+                                    curTile.raw.rigidBody.mass = 0;//Make the body static
+                                }
+                                curTile.body = new echo.Body(curTile.raw.rigidBody);
                             }
-                            curTile.body = new echo.Body(curTile.raw.rigidBody);
+                            CollisionEditorDialog.open(null,cast(curTile));
+                            changed = true;
                         }
-                        CollisionEditorDialog.open(null,cast(curTile));
                     }
+                    else {
+                        ui.text("Tile collisions:");
+                        if (ui.button("Create Physics World")) {
+                            App.editorui.inspector.inspector.selectScene();
+                        }
+                    }
+                }
+                if(changed){
+                    #if editor
+                    EditorHierarchy.makeDirty();
+                    map.dataChanged = true;
+                    #end 
                 }
                 ui.unindent();
             }
@@ -256,6 +270,8 @@ class TileEditor {
         }
         var temp:TTilemapData = cast(map.raw);
         temp.map = map.data;
+        temp.width = w;
+        temp.height = h;
     }
     @:access(found.anim.Tilemap,found.anim.Tile)
     function currentMaxTiles(?tileToGetMaxOf:Null<Tile>){

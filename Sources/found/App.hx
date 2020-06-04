@@ -339,7 +339,8 @@ private class FPS {
 		}
 		return fps;
 	}
-
+	var lastFps:Int = 0;
+	var fpsHandle:zui.Zui.Handle = zui.Id.handle();
 	public function render(canvas:kha.Canvas,inEditor = true): Void {
 		if(canvas.g2 == null || State.active == null || State.active.cam == null) return;
 		if(ui == null)ui = new zui.Zui({font: kha.Assets.fonts.font_default});
@@ -358,7 +359,9 @@ private class FPS {
 		var accentCol = ui.t.ACCENT_COL;
 		var windowBgColor = ui.t.WINDOW_BG_COL;
 		ui.t.ACCENT_COL =ui.t.WINDOW_BG_COL= kha.Color.Transparent;
-		if(ui.window(zui.Id.handle(),Std.int(cam.x),Std.int(cam.y), width, height,false))ui.text('Fps: $fps');
+		
+		fpsHandle.redraws = lastFps != fps ? 2 : 0;
+		if(ui.window(fpsHandle,Std.int(cam.x),Std.int(cam.y), width, height,false))ui.text('Fps: $fps');
 		ui.end();
 		ui.setScale(oldScale);
 		ui.t.ACCENT_COL = accentCol;

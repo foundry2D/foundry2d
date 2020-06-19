@@ -82,6 +82,8 @@ class Input {
 		registered = true;
 		App.notifyOnEndFrame(endFrame);
 		App.notifyOnReset(reset);
+		// Reset mouse delta on foreground
+		kha.System.notifyOnApplicationState(function() { getMouse().reset(); }, null, null, null, null);
 	}
 }
 
@@ -164,6 +166,10 @@ class Mouse extends VirtualInput {
 	public function reset() {
 		buttonsDown[0] = buttonsDown[1] = buttonsDown[2] = false;
 		endFrame();
+	}
+
+	public static function getMouseButtonStringValues(): Array<String> {
+		return buttons;
 	}
 
 	function buttonIndex(button: String): Int {
@@ -263,8 +269,8 @@ class Mouse extends VirtualInput {
 	public function onTouchMove(index: Int, x: Int, y: Int) {}
 	#end
 
-	inline function get_viewX(): Float { return x - iron.App.x(); }
-	inline function get_viewY(): Float { return y - iron.App.y(); }
+	inline function get_viewX(): Float { return x - Found.sceneX; }
+	inline function get_viewY(): Float { return y - Found.sceneY; }
 }
 
 class Pen extends VirtualInput {
@@ -348,8 +354,8 @@ class Pen extends VirtualInput {
 		connected = true;
 	}
 
-	inline function get_viewX(): Float { return x - iron.App.x(); }
-	inline function get_viewY(): Float { return y - iron.App.y(); }
+	inline function get_viewX(): Float { return x - Found.sceneX; }
+	inline function get_viewY(): Float { return y - Found.sceneY; }
 }
 
 class Keyboard extends VirtualInput {
@@ -429,6 +435,10 @@ class Keyboard extends VirtualInput {
 		return keysStarted.get(key) || (repeatKey && keysDown.get(key));
 	}
 
+	public static function getKeyCodeStringValues(): Array<String> {
+		return keys;
+	}
+
 	public static function keyCode(key: KeyCode): String {
 		if (key == KeyCode.Space) return "space";
 		else if (key == KeyCode.Backspace) return "backspace";
@@ -436,6 +446,9 @@ class Keyboard extends VirtualInput {
 		else if (key == KeyCode.Return) return "enter";
 		else if (key == KeyCode.Shift) return "shift";
 		else if (key == KeyCode.Control) return "control";
+		#if kha_darwin
+		else if (key == KeyCode.Meta) return "control";
+		#end
 		else if (key == KeyCode.Alt) return "alt";
 		else if (key == KeyCode.Escape) return "escape";
 		else if (key == KeyCode.Delete) return "delete";
@@ -561,20 +574,37 @@ class GamepadStick {
 	public function new() {}
 }
 
+class GamepadAxis {
+	public var value = 0.0;
+	public var lastValue = 0.0;
+	public var moved = false;
+	public var movement = 0.0;
+	public function new() {}
+
+	public function updateAxis(newValue:Float) {
+		if(newValue != value) {
+			lastValue = value;
+			value = newValue;
+			movement = value - lastValue;
+			moved = true;
+		}
+	}
+}
+
 class Gamepad extends VirtualInput {
 
-	public static var buttonsPS = ["cross", "circle", "square", "triangle", "l1", "r1", "l2", "r2", "share", "options", "l3", "r3", "up", "down", "left", "right", "home", "touchpad"];
-	public static var buttonsXBOX = ["a", "b", "x", "y", "l1", "r1", "l2", "r2", "share", "options", "l3", "r3", "up", "down", "left", "right", "home", "touchpad"];
-	public static var buttons = buttonsPS;
-
+	static var buttonsPS = ["cross", "circle", "square", "triangle", "l1", "r1", "l2", "r2", "share", "options", "l3", "r3", "up", "down", "left", "right", "home", "touchpad"];
+	static var buttonsXBOX = ["a", "b", "x", "y", "l1", "r1", "l2", "r2", "share", "options", "l3", "r3", "up", "down", "left", "right", "home", "touchpad"];
+	static var buttons = buttonsXBOX;
+	static var axisNames = ["left joystick X", "left joystick Y", "right joystick X", "right joystick Y", "left trigger", "right trigger"];
+	
 	var buttonsDown: Array<Float> = []; // Intensity 0 - 1
 	var buttonsStarted: Array<Bool> = [];
 	var buttonsReleased: Array<Bool> = [];
-
-	var buttonsFrame: Array<Int> = [];
-
-	public var leftStick = new GamepadStick();
-	public var rightStick = new GamepadStick();
+	
+	var buttonsFrame: Array<Int> = [];	
+	
+	var axisValues: Array<GamepadAxis> = [];
 
 	public var connected = false;
 	var num = 0;
@@ -585,6 +615,11 @@ class Gamepad extends VirtualInput {
 			buttonsStarted.push(false);
 			buttonsReleased.push(false);
 		}
+
+		for (axis in axisNames) {
+			axisValues.push(new GamepadAxis());
+		}
+
 		num = i;
 		reset();
 		virtual ? connected = true : connect();
@@ -610,12 +645,11 @@ class Gamepad extends VirtualInput {
 			}
 			buttonsFrame.splice(0, buttonsFrame.length);
 		}
-		leftStick.moved = false;
-		leftStick.movementX = 0;
-		leftStick.movementY = 0;
-		rightStick.moved = false;
-		rightStick.movementX = 0;
-		rightStick.movementY = 0;
+
+		for (axis in axisValues) {
+			axis.moved = false;
+			axis.movement = 0;
+		}
 	}
 
 	public function reset() {
@@ -625,6 +659,10 @@ class Gamepad extends VirtualInput {
 			buttonsReleased[i] = false;
 		}
 		endFrame();
+	}
+
+	public static function getButtonStringValues(): Array<String> {
+		return buttons;
 	}
 
 	public static function keyCode(button: Int): String {
@@ -648,20 +686,27 @@ class Gamepad extends VirtualInput {
 		return buttonsReleased[buttonIndex(button)];
 	}
 
-	function axisListener(axis: Int, value: Float) {
-		var stick = axis <= 1 ? leftStick : rightStick;
+	public static function getAxisStringValues(): Array<String> {
+		return axisNames;
+	}
 
-		if (axis == 0 || axis == 2) { // X
-			stick.lastX = stick.x;
-			stick.x = value;
-			stick.movementX = stick.x - stick.lastX;
+	public static function axisName(axisIndex: Int): String {
+		return axisNames[axisIndex];
+	}
+
+	function axisIndex(axisName: String): Int {
+		for (i in 0...axisNames.length) if (axisNames[i] == axisName) return i;
+		return 0;
+	}
+
+	public function getAxisInformation(axisName:String) {
+		return axisValues[axisIndex(axisName)];
+	}
+
+	function axisListener(axis: Int, value: Float) {
+		if(axis >= 0 && axis < axisValues.length) {
+			axisValues[axis].updateAxis(value);
 		}
-		else if (axis == 1 || axis == 3) { // Y
-			stick.lastY = stick.y;
-			stick.y = value;
-			stick.movementY = stick.y - stick.lastY;
-		}
-		stick.moved = true;
 	}
 
 	function buttonListener(button: Int, value: Float) {

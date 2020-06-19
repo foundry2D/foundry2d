@@ -156,9 +156,9 @@ class NodeEditor {
 					if (ui.button("On Keyboard"))
 						pushNodeToSelectedGroup(FoundryNode.onKeyboardNode);
 					if (ui.button("On Gamepad Axis"))
-						pushNodeToSelectedGroup(FoundryNode.gamepadAxisInputNode);
+						pushNodeToSelectedGroup(FoundryNode.onGamepadAxisInputNode);
 					if (ui.button("On Gamepad Button"))
-						pushNodeToSelectedGroup(FoundryNode.gamepadButtonInputNode);
+						pushNodeToSelectedGroup(FoundryNode.onGamepadButtonInputNode);
 				}
 				if (ui.panel(Id.handle(), "Math")) {
 					if (ui.button("Split Vec2"))

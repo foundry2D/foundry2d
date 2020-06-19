@@ -15,7 +15,9 @@ import kha.ScreenCanvas;
 
 class App {
 
-  	private var _imageQuality:ImageScaleQuality;
+	private var _imageQuality:ImageScaleQuality;
+	static var onResets: Array<Void->Void> = null;
+	static var onEndFrames: Array<Void->Void> = null;
 	static var traitInits:Array<Void->Void> = [];
 	static var traitUpdates:Array<Float->Void> = [];
 	static var traitLateUpdates:Array<Void->Void> = [];
@@ -75,6 +77,9 @@ class App {
 		traitLateUpdates = [];
 		traitRenders = [];
 		traitRenders2D = [];
+
+		if (onResets != null) for (f in onResets) f();
+		
 		for(exe in found.object.Executor.executors){
 			var modified:Array<Any> = Reflect.field(found.object.Object,exe.field);
 			modified = [];
@@ -299,23 +304,23 @@ class App {
 		traitRenders2D.remove(f);
 	}
 
-	// public static function notifyOnReset(f:Void->Void) {
-	// 	if (onResets == null) onResets = [];
-	// 	onResets.push(f);
-	// }
+	public static function notifyOnReset(f:Void->Void) {
+		if (onResets == null) onResets = [];
+		onResets.push(f);
+	}
 
-	// public static function removeReset(f:Void->Void) {
-	// 	onResets.remove(f);
-	// }
+	public static function removeReset(f:Void->Void) {
+		onResets.remove(f);
+	}
 
-	// public static function notifyOnEndFrame(f:Void->Void) {
-	// 	if (onEndFrames == null) onEndFrames = [];
-	// 	onEndFrames.push(f);
-	// }
+	public static function notifyOnEndFrame(f:Void->Void) {
+		if (onEndFrames == null) onEndFrames = [];
+		onEndFrames.push(f);
+	}
 
-	// public static function removeEndFrame(f:Void->Void) {
-	// 	onEndFrames.remove(f);
-	// }
+	public static function removeEndFrame(f:Void->Void) {
+		onEndFrames.remove(f);
+	}
 }
 
 private class FPS {

@@ -3,6 +3,7 @@ package found.node.data;
 import zui.Nodes.TNode;
 import kha.math.FastVector2;
 
+@:access(Input.Keyboard)
 class FoundryNode {
 	public static var onInitNode:TNode = {
 		id: 0,
@@ -65,14 +66,14 @@ class FoundryNode {
 			{
 				name: "mouseEventType",
 				type: "ENUM",
-				data: ["Pressed", "Down", "Released", "Moved"],
+				data: OnMouseNode.getMouseButtonEventTypes(),
 				output: 0,
 				default_value: 0
 			},
 			{
 				name: "mouseButton",
 				type: "ENUM",
-				data: ["Left", "Middle", "Right"],
+				data: Input.Mouse.getMouseButtonStringValues(),
 				output: 0,
 				default_value: 0
 			}
@@ -136,65 +137,36 @@ class FoundryNode {
 			{
 				name: "keyboardEventType",
 				type: "ENUM",
-				data: ["Pressed", "Down", "Released"],
+				data: OnKeyboardNode.getKeyboardEventTypes(),
 				output: 0,
 				default_value: 0
 			},
 			{
 				name: "keyCode",
 				type: "ENUM",
-				data: [
-					"Up", "Down", "Left", "Right", "Space", "Return", "Shift", "Tab", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O",
-					"P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
-				],
+				data: Input.Keyboard.getKeyCodeStringValues(),
 				output: 0,
 				default_value: 0
 			}
 		],
 		color: -4962746
 	};
-	public static var gamepadAxisInputNode:TNode = {
+	public static var onGamepadAxisInputNode:TNode = {
 		id: 0,
-		name: "Gamepad Axis Input",
-		type: "GamepadAxisInputNode",
+		name: "On Gamepad Axis Input",
+		type: "OnGamepadAxisInputNode",
 		x: 200,
 		y: 200,
-		inputs: [],
-		outputs: [
+		inputs: [
 			{
 				id: 0,
 				node_id: 0,
-				name: "Float",
+				name: "Gamepad Index",
 				type: "VALUE",
 				color: -10183681,
-				default_value: 0.0
-			}
-		],
-		buttons: [
-			{
-				name: "axisName",
-				type: "ENUM",
-				data: [
-					"Left Joystick X",
-					"Left Joystick Y",
-					"Right Joystick X",
-					"Right Joystick Y",
-					"Left Trigger",
-					"Right Trigger"
-				],
-				output: 0,
 				default_value: 0
 			}
 		],
-		color: -4962746
-	};
-	public static var gamepadButtonInputNode:TNode = {
-		id: 0,
-		name: "Gamepad Button Input",
-		type: "GamepadButtonInputNode",
-		x: 200,
-		y: 200,
-		inputs: [],
 		outputs: [
 			{
 				id: 0,
@@ -203,22 +175,73 @@ class FoundryNode {
 				type: "ACTION",
 				color: 0xffaa4444,
 				default_value: ""
+			},
+			{
+				id: 1,
+				node_id: 0,
+				name: "Float Axis Value",
+				type: "FLOAT",
+				color: -10183681,
+				default_value: 0.0
+			}
+		],
+		buttons: [
+			{
+				name: "selectedAxisName",
+				type: "ENUM",
+				data: Input.Gamepad.getAxisStringValues(),
+				output: 0,
+				default_value: 0
+			}
+		],
+		color: -4962746
+	};
+	public static var onGamepadButtonInputNode:TNode = {
+		id: 0,
+		name: "On Gamepad Button Input",
+		type: "OnGamepadButtonInputNode",
+		x: 200,
+		y: 200,
+		inputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name: "Gamepad Index",
+				type: "VALUE",
+				color: -10183681,
+				default_value: 0
+			}
+		],
+		outputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name: "Out",
+				type: "ACTION",
+				color: 0xffaa4444,
+				default_value: ""
+			},
+			{
+				id: 1,
+				node_id: 0,
+				name: "Int Button Value",
+				type: "INT",
+				color: -10183681,
+				default_value: 0.0
 			}
 		],
 		buttons: [
 			{
 				name: "selectedButtonEventType",
 				type: "ENUM",
-				data: ["Pressed", "Down", "Released"],
+				data: OnGamepadButtonInputNode.getButtonEventTypes(),
 				output: 0,
 				default_value: 0
 			},
 			{
 				name: "selectedButtonName",
 				type: "ENUM",
-				data: [
-					"a", "b", "x", "y", "l1", "r1", "l2", "r2", "share", "options", "l3", "r3", "up", "down", "left", "right", "home", "touchpad"
-				],
+				data: Input.Gamepad.getButtonStringValues(),
 				output: 0,
 				default_value: 0
 			}
@@ -568,42 +591,30 @@ class FoundryNode {
 			{
 				name: "defaultUpKeyCode",
 				type: "ENUM",
-				data: [
-					"Up", "Down", "Left", "Right", "Space", "Return", "Shift", "Tab", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O",
-					"P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
-				],
+				data: Input.Keyboard.getKeyCodeStringValues(),
 				output: 0,
-				default_value: 0
+				default_value: Input.Keyboard.getKeyCodeStringValues().indexOf("up")
 			},
 			{
 				name: "defaultDownKeyCode",
 				type: "ENUM",
-				data: [
-					"Up", "Down", "Left", "Right", "Space", "Return", "Shift", "Tab", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O",
-					"P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
-				],
+				data: Input.Keyboard.getKeyCodeStringValues(),
 				output: 0,
-				default_value: 1
+				default_value: Input.Keyboard.getKeyCodeStringValues().indexOf("down")
 			},
 			{
 				name: "defaultLeftKeyCode",
 				type: "ENUM",
-				data: [
-					"Up", "Down", "Left", "Right", "Space", "Return", "Shift", "Tab", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O",
-					"P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
-				],
+				data: Input.Keyboard.getKeyCodeStringValues(),
 				output: 0,
-				default_value: 2
+				default_value: Input.Keyboard.getKeyCodeStringValues().indexOf("left")
 			},
 			{
 				name: "defaultRightKeyCode",
 				type: "ENUM",
-				data: [
-					"Up", "Down", "Left", "Right", "Space", "Return", "Shift", "Tab", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O",
-					"P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
-				],
+				data: Input.Keyboard.getKeyCodeStringValues(),
 				output: 0,
-				default_value: 3
+				default_value: Input.Keyboard.getKeyCodeStringValues().indexOf("right")
 			}
 		],
 		color: -4962746
@@ -652,32 +663,23 @@ class FoundryNode {
 			{
 				name: "defaultLeftKeyCode",
 				type: "ENUM",
-				data: [
-					"Up", "Down", "Left", "Right", "Space", "Return", "Shift", "Tab", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O",
-					"P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
-				],
+				data: Input.Keyboard.getKeyCodeStringValues(),
 				output: 0,
-				default_value: 2
+				default_value: Input.Keyboard.getKeyCodeStringValues().indexOf("left")
 			},
 			{
 				name: "defaultRightKeyCode",
 				type: "ENUM",
-				data: [
-					"Up", "Down", "Left", "Right", "Space", "Return", "Shift", "Tab", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O",
-					"P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
-				],
+				data: Input.Keyboard.getKeyCodeStringValues(),
 				output: 0,
-				default_value: 3
+				default_value: Input.Keyboard.getKeyCodeStringValues().indexOf("right")
 			},
 			{
 				name: "defaultJumpKeyCode",
 				type: "ENUM",
-				data: [
-					"Up", "Down", "Left", "Right", "Space", "Return", "Shift", "Tab", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O",
-					"P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
-				],
+				data: Input.Keyboard.getKeyCodeStringValues(),
 				output: 0,
-				default_value: 4
+				default_value: Input.Keyboard.getKeyCodeStringValues().indexOf("space")
 			}
 		],
 		color: -4962746

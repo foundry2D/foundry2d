@@ -8,8 +8,16 @@ import found.data.SpriteData;
 import found.data.SceneFormat;
 import kha.math.Vector2;
 
+
 class Tilemap extends Object{
-    
+    static function deserialize(data:Any):Map<Int,Array<Int>>{
+        var map = new Map<Int, Array<Int>>();
+        for(field in Reflect.fields(Reflect.getProperty(data,"h"))){
+            map.set(Std.parseInt(field),Reflect.getProperty(Reflect.getProperty(data,"h"),field));
+        }
+        return map;
+
+    }
     //@TODO: Set data array to new array 
     //when changing the width or height of the tilemap
     public var w(default,set) : Int;
@@ -35,11 +43,17 @@ class Tilemap extends Object{
         this.h = Std.int(data.height);
         this.tw = data.tileWidth;
         this.th = data.tileHeight;
-        this.data = data.map.length == 0 ? data.map = [for (i in 0...w * h) -1]: data.map;
+        this.data = [for (i in 0...w * h) -1];
         this.imageData = [];
         this.tiles = [];
         this.pivotTiles = [];
         this.raw = data;
+        data.map = Tilemap.deserialize(data.map);
+        for(tileid in data.map.keys()){
+            for(pos in data.map.get(tileid)){
+                this.data[pos] = tileid;
+            }
+        }
         
         for(tile in data.images){
             Tile.createTile(this,tile,tile.id,true,done);

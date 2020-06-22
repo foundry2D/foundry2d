@@ -73,6 +73,7 @@ class TileEditor {
 
     var mapWidthHandle:Handle = Id.handle();
     var mapHeightHandle:Handle = Id.handle();
+    var limit = 10048;
     @:access(zui.Zui,found.anim.Tilemap,found.anim.Tile)
     public function render(canvas:kha.Canvas): Void {
         if(!visible || selectedTilemapIdIndex < 0)return;
@@ -106,6 +107,7 @@ class TileEditor {
                 var w = Ext.floatInput(ui,mapWidthHandle, "Map Width");
                 if(mapWidthHandle.changed){
                     var w = Std.int(Util.snap(w,map.tw));
+                    if(w > limit) w = limit;
                     resizeMapdata(w,map.h);
                     changed = true;  
                                    
@@ -114,6 +116,7 @@ class TileEditor {
                 var h = Ext.floatInput(ui,mapHeightHandle, "Map Height");
                 if(mapHeightHandle.changed){
                     var h = Std.int(Util.snap(h,map.tw));
+                    if(h > limit) h = limit;
                     resizeMapdata(map.w,h);
                     changed = true;
                 }
@@ -265,11 +268,18 @@ class TileEditor {
             map.h = h;
         }
         map.data = [for(i in 0...w*h)-1];
-        for(tile in tiles){
-            map.data[map.posXY2Id(tile.pos.x,tile.pos.y)] = tile.tileId;
-        }
         var temp:TTilemapData = cast(map.raw);
-        temp.map = map.data;
+        temp.map.clear();
+        for(tile in tiles){
+            var index = map.posXY2Id(tile.pos.x,tile.pos.y);
+            map.data[index] = tile.tileId;
+            if(temp.map.exists(tile.tileId)){
+                temp.map.get(tile.tileId).push(index);
+            }
+            else {
+                temp.map.set(tile.tileId,[index]);
+            }
+        }
         temp.width = w;
         temp.height = h;
     }
@@ -408,7 +418,12 @@ class TileEditor {
         if(index > -1 && curTile.tileId != null){
             map.data[index] = curTile.tileId;
             var temp:TTilemapData = cast(map.raw);
-            temp.map[index] = curTile.tileId;
+            if(temp.map.exists(curTile.tileId)){
+                temp.map.get(curTile.tileId).push(index);
+            }
+            else {
+                temp.map.set(curTile.tileId,[index]);
+            }
             if(curTile.raw.rigidBody != null){
                 curTile.raw.rigidBody.x = map.x(index);
                 curTile.raw.rigidBody.y = map.y(index);

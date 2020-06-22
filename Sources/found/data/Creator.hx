@@ -38,7 +38,7 @@ class Creator {
                 tilemap.height = 960.0;
                 tilemap.tileWidth = 64;
                 tilemap.tileHeight = 64;
-                tilemap.map = [];
+                tilemap.map = new Map<Int,Array<Int>>();
                 var tile:TTileData = createType("Tile","sprite_object");
                 tile.id = 0;
                 tile.width = 896.0;

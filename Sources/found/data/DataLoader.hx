@@ -152,7 +152,7 @@ class DataLoader {
 		return hj.getUnserialized();
 	}
 
-	public static function stringify(o:Dynamic,#if debug ?pretty=true #else?pretty=false#end) {
+	public static function stringify(o:Dynamic,#if something ?pretty=true #else?pretty=false#end) {
 		var hj = new DataLoader(Data.version);
 		hj.serialize(o, pretty);
 		return hj.getSerialized();

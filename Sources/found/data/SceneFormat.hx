@@ -101,7 +101,9 @@ typedef TTilemapData = {
 #end
     public var tileWidth: Int;
     public var tileHeight: Int;
-    public var map:Array<Int>;
+    // public var map:Array<Int>;
+    //                 Tileid,posId
+    public var map:Map<Int,Array<Int>>;
     public var images:Array<TTileData>;
     @:optional public var flip:Null<Vector2>;
 }

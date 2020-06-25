@@ -1,6 +1,5 @@
 package found.object;
 
-import echo.data.Options.ShapeOptions;
 import kha.simd.Float32x4;
 import found.math.Vec2;
 import kha.Canvas;
@@ -56,18 +55,22 @@ class Object {
 		else if(body != null){
 			body.on_move = null;
 		}
+		if(b == null && body != null){
+			State.active.physics_world.remove(body);
+		}
 
 		return body = b;
 	}
 
 	function makeBody(scene:Scene,p_raw:TObj){
 		if(body != null)return;
-		if(p_raw.rigidBody.x == null) p_raw.rigidBody.x = p_raw.position.x;
-		if(p_raw.rigidBody.y == null) p_raw.rigidBody.y = p_raw.position.y;
+		if(p_raw.rigidBody.x == null) p_raw.rigidBody.x = this.position.x;
+		if(p_raw.rigidBody.y == null) p_raw.rigidBody.y = this.position.y;
 		if(p_raw.rigidBody.shapes != null) {
 			if(p_raw.rigidBody.shapes[0].width == null) p_raw.rigidBody.shapes[0].width = p_raw.width;
 			if(p_raw.rigidBody.shapes[0].height == null) p_raw.rigidBody.shapes[0].height = p_raw.height;
 		}
+		
 		this.body = scene.physics_world.add(new echo.Body(p_raw.rigidBody));
 	}
 
@@ -197,11 +200,6 @@ class Object {
 
 	public function render(canvas:Canvas){
 		if (!Scene.ready) return;
-		#if debug
-    	if(body != null){
-			Object.physicsDraw(canvas,raw.rigidBody.shapes,position);
-		}
-		#end
 	}
 
 	public function isVisible(offset:Int,cam:Float32x4): Bool {
@@ -339,22 +337,4 @@ class Object {
 		}
 		return null;
 	}
-
-	#if debug
-	static public function physicsDraw(canvas:kha.Canvas,shapes:Array<ShapeOptions>,position:Vector2){
-		if(!Found.collisionsDraw || State.active.physics_world == null) return;
-		canvas.g2.color = kha.Color.fromBytes(255,0,0,64);
-		for(shape in shapes) {
-			drawShape(canvas.g2,shape,position.x + shape.offset_x,position.y + shape.offset_y);
-		}
-		canvas.g2.color = kha.Color.White;
-	}
-	static function drawShape(g:kha.graphics2.Graphics,shape:ShapeOptions,x:Float,y:Float){
-		switch(shape.type){
-			case echo.data.Types.ShapeType.RECT:
-			g.fillRect(x,y,shape.width,shape.height);
-			default:
-		}
-	} 
-	#end
 }

@@ -63,6 +63,7 @@ class Tile {
 	}
 	//initialized in makeBodies of Tilemap
 	public var body:echo.Body = null;
+	public var bodies:Array<echo.Body> = [];
 
 	static var onStaticDone:Tilemap->Void = null;
 	@:access(found.anim.Tilemap)

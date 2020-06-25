@@ -22,8 +22,14 @@ typedef Selection = {
     var h:Float;
 }
 
+class TileEditorState {
+    public static var Draw = 0;
+    public static var Erase = 1;
+}
+
 class TileEditor {
     var ui: Zui;
+    static var editorStates:Array<String> = [for(field in Type.getClassFields(TileEditorState))field];
     // var itemList:Array<TTileData> = [];
     var width:Int;
     var height:Int;
@@ -40,6 +46,7 @@ class TileEditor {
     var tileHandle = Id.handle({value: 0});
     var unusedIds:Array<Int> = [];
     var canDrawTile:Bool =false;
+    var state:Int = TileEditorState.Draw;
     var editorWindowHandle:Handle = Id.handle();
     var tilesheets:Array<TTileData> = [];
     var tilsheetListHandle:Handle = Id.handle();
@@ -73,6 +80,7 @@ class TileEditor {
 
     var mapWidthHandle:Handle = Id.handle();
     var mapHeightHandle:Handle = Id.handle();
+    var editorStateHandle:Handle = Id.handle();
     var limit = 10048;
     @:access(zui.Zui,found.anim.Tilemap,found.anim.Tile)
     public function render(canvas:kha.Canvas): Void {
@@ -123,6 +131,11 @@ class TileEditor {
                 map.tw = Std.int(Ext.floatInput(ui, Id.handle({value: 64.0}), "Tile Width"));
                 map.th = Std.int(Ext.floatInput(ui, Id.handle({value: 64.0}), "Tile Height"));
                 
+                editorStateHandle.position = state;
+                ui.combo(editorStateHandle,editorStates,"Draw State",true);
+                if(editorStateHandle.changed){
+                    state = editorStateHandle.position;
+                }
 				if(curTile != null){
                     //Tilemap drawing with selection
                     var r = ui.curRatio == -1 ? 1.0 : ui.ratios[ui.curRatio];
@@ -193,12 +206,15 @@ class TileEditor {
                     ui.g.color = kha.Color.White;
                     if(found.State.active.physics_world != null){
                         if(ui.button("Edit Selected Tile Collisions") && curTile != null && !tileHandle.changed){
-                            if(curTile.body == null){
+                            if(curTile.body == null || curTile.raw.rigidBody == null){
                                 if(curTile.raw.rigidBody == null){
                                     curTile.raw.rigidBody = echo.Body.defaults;
                                     curTile.raw.rigidBody.mass = 0;//Make the body static
                                 }
                                 curTile.body = new echo.Body(curTile.raw.rigidBody);
+                                // @Incomplete: Add a body to physics_world based on the curTile.tileid
+                                // for each tile of this id that was drawn beforehand(i.e. before 
+                                //creating a collision for the tile)
                             }
                             CollisionEditorDialog.open(null,cast(curTile));
                             changed = true;
@@ -233,7 +249,7 @@ class TileEditor {
             
             //Scale tile w/h
             //Scale image w/h
-            var temp = scaleToScreen(1.0,1.0);
+            var scaled = scaleToScreen(1.0,1.0);
             var px:Float = Found.mouseX;//Math.abs(Found.mouseX) < Found.GRID*0.75 ? Found.mouseX-curTile._w*2: Found.mouseX-curTile._w;
             var py:Float = Found.mouseY;//Math.abs(Found.mouseY) < Found.GRID*0.75 ? Found.mouseY-curTile._h*2:Found.mouseY-curTile._h;
             vec.x = px;
@@ -243,7 +259,7 @@ class TileEditor {
             // py = Math.floor(py);
             // py = Util.snap(py,Found.GRID);
 
-            curTile.render(canvas,vec,kha.Color.fromBytes(255,255,255,128),new Vector2(temp.width,temp.height));
+            curTile.render(canvas,vec,kha.Color.fromBytes(255,255,255,128),new Vector2(scaled.width,scaled.height));
             canvas.g2.end();
         }
         else{
@@ -268,20 +284,20 @@ class TileEditor {
             map.h = h;
         }
         map.data = [for(i in 0...w*h)-1];
-        var temp:TTilemapData = cast(map.raw);
-        temp.map.clear();
+        var rawData:TTilemapData = cast(map.raw);
+        rawData.map.clear();
         for(tile in tiles){
             var index = map.posXY2Id(tile.pos.x,tile.pos.y);
             map.data[index] = tile.tileId;
-            if(temp.map.exists(tile.tileId)){
-                temp.map.get(tile.tileId).push(index);
+            if(rawData.map.exists(tile.tileId)){
+                rawData.map.get(tile.tileId).push(index);
             }
             else {
-                temp.map.set(tile.tileId,[index]);
+                rawData.map.set(tile.tileId,[index]);
             }
         }
-        temp.width = w;
-        temp.height = h;
+        rawData.width = w;
+        rawData.height = h;
     }
     @:access(found.anim.Tilemap,found.anim.Tile)
     function currentMaxTiles(?tileToGetMaxOf:Null<Tile>){
@@ -416,22 +432,54 @@ class TileEditor {
         var index  = map.pos2Id(cast(pos));
         
         if(index > -1 && curTile.tileId != null){
-            map.data[index] = curTile.tileId;
-            var temp:TTilemapData = cast(map.raw);
-            if(temp.map.exists(curTile.tileId)){
-                temp.map.get(curTile.tileId).push(index);
+            var lastId = map.data[index];
+            #if editor
+            var changed =false;
+            #end
+            var rawData:TTilemapData = cast(map.raw);
+            if(state == TileEditorState.Draw){
+                map.data[index] = curTile.tileId;
+                if(rawData.map.exists(curTile.tileId)){
+                    var indicies = rawData.map.get(curTile.tileId);
+                    if(indicies[indicies.length-1] == index)return;
+                    indicies.push(index);
+                }
+                else {
+                    rawData.map.set(curTile.tileId,[index]);
+                }
+                if(curTile.raw.rigidBody != null){
+                    curTile.raw.rigidBody.x = map.x2p(map.x(index))+map.position.x;
+                    curTile.raw.rigidBody.y = map.y2p(map.y(index))+map.position.y;
+                    curTile.bodies.push(found.State.active.physics_world.add(new echo.Body(curTile.raw.rigidBody)));
+                }
+                #if editor
+                changed = true;
+                #end
             }
-            else {
-                temp.map.set(curTile.tileId,[index]);
-            }
-            if(curTile.raw.rigidBody != null){
-                curTile.raw.rigidBody.x = map.x(index);
-                curTile.raw.rigidBody.y = map.y(index);
-                found.State.active.physics_world.add(new echo.Body(curTile.raw.rigidBody));
+            if(state == TileEditorState.Erase && lastId != -1){
+                map.data[index] = -1;
+                var arr = rawData.map.get(lastId);
+                var bodies = map.tiles.get(lastId).bodies;
+                var body = null;
+                for(i in 0...arr.length){
+                    if(arr[i] == index){
+                        arr.splice(i,1);
+                        body = bodies.splice(i,1)[0];
+                    }
+                }
+                
+                if(found.State.active.physics_world != null && body != null){
+                    found.State.active.physics_world.remove(body);
+                }
+                #if editor
+                changed = true;
+                #end
             }
             #if editor
-            EditorHierarchy.makeDirty();
-            map.dataChanged = true;
+            if(changed){
+                EditorHierarchy.makeDirty();
+                map.dataChanged = true;
+            }
             #end
         }
 

@@ -266,6 +266,17 @@ class Scene {
         exe.execute();
       }
     }
+    #if debug
+    if(physics_world != null && Found.collisionsDraw){
+      physics_world.for_each(function(f:echo.Body){
+        if(f == null || f.shapes.length <= 0 || !f.active)return;
+        canvas.g2.color = kha.Color.fromBytes(255,0,0,64);
+        var bds = f.bounds();
+        canvas.g2.fillRect(bds.x-cam.position.x-bds.width*0.5,bds.y-cam.position.y-bds.height*0.5,bds.width,bds.height);
+        canvas.g2.color = kha.Color.White;
+      });
+    }
+    #end
 
   }
 

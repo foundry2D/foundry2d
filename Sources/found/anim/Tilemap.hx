@@ -62,6 +62,14 @@ class Tilemap extends Object{
             done(this);
         }
     }
+
+    override function set_body(b:echo.Body) {
+        var out = super.set_body(b);
+        if(b == null){
+            removeBodies(State.active);
+        }
+        return out;
+    }
     
     public inline function x(id : Int) : Int {
         return id % w;
@@ -137,11 +145,6 @@ class Tilemap extends Object{
                     if(tile != null){
                         var pos:Vector2 = new Vector2(x+position.x,y+position.y);
                         tile.render(canvas,pos);
-                        #if debug
-                        if(tile.body != null && tile.raw.rigidBody != null){
-                            Object.physicsDraw(canvas,tile.raw.rigidBody.shapes,pos);
-                        }
-                        #end
                     }
                 }
             }
@@ -167,30 +170,30 @@ class Tilemap extends Object{
     #end
 
     public function makeBodies(scene:Scene){
-        var x = 0;
-        var y = 0;
-        while(x < this.w){
-            var pos = this.posXY2Id(x,y);
-            if(pos != -1){
-                var tileId = this.data[pos];
-                if(tileId != -1){
-                    var tile = this.tiles[tileId];
-                    if(tile != null){
+        var data:TTilemapData = cast(this.raw);
+        for(tileId in data.map.keys()){
+            for(index in data.map.get(tileId) ){
+                var tile = this.tiles[tileId];
+                if(tile != null){
                     var p_raw = Reflect.copy(tile.raw);
                     if(p_raw.rigidBody == null){
                         p_raw.rigidBody = echo.Body.defaults;
                         p_raw.rigidBody.mass = 0;//Make the body static
                     }
-                    p_raw.rigidBody.x = x+this.position.x;
-                    p_raw.rigidBody.y = y+this.position.y;
-                    tile.body = scene.physics_world.add(new echo.Body(p_raw.rigidBody));
-                    }
+                    p_raw.rigidBody.x = this.x2p(this.x(index))+this.position.x;
+                    p_raw.rigidBody.y = this.y2p(this.y(index))+this.position.y;
+                    tile.bodies.push(scene.physics_world.add(new echo.Body(p_raw.rigidBody)));
                 }
             }
-            x+=this.tw;
-            if(x>= this.w && y < this.h){
-                y+=this.th;
-                x = 0;
+        }
+    }
+
+    public function removeBodies(scene:Scene){
+        var data:TTilemapData = cast(this.raw);
+        for(tileId in data.map.keys()){
+            var tile = this.tiles[tileId];
+            for(body in tile.bodies){
+                scene.physics_world.remove(body);
             }
         }
     }

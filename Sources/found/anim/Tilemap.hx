@@ -169,28 +169,37 @@ class Tilemap extends Object{
     }
     #end
 
-    public function makeBodies(scene:Scene){
+    public function makeBodies(scene:Scene,?p_tileid:Int){
         var data:TTilemapData = cast(this.raw);
-        for(tileId in data.map.keys()){
+        var addAllIds:()->Null<Int> =  function(){
+            for(tileid in data.map.keys())
+                makeBodies(scene,tileid);
+            return null;
+        };
+        var tileId:Null<Int> = p_tileid != null ? p_tileid : addAllIds();
+        if(tileId != null){
             for(index in data.map.get(tileId) ){
                 var tile = this.tiles[tileId];
-                if(tile != null){
-                    var p_raw = Reflect.copy(tile.raw);
-                    if(p_raw.rigidBody == null){
-                        p_raw.rigidBody = echo.Body.defaults;
-                        p_raw.rigidBody.mass = 0;//Make the body static
-                    }
-                    p_raw.rigidBody.x = this.x2p(this.x(index))+this.position.x;
-                    p_raw.rigidBody.y = this.y2p(this.y(index))+this.position.y;
-                    tile.bodies.push(scene.physics_world.add(new echo.Body(p_raw.rigidBody)));
+                if(tile != null && tile.raw.rigidBodies != null && tile.raw.rigidBodies.exists(tile.tileId)){
+                    var body = tile.raw.rigidBodies.get(tile.tileId);
+                    body.x = this.x2p(this.x(index))+this.position.x;
+                    body.y = this.y2p(this.y(index))+this.position.y;
+                    tile.bodies.push(scene.physics_world.add(new echo.Body(body)));
                 }
             }
         }
+        
     }
 
-    public function removeBodies(scene:Scene){
+    public function removeBodies(scene:Scene,?p_tileid:Int){
         var data:TTilemapData = cast(this.raw);
-        for(tileId in data.map.keys()){
+        var rmAllIds:()->Null<Int> =  function(){
+            for(tileid in data.map.keys())
+                removeBodies(scene,tileid);
+            return null;
+        };
+        var tileId:Null<Int> = p_tileid != null ? p_tileid : rmAllIds();
+        if(tileId != null){
             var tile = this.tiles[tileId];
             for(body in tile.bodies){
                 scene.physics_world.remove(body);

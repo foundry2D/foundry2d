@@ -48,6 +48,7 @@ class Creator {
                 tile.points = [new Vector2(),new Vector2(64,0),new Vector2(64,64),new Vector2(0,64)];
                 tile.imagePath = "tilesheet";
                 tile.usedIds = [0];
+                tile.rigidBodies = new Map<Int,echo.data.Options.BodyOptions>();
 
                 tilemap.images = [tile];
 

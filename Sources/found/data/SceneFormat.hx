@@ -91,6 +91,7 @@ typedef TTileData = {
     public var usedIds:Array<Int>;
     public var tileWidth: Int;
     public var tileHeight: Int;
+    @:optional public var rigidBodies:Null<Map<Int,echo.data.Options.BodyOptions>>;
     @:optional public var tileAnims:Null<Array<Array<Int>>>;
 }
 #if js

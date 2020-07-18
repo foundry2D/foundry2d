@@ -206,15 +206,14 @@ class TileEditor {
                     ui.g.color = kha.Color.White;
                     if(found.State.active.physics_world != null){
                         if(ui.button("Edit Selected Tile Collisions") && curTile != null && !tileHandle.changed){
-                            if(curTile.body == null || curTile.raw.rigidBody == null){
-                                if(curTile.raw.rigidBody == null){
-                                    curTile.raw.rigidBody = echo.Body.defaults;
-                                    curTile.raw.rigidBody.mass = 0;//Make the body static
+                            if(curTile.body == null || !curTile.raw.rigidBodies.exists(curTile.tileId)){
+                                if(!curTile.raw.rigidBodies.exists(curTile.tileId)){
+                                    var body = echo.Body.defaults;
+                                    body.mass = 0;//Make the body static
+                                    body.shapes = [];
+                                    curTile.raw.rigidBodies.set(curTile.tileId,body);
                                 }
-                                curTile.body = new echo.Body(curTile.raw.rigidBody);
-                                // @Incomplete: Add a body to physics_world based on the curTile.tileid
-                                // for each tile of this id that was drawn beforehand(i.e. before 
-                                //creating a collision for the tile)
+                                curTile.body = new echo.Body(curTile.raw.rigidBodies.get(curTile.tileId));
                             }
                             CollisionEditorDialog.open(null,cast(curTile));
                             changed = true;
@@ -367,8 +366,10 @@ class TileEditor {
 
     @:access(found.anim.Tilemap,found.anim.Tile)
     function removeTilesheet(index:Int){
+        
         tilesheets.splice(index,1);
         var tile = map.pivotTiles[index];
+        tile.map.removeBodies(found.State.active);
         var indicies:Array<Int> = [];
         for(i in tile.tileId...(tile.tileId+currentMaxTiles(tile))){
             map.tiles.remove(i);
@@ -447,10 +448,11 @@ class TileEditor {
                 else {
                     rawData.map.set(curTile.tileId,[index]);
                 }
-                if(curTile.raw.rigidBody != null){
-                    curTile.raw.rigidBody.x = map.x2p(map.x(index))+map.position.x;
-                    curTile.raw.rigidBody.y = map.y2p(map.y(index))+map.position.y;
-                    curTile.bodies.push(found.State.active.physics_world.add(new echo.Body(curTile.raw.rigidBody)));
+                if(curTile.raw.rigidBodies.exists(curTile.tileId)){
+                    var body = curTile.raw.rigidBodies.get(curTile.tileId);
+                    body.x = map.x2p(map.x(index))+map.position.x;
+                    body.y = map.y2p(map.y(index))+map.position.y;
+                    curTile.bodies.push(found.State.active.physics_world.add(new echo.Body(body)));
                 }
                 #if editor
                 changed = true;
@@ -470,6 +472,7 @@ class TileEditor {
                 
                 if(found.State.active.physics_world != null && body != null){
                     found.State.active.physics_world.remove(body);
+                    body.dispose();
                 }
                 #if editor
                 changed = true;

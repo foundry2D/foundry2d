@@ -141,6 +141,8 @@ class Mouse extends VirtualInput {
 	public var moved(default, null) = false;
 	public var movementX(default, null) = 0.0;
 	public var movementY(default, null) = 0.0;
+	public var distX(default, null) = 0.0;
+	public var distY(default, null) = 0.0;
 	public var wheelDelta(default, null) = 0;
 	public var locked(default, null) = false;
 	public var hidden(default, null) = false;
@@ -245,6 +247,8 @@ class Mouse extends VirtualInput {
 			this.movementX += x - lastX;
 			this.movementY += y - lastY;
 		}
+		distX = movementX;
+		distY = movementY;
 		lastX = x;
 		lastY = y;
 		this.x = x;

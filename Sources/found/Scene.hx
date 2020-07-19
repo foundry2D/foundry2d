@@ -272,7 +272,7 @@ class Scene {
         if(f == null || f.shapes.length <= 0 || !f.active)return;
         canvas.g2.color = kha.Color.fromBytes(255,0,0,64);
         var bds = f.bounds();
-        canvas.g2.fillRect(bds.x-cam.position.x-bds.width*0.5,bds.y-cam.position.y-bds.height*0.5,bds.width,bds.height);
+        canvas.g2.fillRect(bds.min_x-cam.position.x,bds.min_y-cam.position.y,bds.width,bds.height);
         canvas.g2.color = kha.Color.White;
       });
     }

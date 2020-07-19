@@ -88,6 +88,10 @@ class App {
 		editorui.update(dt);
 		#end
 		#if tile_editor
+		if(Input.getMouse().down("left") && Input.getMouse().moved){
+			Found.tileeditor.addTile();
+
+		}
 		frameCounter.update();
 		#end
 	}

@@ -51,6 +51,8 @@ class TileEditor {
     var tilesheets:Array<TTileData> = [];
     var tilsheetListHandle:Handle = Id.handle();
 
+    var mouse:found.Input.Mouse;
+
     public function new(visible = true) {
         this.visible = visible;
         ui = new zui.Zui({font: kha.Assets.fonts.font_default,autoNotifyInput: false});
@@ -71,7 +73,8 @@ class TileEditor {
 		kha.input.Keyboard.get().notify(onKeyDownTE, onKeyUpTE, onKeyPressTE);
 		#if (kha_android || kha_ios)
 		if (kha.input.Surface.get() != null) kha.input.Surface.get().notify(onTouchDownTE, onTouchUpTE, onTouchMoveTE);
-		#end
+        #end
+        mouse = Input.getMouse();
     }
 
     public function redraw() {
@@ -84,7 +87,7 @@ class TileEditor {
     var limit = 10048;
     @:access(zui.Zui,found.anim.Tilemap,found.anim.Tile)
     public function render(canvas:kha.Canvas): Void {
-        if(!visible || selectedTilemapIdIndex < 0)return;
+        if(!visible || selectedTilemapIdIndex < 0 || mouse == null)return;
         ui.begin(canvas.g2);
         
         if(map == null){
@@ -244,13 +247,13 @@ class TileEditor {
             kha.input.Mouse.get(0).hideSystemCursor();
             canvas.g2.begin(false,0x00000000);
             canvas.g2.color = kha.Color.White;
-            canvas.g2.drawScaledImage(kha.Assets.images.basic,Found.mouseX,Found.mouseY,10,10);
+            canvas.g2.drawScaledImage(kha.Assets.images.basic,mouse.x,mouse.y,10,10);
             
             //Scale tile w/h
             //Scale image w/h
             var scaled = scaleToScreen(1.0,1.0);
-            var px:Float = Found.mouseX;//Math.abs(Found.mouseX) < Found.GRID*0.75 ? Found.mouseX-curTile._w*2: Found.mouseX-curTile._w;
-            var py:Float = Found.mouseY;//Math.abs(Found.mouseY) < Found.GRID*0.75 ? Found.mouseY-curTile._h*2:Found.mouseY-curTile._h;
+            var px:Float = mouse.x;//Math.abs(mouse.x) < Found.GRID*0.75 ? mouse.x-curTile._w*2: mouse.x-curTile._w;
+            var py:Float = mouse.y;//Math.abs(mouse.y) < Found.GRID*0.75 ? mouse.y-curTile._h*2:mouse.y-curTile._h;
             vec.x = px;
             vec.y = py;
             // px = Math.floor(px);
@@ -397,8 +400,8 @@ class TileEditor {
         var addY = map.position.y > 0 ? -map.position.y : Math.abs(map.position.y);  
         #if editor
         if(!Found.fullscreen){
-            px = Found.mouseX;
-            py = Found.mouseY;
+            px = mouse.x;
+            py = mouse.y;
             
             var pos:kha.math.FastVector2 = new kha.math.FastVector2(px,py);  
             pos = utilities.Conversion.ScreenToWorld(pos);
@@ -407,8 +410,8 @@ class TileEditor {
         }
         else{
         #end
-        px = Math.abs(Found.mouseX) < Found.GRID*0.75 ? Found.mouseX-curTile._w*2: Found.mouseX-curTile._w;
-        py = Math.abs(Found.mouseY) < Found.GRID*0.75 ? Found.mouseY-curTile._h*2:Found.mouseY-curTile._h;
+        px = Math.abs(mouse.x) < Found.GRID*0.75 ? mouse.x-curTile._w*2: mouse.x-curTile._w;
+        py = Math.abs(mouse.y) < Found.GRID*0.75 ? mouse.y-curTile._h*2:mouse.y-curTile._h;
         px = Math.floor(px+addX+found.State.active.cam.position.x);
         px = Util.snap(px,Found.GRID);
         py = Math.floor(py+addY+found.State.active.cam.position.y);
@@ -516,14 +519,14 @@ class TileEditor {
         var w = Found.WIDTH;
         var h = Found.HEIGHT;
         #end
-        var out = Found.mouseX > x &&
-                Found.mouseX < x+w &&
-                Found.mouseY > y &&
-                Found.mouseY < y+h &&
-                (Found.mouseY < ui._windowY ||
-                Found.mouseY > ui._windowY+endHeight ||
-                Found.mouseX < ui._windowX ||
-                Found.mouseX > ui._windowX+width);
+        var out = mouse.x > x &&
+                mouse.x < x+w &&
+                mouse.y > y &&
+                mouse.y < y+h &&
+                (mouse.y < ui._windowY ||
+                mouse.y > ui._windowY+endHeight ||
+                mouse.x < ui._windowX ||
+                mouse.x > ui._windowX+width);
         return out;
     }
     //@TODO: We should probably modify how we declare and use this

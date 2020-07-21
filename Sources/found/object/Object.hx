@@ -161,6 +161,9 @@ class Object {
 		
 		uid = ++uidCounter;
 
+		if(p_raw.type == "object")
+			this.raw = p_raw;
+
 		_positions.push(Reflect.copy(p_raw.position));
 		_rotations.push(Reflect.copy(p_raw.rotation));
 		_scales.push( p_raw.scale != null ? Reflect.copy(p_raw.scale) : new Vector2(1.0,1.0));

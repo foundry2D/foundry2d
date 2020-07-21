@@ -131,9 +131,11 @@ class Scene {
   function addEntity(e:TObj){
   #end  
     switch(e.type){
+        case "object":
+            addToStateArray(new Object(e));
         case "sprite_object":
           var data:TSpriteData = SceneFormat.getData(e);
-          var out = new Sprite(data,function (s:Sprite){
+          new Sprite(data,function (s:Sprite){
               createTraits(data.traits,s);
               addToStateArray(s);
           });
@@ -157,11 +159,7 @@ class Scene {
           createTraits(data.traits,out);
           addToStateArray(out);
         case "emitter_object":
-        default://Object
-          // var data:TSpriteData = SceneFormat.getData(e);
-          // var out = new Sprite(data._imagePath,data.position.x,data.position.y,Std.int(data.width),Std.int(data.height));
-          // out.raw = data;
-          // _entities.push(out);
+        default:
           trace("Data with name"+e.name+"was not added because it's type is not implemented");
 
       }
@@ -251,12 +249,13 @@ class Scene {
       }
       entity.render(canvas);
     }
-    if(ordered.length > 0)
-      canvas.g2.popTransformation();
-
-    if (App.traitRenders2D.length > 0 #if editor && App.editorui.isPlayMode #end) {
+    
+    if (App.traitRenders2D.length > 0) {
 			for (f in App.traitRenders2D) { App.traitRenders2D.length > 0 ? f(canvas.g2) : break; }
     }
+
+    if(ordered.length > 0)
+      canvas.g2.popTransformation();
     
     //@TODO: Evaluate if we still need this in render... ?
     if (App.traitInits.length > 0 #if editor && App.editorui.isPlayMode #end) {

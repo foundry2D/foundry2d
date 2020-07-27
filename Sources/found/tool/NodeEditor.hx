@@ -25,10 +25,12 @@ class NodeEditor {
 	public static var x:Int;
 	public static var y:Int;
 
-	public function new(px:Int, py:Int, w:Int, h:Int) {
+	public function new(ui:zui.Zui,px:Int, py:Int, w:Int, h:Int) {
 		this.visible = false;
 		setAll(px, py, w, h);
+		ui.g.end();
 		drawGrid();
+		ui.g.begin(false);
 	}
 
 	public function setAll(px:Int, py:Int, w:Int, h:Int) {
@@ -52,7 +54,7 @@ class NodeEditor {
 	public function render(ui:zui.Zui) {
 		if (!visible)
 			return;
-
+		
 		var nodePanX:Float = 0.0;
 		var nodePanY:Float = 0.0;
 		if (NodeEditor.selectedNode != null) {
@@ -76,10 +78,11 @@ class NodeEditor {
 		}
 		if (ui.window(nodeCanvasWindowHandle, NodeEditor.x, NodeEditor.y, NodeEditor.width, NodeEditor.height)) {
 			ui.g.color = kha.Color.White;
-			ui.g.drawImage(grid, nodePanX, nodePanY);
+			ui.g.drawImage(grid,nodePanX,nodePanY);
 			renderNodes(ui);
 		}
 		renderNodesMenu(ui);
+		
 	}
 
 	public function renderNodes(ui:Zui) {

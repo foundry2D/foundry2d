@@ -14,7 +14,7 @@ import zui.Ext;
 @:access(zui.Zui)
 class AnimationEditor {
         var ui: Zui;
-        public var visible:Bool;
+
         public static var width:Int;
         public static var height:Int;
         public static var x:Int;
@@ -25,11 +25,14 @@ class AnimationEditor {
         public var selectedUID(default,set):Int = -1;
         var windowHandle:zui.Zui.Handle = Id.handle();
         var timelineHandle:zui.Zui.Handle = Id.handle();
-        public function new(ui:Zui,px:Int,py:Int,w:Int,h:Int) {
-            this.visible = false;
-            this.ui = ui;
-            setAll(px,py,w,h);
-            windowHandle.scrollEnabled = true;
+        var parent:EditorPanel;
+        var ownerTab:Tab;
+        public function new(panel:EditorPanel,animTab:Tab) {
+            parent = panel;
+            ownerTab = animTab;
+            setAll(parent.x,parent.y,parent.w,parent.h);
+            parent.windowHandle.scrollEnabled = true;
+            panel.postRenders.push(renderTimeline);
         }
     
         public function setAll(px:Int,py:Int,w:Int,h:Int){
@@ -92,9 +95,11 @@ class AnimationEditor {
         var animIndex:Int  = -1;
         var animHandle:zui.Zui.Handle = new zui.Zui.Handle();
         var fpsHandle:zui.Zui.Handle =  new zui.Zui.Handle();
+        var viewHeight:Int = 0;
         @:access(found.anim.Sprite,found.anim.Animation)
         public function render(ui:zui.Zui){
-            if(!visible)return;
+
+            this.ui = ui;
             var sc = ui.SCALE();
             var timelineLabelsHeight = Std.int(30 * sc);
             var timelineFramesHeight = Std.int(40 * sc);
@@ -123,11 +128,14 @@ class AnimationEditor {
                  
                 timelineHandle.redraws = windowHandle.redraws = 2;//redraw
             }
-            var viewHeight = AnimationEditor.height - timeline.height;
-            if(ui.window(windowHandle, AnimationEditor.x, AnimationEditor.y, AnimationEditor.width, viewHeight)){
+            viewHeight = AnimationEditor.height - timeline.height;
+            if(ui.tab(parent.htab,"Animation")){
                 ui.row([0.5,0.25,0.25]);
                 animHandle.position = animIndex;
-                animIndex = ui.combo(animHandle,animations);
+                if(animations.length  > 0){
+                    animIndex = ui.combo(animHandle,animations);
+                }
+
                 if(curSprite != null && animHandle.changed){
                     curSprite.data.curAnim = animIndex;
                 }
@@ -200,6 +208,14 @@ class AnimationEditor {
 
             }
 
+            
+            
+        }
+        function renderTimeline(ui:zui.Zui){
+            if(!ownerTab.active)return;
+            var sc = ui.SCALE();
+            var timelineLabelsHeight = Std.int(30 * sc);
+            var timelineFramesHeight = Std.int(40 * sc);
             if(ui.window(timelineHandle,AnimationEditor.x, AnimationEditor.y+viewHeight,AnimationEditor.width, timeline.height)){
                 
                 ui.imageScrollAlign =false;// This makes its so that we can cheat the image drawing to draw well to make it easier to have valid input
@@ -251,9 +267,7 @@ class AnimationEditor {
                 ui._y = old.y;
                 ui.imageScrollAlign =true;
             }
-            
         }
-        
         @:access(found.anim.Sprite,found.anim.Animation)
         function addItem(name:String){
             if(animIndex < 0) return;
@@ -325,7 +339,7 @@ class AnimationEditor {
         }
         @:access(found.anim.Sprite,found.data.SpriteData,found.anim.Animation)
         public function update(dt:Float) {
-            if(!visible)return;
+            if(!ownerTab.active)return;
 
             if(doUpdate && curSprite != null){
                 var currentCount = curSprite.data.animation._speeddiv - (curSprite.data.animation._count % curSprite.data.animation._speeddiv); 
@@ -341,7 +355,7 @@ class AnimationEditor {
 
             var size = (width > height ? width:height)*0.25;
             var rx = width*0.5 - size * 0.5;
-            // var ry = height*0.5 - size * 0.5+ui.BUTTON_H()*0.5;
+            
             if(canvas == null){
                 canvas = kha.Image.createRenderTarget(Std.int(width*0.25),Std.int(height*0.25));
             }
@@ -389,10 +403,12 @@ class AnimationEditor {
             var frameWidth = Std.int(10 * ui.SCALE())*4;
             dot = kha.Image.createRenderTarget(frameWidth, frameWidth);
             var g = dot.g2;
+            ui.g.end();
             g.begin(true);
             g.color = kha.Color.Red;
             g.fillTriangle(0,frameWidth,frameWidth*0.5,0,frameWidth,frameWidth);
             g.end();
+            ui.g.begin(false);
         }
         function drawTimeline(timelineLabelsHeight:Int, timelineFramesHeight:Int) {
             var sc = ui.SCALE();
@@ -402,6 +418,7 @@ class AnimationEditor {
             timeline = kha.Image.createRenderTarget(AnimationEditor.width, timelineHeight);
     
             var g = timeline.g2;
+            ui.g.end();
             g.begin(true, 0xff222222);
             g.font = kha.Assets.fonts.font_default;
             g.fontSize = Std.int(16 * sc);
@@ -422,6 +439,7 @@ class AnimationEditor {
             }
     
             g.end();
+            ui.g.begin(false);
         }
 
         @:access(found.anim.Sprite,found.data.SpriteData,found.anim.Animation)

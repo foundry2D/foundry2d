@@ -319,6 +319,7 @@ class TileEditor {
         var path = ui.textInput(imagePathHandle);
         if(ui.button("...")){
             FileBrowserDialog.open(function(path:String){
+                if(path == "")return;
                 // curTile.data.
             });
         }
@@ -341,6 +342,8 @@ class TileEditor {
     @:access(found.anim.Tilemap,found.anim.Tile)
     function addTilesheet(title:String) {
         FileBrowserDialog.open(function(path:String){
+            if(path == "")return;
+            
             found.data.Data.getImage(path,function(image:kha.Image){
                 var tilesheet:TTileData = found.data.Creator.createType(title,"sprite_object");
                 var curPivot = map.pivotTiles[map.pivotTiles.length-1];

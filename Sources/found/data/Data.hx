@@ -11,9 +11,6 @@ class Data {
 
 	public static var version = 0.1;
 	public static var cachedSceneRaws:Map<String, TSceneFormat> = new Map();
-    public static var cachedSprites:Map<String, SpriteData> = new Map();
-    public static var cachedRects:Map<String, RectData> = new Map();
-    public static var cachedEmitters:Map<String, EmitterData> = new Map();
 
 	public static var cachedBlobs:Map<String, kha.Blob> = new Map();
 	public static var cachedImages:Map<String, kha.Image> = new Map();
@@ -24,9 +21,6 @@ class Data {
 
     public static var assetsLoaded = 0;
     static var loadingSceneRaws:Map<String, Array<TSceneFormat->Void>> = new Map();
-    static var loadingEmitters:Map<String, Array<EmitterData->Void>> = new Map();
-    static var loadingSprites:Map<String, Array<SpriteData->Void>> = new Map();
-    static var loadingRects:Map<String, Array<RectData->Void>> = new Map();
 
     static var loadingBlobs:Map<String, Array<kha.Blob->Void>> = new Map();
 	static var loadingImages:Map<String, Array<kha.Image->Void>> = new Map();
@@ -44,14 +38,9 @@ class Data {
     public function new() {}
 
     public static function deleteAll() {
-		// for (c in cachedSprites) c.delete();
-		cachedSprites = new Map();
-		// for (c in cachedRects) c.delete();
-		cachedRects = new Map();
 		cachedSceneRaws = new Map();
 		// cachedLights = new Map();
 		// cachedCameras = new Map();
-		cachedEmitters = new Map();
 		
 
 		for (c in cachedBlobs) c.unload();

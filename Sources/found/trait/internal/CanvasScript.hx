@@ -79,9 +79,12 @@ class CanvasScript extends Trait {
             found.data.Data.getBlob(canvasName + ".json",done);
         }
 		
+		notifyOnReady(scaleOnReady);
 
 		notifyOnRender2D(function(g: kha.graphics2.Graphics) {
 			if (canvas == null || !visible) return;
+			
+			if (onReady != null) { onReady(); onReady = null; }
 			
 			setCanvasDimensions(kha.System.windowWidth(), kha.System.windowHeight());
 			var events = Canvas.draw(cui, canvas, g);
@@ -99,14 +102,16 @@ class CanvasScript extends Trait {
 				var all = found.Event.get(e);
 				if (all != null) for (entry in all) entry.onEvent();
 			}
-
-			if (onReady != null) { onReady(); onReady = null; }
 		});
 	}
-
+	function scaleOnReady(){
+		var toScale = kha.System.windowHeight() < kha.System.windowWidth() ?  kha.System.windowHeight() / canvas.height : kha.System.windowWidth()/ canvas.width ;
+		if(cui.SCALE() != toScale)
+			setUiScale(toScale);
+	}
 	var onReady: Void->Void = null;
 	public function notifyOnReady(f: Void->Void) {
-		onReady = f;
+		onReady = f != scaleOnReady ? function(){ f();scaleOnReady();} : f;
 	}
 
 	/**
@@ -168,6 +173,17 @@ class CanvasScript extends Trait {
 	public function getHandle(name: String): Handle {
 		// Consider this a temporary solution
 		return Canvas.h.children[getElement(name).id];
+	}
+	
+	@:access(zui.Canvas)
+    function getScaledElement(elem:TElement):TElement{
+		//@TODO: add anchor code to position elements based the anchors set.
+        var element = Reflect.copy(elem);
+        element.x = Canvas.scaled(elem.x);
+        element.y = Canvas.scaled(elem.y);
+        element.width = Canvas.scaled(elem.width);
+        element.height = Canvas.scaled(elem.height);
+        return element;
     }
     
     public function addCustomDraw(name:String, func:kha.graphics2.Graphics->TElement->Void){

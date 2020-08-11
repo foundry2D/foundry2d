@@ -101,11 +101,6 @@ class App {
 		#if editor
 		if(!Found.fullscreen){
 			if(!editorui.visible) editorui.visible =true;
-			Found.backbuffer.g2.begin();
-
-			if(Found.renderfunc != null)
-				Found.renderfunc(Found.backbuffer.g2);
-			Found.backbuffer.g2.end();
 			editorui.render(Found.backbuffer);
 			#if tile_editor
 			Found.tileeditor.render(Found.backbuffer);

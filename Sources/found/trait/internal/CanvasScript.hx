@@ -9,7 +9,9 @@ class CanvasScript extends Trait {
 
 
 	var cui: Zui;
-    var canvas: TCanvas = null;
+	var canvas: TCanvas = null;
+	var baseWidth:Int;
+	var baseHeight:Int;
     
     var customDraw:Map<String,kha.graphics2.Graphics->TElement->Void>;
 
@@ -79,7 +81,11 @@ class CanvasScript extends Trait {
             found.data.Data.getBlob(canvasName + ".json",done);
         }
 		
-		notifyOnReady(scaleOnReady);
+		notifyOnReady(function(){
+			baseWidth = canvas.width;
+			baseHeight = canvas.height;
+			scaleOnReady();
+		});
 
 		notifyOnRender2D(function(g: kha.graphics2.Graphics) {
 			if (canvas == null || !visible) return;
@@ -105,13 +111,17 @@ class CanvasScript extends Trait {
 		});
 	}
 	function scaleOnReady(){
+		#if kha_html5
+		var toScale = kha.System.windowHeight() < kha.System.windowWidth() && kha.System.windowHeight() + 80 < baseHeight ?  kha.System.windowHeight() / baseHeight : kha.System.windowWidth()/ baseWidth ;
+		#else
 		var toScale = kha.System.windowHeight() < kha.System.windowWidth() ?  kha.System.windowHeight() / canvas.height : kha.System.windowWidth()/ canvas.width ;
+		#end
 		if(cui.SCALE() != toScale)
 			setUiScale(toScale);
 	}
 	var onReady: Void->Void = null;
 	public function notifyOnReady(f: Void->Void) {
-		onReady = f != scaleOnReady ? function(){ f();scaleOnReady();} : f;
+		onReady = f;
 	}
 
 	/**

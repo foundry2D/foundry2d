@@ -164,7 +164,7 @@ class Tilemap extends Object{
     #if tile_editor
     function drawCountour(canvas:Canvas){
         var g = canvas.g2;
-        g.drawRect(position.x,position.y,w,h,3.0);
+        g.drawRect(position.x,position.y,w,h+th,3.0);
 
     }
     #end

@@ -70,7 +70,9 @@ class Found {
     if (config.smooth == null) config.smooth = true;
     smooth = config.smooth;
 
+    #if (kha_html5)
     html();
+    #end
 
     System.start({
 			title:config.title,
@@ -109,7 +111,7 @@ class Found {
   }
 
   static function html(){
-    #if (kha_html5 && js)
+
     document.documentElement.style.padding = '0';
     document.documentElement.style.margin = '0';
     document.body.style.padding = '0';
@@ -126,7 +128,6 @@ class Found {
     }
     window.onresize = resize;
     resize();
-    #end
   }
 }
 

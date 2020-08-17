@@ -28,7 +28,7 @@ class TileEditorState {
 }
 
 class TileEditor {
-    var ui: Zui;
+    static var ui: Zui;
     static var editorStates:Array<String> = [for(field in Type.getClassFields(TileEditorState))field];
     // var itemList:Array<TTileData> = [];
     var width:Int;
@@ -131,9 +131,10 @@ class TileEditor {
                     resizeMapdata(map.w,h);
                     changed = true;
                 }
-                map.tw = Std.int(Ext.floatInput(ui, Id.handle({value: 64.0}), "Tile Width"));
-                map.th = Std.int(Ext.floatInput(ui, Id.handle({value: 64.0}), "Tile Height"));
                 
+                if(ui.button("Change Tilemap Grid Size")){
+                    GridSizeDialog.open(map);
+                }
                 editorStateHandle.position = state;
                 ui.combo(editorStateHandle,editorStates,"Draw State",true);
                 if(editorStateHandle.changed){

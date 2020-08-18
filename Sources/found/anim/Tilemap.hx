@@ -164,7 +164,7 @@ class Tilemap extends Object{
     #if tile_editor
     function drawCountour(canvas:Canvas){
         var g = canvas.g2;
-        g.drawRect(position.x,position.y,w,h+th,3.0);
+        g.drawRect(position.x,position.y,w,h,3.0);
 
     }
     #end
@@ -184,7 +184,15 @@ class Tilemap extends Object{
                     var body = tile.raw.rigidBodies.get(tile.tileId);
                     body.x = this.x2p(this.x(index))+this.position.x;
                     body.y = this.y2p(this.y(index))+this.position.y;
-                    tile.bodies.push(scene.physics_world.add(new echo.Body(body)));
+                    var addBody:Bool = true;
+                    for(bod in tile.bodies){
+                        if(bod.x == body.x && bod.y == body.y){
+                            addBody = false;
+                            break;
+                        }
+                    }
+                    if(addBody)
+                        tile.bodies.push(scene.physics_world.add(new echo.Body(body)));
                 }
             }
         }

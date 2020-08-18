@@ -409,8 +409,8 @@ class TileEditor {
             
             var pos:kha.math.FastVector2 = new kha.math.FastVector2(px,py);  
             pos = utilities.Conversion.ScreenToWorld(pos);
-            px = pos.x + addX;
-            py = pos.y + addY;
+            px = pos.x + addX +found.State.active.cam.position.x;
+            py = pos.y + addY +found.State.active.cam.position.y;
         }
         else{
         #end
@@ -437,9 +437,12 @@ class TileEditor {
             }
         }
         var pos = getTilePos();
+
         var index  = map.pos2Id(cast(pos));
         
-        if(index > -1 && curTile.tileId != null){
+        //@TODO: Why do we need to do these checks here: && pos.x < map.w && pos.y < map.h 
+        //shouldnt pos2ID do it for us ?
+        if(index > -1 && curTile.tileId != null && pos.x < map.w && pos.y < map.h){
             var lastId = map.data[index];
             #if editor
             var changed =false;
@@ -459,7 +462,15 @@ class TileEditor {
                     var body = curTile.raw.rigidBodies.get(curTile.tileId);
                     body.x = map.x2p(map.x(index))+map.position.x;
                     body.y = map.y2p(map.y(index))+map.position.y;
-                    curTile.bodies.push(found.State.active.physics_world.add(new echo.Body(body)));
+                    var addBody = true;
+                    for(bod in curTile.bodies){
+                        if(bod.x == body.x && bod.y == body.y){
+                            addBody = false;
+                            break;
+                        }
+                    }
+                    if(addBody)
+                        curTile.bodies.push(found.State.active.physics_world.add(new echo.Body(body)));
                 }
                 #if editor
                 changed = true;

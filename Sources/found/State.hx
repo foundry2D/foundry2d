@@ -44,10 +44,12 @@ class State extends Scene {
 	public static function removeState(name:String){
 		_states.remove(name);
 	}
-
+	
+	static var lastState:State;
 	public static function set(name:String,onDone:Void->Void=null){
 		Scene.ready = false;
 		var file = _states.get(name);
+		lastState = active;
 		active = loadingState;
 		var loaded = onDone == null ? loadState : function(raw:TSceneFormat){
 			loadState(raw);
@@ -60,9 +62,9 @@ class State extends Scene {
 	private static function loadState(raw:TSceneFormat){
 		App.reset();
 		//@TODO: Evaluate if we need a dispose function for the Scene class to dispose the last created Scene ?
-		if(State.active.physics_world != null){
-			State.active.physicsUpdate = null;
-			State.active.physics_world.dispose();
+		if(lastState != null && lastState.physics_world != null){
+			lastState.physicsUpdate = null;
+			lastState.physics_world.dispose();
 		}
 		active = new State(raw);
 	}

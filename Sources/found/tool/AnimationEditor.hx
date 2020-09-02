@@ -129,7 +129,7 @@ class AnimationEditor {
                 timelineHandle.redraws = windowHandle.redraws = 2;//redraw
             }
             viewHeight = AnimationEditor.height - timeline.height;
-            if(ui.tab(parent.htab,"Animation")){
+            if(ui.tab(parent.htab,ownerTab.name)){
                 ui.row([0.5,0.25,0.25]);
                 animHandle.position = animIndex;
                 if(animations.length  > 0){

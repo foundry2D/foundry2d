@@ -226,7 +226,7 @@ class TileEditor {
                     else {
                         ui.text("Tile collisions:");
                         if (ui.button("Create Physics World")) {
-                            App.editorui.inspector.inspector.selectScene();
+                            App.editorui.inspector.selectScene();
                         }
                     }
                 }

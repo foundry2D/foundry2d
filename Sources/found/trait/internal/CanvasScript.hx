@@ -42,7 +42,7 @@ class CanvasScript extends Trait {
                 Canvas.themes = haxe.Json.parse(tBlob.toString());
             }
             else {
-                trace("\"_themes.json\" is empty! Using default theme instead.");
+				warn("\"_themes.json\" is empty! Using default theme instead.");
             }
 
             if (Canvas.themes.length == 0) {

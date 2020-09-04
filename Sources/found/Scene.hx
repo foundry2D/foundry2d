@@ -12,7 +12,6 @@ import found.math.Util.Cli;
 import found.anim.Sprite;
 import haxe.ds.ArraySort;
 import kha.Canvas;
-import kha.math.Vector2;
 import found.object.Object;
 import found.object.Camera;
 import found.object.Executor;
@@ -126,7 +125,7 @@ class Scene {
   #if editor
   public function addEntity(e:TObj,?isEditor = false){
     if(!isEditor && this.raw._entities.length == this._entities.length)
-      trace(Cli.byellow+"WARNING:"+Cli.reset+" This function should only be used for "+Cli.bred+"EDITOR"+Cli.reset+" developpement");
+      warn(Cli.byellow+"WARNING:"+Cli.reset+" This function should only be used for "+Cli.bred+"EDITOR"+Cli.reset+" developpement");
   #else
   function addEntity(e:TObj){
   #end  

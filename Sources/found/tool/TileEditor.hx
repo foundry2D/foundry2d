@@ -232,7 +232,7 @@ class TileEditor {
                 }
                 if(changed){
                     #if editor
-                    EditorHierarchy.makeDirty();
+                    EditorHierarchy.getInstance().makeDirty();
                     map.dataChanged = true;
                     #end 
                 }
@@ -498,7 +498,7 @@ class TileEditor {
             }
             #if editor
             if(changed){
-                EditorHierarchy.makeDirty();
+                EditorHierarchy.getInstance().makeDirty();
                 map.dataChanged = true;
             }
             #end

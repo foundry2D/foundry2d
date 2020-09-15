@@ -96,8 +96,8 @@ class Sprite extends Object {
 					this.data.animation.get().th = Std.int(height);
 				}
 				#if editor
-				if(EditorHierarchy.inspector != null)
-					EditorHierarchy.inspector.updateField(uid,"imagePath",this.raw);
+				if(found.App.editorui.inspector != null)
+					found.App.editorui.inspector.updateField(uid,"imagePath",this.raw);
 				#end
 			});
 		}

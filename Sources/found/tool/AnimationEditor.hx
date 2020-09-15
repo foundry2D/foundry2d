@@ -45,7 +45,7 @@ class AnimationEditor {
         @:access(found.anim.Sprite,found.anim.Animation)
         function set_selectedUID(value:Int):Int{
             var oldUid = selectedUID;
-            if(value < 0 && value > found.State.active._entities.length){
+            if(value < 0 || value > found.State.active._entities.length){
                 selectedUID = -1;
             }
             else{
@@ -166,7 +166,7 @@ class AnimationEditor {
                 if(ui.button("Save Animations") && curSprite != null){
                     saveAnimations();
                     #if editor
-                    EditorHierarchy.makeDirty();
+                    EditorHierarchy.getInstance().makeDirty();
                     #end
                 }
 

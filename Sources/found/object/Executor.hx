@@ -47,8 +47,8 @@ class Executor<T> {
             modified[data.uid] = data.out;
         }
         #if editor
-        if(EditorHierarchy.inspector != null)
-            EditorHierarchy.inspector.updateField(data.uid,field,modified[data.uid]);
+        if(found.App.editorui.inspector != null)
+            found.App.editorui.inspector.updateField(data.uid,field,modified[data.uid]);
         #end
     }
     public function add(func:T->T,data:T,uid:Int){

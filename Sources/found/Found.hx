@@ -13,6 +13,17 @@ import js.Browser.document;
 import js.Browser.window;
 #end
 
+enum OS {
+	Windows;
+	Mac;
+	Linux;
+	Android;
+	iOS;
+	Switch;
+	XboxOne;
+	Ps4;
+}
+
 class Found {
   private static var _app:App;
   
@@ -52,6 +63,52 @@ class Found {
   public static var smooth:Bool;
 
   private static var _fps:Float;
+
+  public static var os(get,null):OS;
+	static function get_os(){
+		var plat:OS;
+		#if kha_html5
+		final agent = js.Browser.navigator.userAgent;
+		if(agent.lastIndexOf("Mobi") != -1){
+			if(agent.lastIndexOf("Android") != -1){
+				plat = Android;
+			}
+			else if(agent.lastIndexOf("Mac") != -1){
+				plat = iOS;
+			}
+		}
+		else {
+			if(agent.lastIndexOf("Windows") != -1){
+				plat = Windows;
+			}
+			else if(agent.lastIndexOf("Linux") != -1){
+				plat = Linux;
+				
+			}
+			else if(agent.lastIndexOf("Mac") != -1){
+				plat = Mac;
+			}
+			else if(agent.lastIndexOf("Xbox") != -1){
+				plat = XboxOne;
+			}
+			else if(agent.lastIndexOf("PlayStation 4") != -1 || agent.lastIndexOf("PLAYSTATION 4") != -1){
+				plat = Ps4;
+			}
+		}
+		#else
+		//@TODO: Add other systems
+		switch(kha.System.systemId){
+			case "Windows":
+				plat = Windows;
+			case "MacOS":
+				plat = Mac;
+			case "Linux":
+				plat = Linux;
+			default:
+		}
+		#end
+		return plat;
+	}
 
   public static function setup(config:FoundConfig){
     if (config.width == null) config.width = WIDTH;

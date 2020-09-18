@@ -14,6 +14,7 @@ import js.Browser.window;
 #end
 
 enum OS {
+  None;
 	Windows;
 	Mac;
 	Linux;
@@ -66,7 +67,7 @@ class Found {
 
   public static var os(get,null):OS;
 	static function get_os(){
-		var plat:OS;
+		var plat:OS = None;
 		#if kha_html5
 		final agent = js.Browser.navigator.userAgent;
 		if(agent.lastIndexOf("Mobi") != -1){

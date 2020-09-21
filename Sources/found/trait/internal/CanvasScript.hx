@@ -84,7 +84,6 @@ class CanvasScript extends Trait {
 		notifyOnReady(function(){
 			baseWidth = canvas.width;
 			baseHeight = canvas.height;
-			scaleOnReady();
 		});
 
 		notifyOnRender2D(function(g: kha.graphics2.Graphics) {
@@ -110,15 +109,7 @@ class CanvasScript extends Trait {
 			}
 		});
 	}
-	function scaleOnReady(){
-		#if kha_html5
-		var toScale = kha.System.windowHeight() < kha.System.windowWidth() && kha.System.windowHeight() + 80 < baseHeight ?  kha.System.windowHeight() / baseHeight : kha.System.windowWidth()/ baseWidth ;
-		#else
-		var toScale = kha.System.windowHeight() < kha.System.windowWidth() ?  kha.System.windowHeight() / canvas.height : kha.System.windowWidth()/ canvas.width ;
-		#end
-		if(cui.SCALE() != toScale)
-			setUiScale(toScale);
-	}
+	
 	var onReady: Void->Void = null;
 	public function notifyOnReady(f: Void->Void) {
 		onReady = f;
@@ -166,8 +157,14 @@ class CanvasScript extends Trait {
 	 * @param y Height
 	 */
 	public function setCanvasDimensions(x: Int, y: Int){
-		canvas.width = x;
-		canvas.height = y;
+		if(canvas.width != x || canvas.height != y){
+			canvas.width = x;
+			canvas.height = y;
+			for (i in 0...canvas.elements.length){
+				canvas.elements[i] = getScaledElement(canvas.elements[i]);
+			}
+		}
+		
 	}
 	/**
 	 * Set font size of the canvas
@@ -188,11 +185,11 @@ class CanvasScript extends Trait {
 	@:access(zui.Canvas)
     function getScaledElement(elem:TElement):TElement{
 		//@TODO: add anchor code to position elements based the anchors set.
-        var element = Reflect.copy(elem);
-        element.x = Canvas.scaled(elem.x);
-        element.y = Canvas.scaled(elem.y);
-        element.width = Canvas.scaled(elem.width);
-        element.height = Canvas.scaled(elem.height);
+		var element = Reflect.copy(elem);
+        element.x = Math.floor((elem.x/baseWidth)*canvas.width);
+        element.y = Math.floor((elem.y/baseHeight)*canvas.height);
+        element.width = Math.floor((elem.width/baseWidth)*canvas.width);
+        element.height = Math.floor((elem.height/baseHeight)*canvas.height);
         return element;
     }
     

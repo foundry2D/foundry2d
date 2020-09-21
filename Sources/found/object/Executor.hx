@@ -1,8 +1,9 @@
 package found.object;
 
 import kha.Scheduler;
+#if !kha_krom
 import kha.Worker;
-
+#end
 class Executor<T> {
     public static var executors:Array<Executor<Dynamic>> = [];
     public var threads:Int = 2;
@@ -10,8 +11,10 @@ class Executor<T> {
     var actions:Array<T->T> = [];
     var datas:Array<T> = [];
     var uids:Array<Int> = [];
+    #if !kha_krom
     var workers:Array<Worker> = [];
     var rest:Worker;
+    #end
     public function new(p_field:String){
         #if debug
         if(Scheduler.time() == 0) trace("You cant create Executors before the Scheduler has been created.Solution: Create your executor in the new function of your class.");

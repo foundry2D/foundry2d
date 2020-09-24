@@ -1,0 +1,11 @@
+---
+name: Feature request
+about: Create a feature request
+title: ''
+labels: feature request
+assignees: ''
+---
+
+<!-- Please search existing requests for potential duplicates before filing yours:
+https://github.com/foundry2D/foundry2d/issues?q=is%3Aissue+label%3A%22feature+request%22+is%3Aopen
+-->

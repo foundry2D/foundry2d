@@ -553,6 +553,7 @@ class Keyboard extends VirtualInput {
 		keysFrame.push(s);
 		keysReleased.set(s, true);
 		keysDown.set(s, false);
+		keysStarted.set(s,false);
 
 		#if kha_android_rmb
 		if (code == KeyCode.Back) {

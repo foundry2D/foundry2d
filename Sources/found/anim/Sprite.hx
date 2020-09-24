@@ -9,8 +9,8 @@ Edited for the Kha Tutorial Series by Lewis Lepton
 https://lewislepton.com
 https://github.com/lewislepton/kha-tutorial-series
 
-Edited for the Found Engine by Jean-Sébastien Nadeau
-https://github.com/mundusnine/found
+Edited for the Foundry Engine by Jean-Sébastien Nadeau
+https://github.com/foundry2D/foundry2d
 */
 
 

@@ -6,8 +6,11 @@ class GateNode extends LogicNode {
 
 	public function new(tree: LogicTree) {
 		super(tree);
-	}
-
+    }
+    static var operationsNames:Array<String> = ["Or","And","Equal","Less", "Less Equal","Greater", "Greater Equal"];
+    public static function getOperationsNames() {
+        return operationsNames;
+    }
 	override function run(from: Int) {
 
 		var v1: Dynamic = inputs[1].get();

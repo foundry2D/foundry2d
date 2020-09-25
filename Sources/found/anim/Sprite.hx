@@ -56,6 +56,10 @@ class Sprite extends Object {
 
 	}
 	
+	override function get_raw():TObj {
+		return this.data.raw;
+	}
+
 	public function setAnimation(animation: Int): Void {
 		data.curAnim = animation;
 	}

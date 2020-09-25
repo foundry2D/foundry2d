@@ -60,13 +60,8 @@ class LogicNode {
 			{
 				name: "operations",
 				type: "ENUM",
-				data: [
-					"OR",
-					"AND",
-					"Equal",
-					"Less", "Less Equal",
-					"Greater", "Greater Equal"
-				]
+				data: GateNode.getOperationsNames(),
+				default_value: 0
 			}
 		]
 	}

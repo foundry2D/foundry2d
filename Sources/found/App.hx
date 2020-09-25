@@ -94,6 +94,8 @@ class App {
 		}
 		frameCounter.update();
 		#end
+
+		if (onEndFrames != null) for (f in onEndFrames) f();
 	}
 	
 	public function render(canvas:Canvas):Void {

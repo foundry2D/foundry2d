@@ -13,6 +13,13 @@ class TopDownControllerNode extends LogicNode {
 	public function new(tree:LogicTree) {
 		super(tree);
 
+		#if debug
+		tree.notifyOnInit(function(){
+			if (tree.object.body == null){
+				error("Top-down controller needs the object to have a Rigidbody");
+			}
+		});
+		#end
 		tree.notifyOnUpdate(update);
 	}	
 

@@ -34,13 +34,16 @@ class Object {
 	#if editor
 	public var dataChanged:Bool = false;
 	#end
-	public var raw(default,set):TObj;
+	@:isVar public var raw(get,set):TObj;
 	function set_raw(data:TObj) {
 		this.raw = data;
 		//@TODO: Evaluate if we really need to do this in release mode; if not add an #if editor
 		if(State.active != null && State.active.physics_world != null && data.rigidBody != null){
             makeBody(State.active,data);
 		}
+		return this.raw;
+	}
+	function get_raw(){
 		return this.raw;
 	}
 	static var uidCounter = -1;

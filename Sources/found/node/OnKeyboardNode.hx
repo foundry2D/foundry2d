@@ -32,7 +32,6 @@ class OnKeyboardNode extends LogicNode {
 		}
 
 		if (keyboardEventOccured)
-			
 			runOutput(0);
 	}
 }

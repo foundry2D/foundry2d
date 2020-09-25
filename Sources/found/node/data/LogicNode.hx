@@ -14,14 +14,6 @@ class LogicNode {
 		color: -4962746,
 		inputs: [
 			{
-				id: 0,
-				node_id: 0,
-				name: "In",
-				type: "ACTION",
-				color: 0xffaa4444,
-				default_value: 0.0
-			},
-			{
 				id: 1,
 				node_id: 0,
 				name: "Bool",
@@ -42,16 +34,8 @@ class LogicNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "True",
-				type: "BOOL",
-				color: -10822566,
-				default_value: 0.0
-			},
-			{
-				id: 1,
-				node_id: 0,
-				name: "False",
-				type: "BOOL",
+				name: "Bool",
+				type: "BOOLEAN",
 				color: -10822566,
 				default_value: 0.0
 			}

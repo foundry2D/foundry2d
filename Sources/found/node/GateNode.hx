@@ -11,10 +11,9 @@ class GateNode extends LogicNode {
     public static function getOperationsNames() {
         return operationsNames;
     }
-	override function run(from: Int) {
-
-		var v1: Dynamic = inputs[1].get();
-		var v2: Dynamic = inputs[2].get();
+    override function get(from:Int):Dynamic {
+        var v1: Dynamic = inputs[0].get();
+		var v2: Dynamic = inputs[1].get();
 		var cond = false;
 
 		switch (operations) {
@@ -28,23 +27,23 @@ class GateNode extends LogicNode {
                 cond = v1 < v2;
             case "Less Equal":
                 cond = v1 <= v2;
-            case "OR":
-                for (i in 1...inputs.length) {
+            case "Or":
+                for (i in 0...inputs.length) {
                     if (inputs[i].get()) {
                         cond = true;
                         break;
                     }
                 }
-            case "AND":
+            case "And":
                 cond = true;
-                for (i in 1...inputs.length) {
+                for (i in 0...inputs.length) {
                     if (!inputs[i].get()) {
                         cond = false;
                         break;
                     }
                 }
-		}
-
-		cond ? runOutput(0) : runOutput(1);
-	}
+        }
+        
+        return cond;
+    }
 }

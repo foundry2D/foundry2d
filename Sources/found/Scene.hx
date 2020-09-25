@@ -280,10 +280,15 @@ class Scene {
 
   
 
-  public function getObjectNames():Array<String>{
+  public function getObjectNames(?type:String):Array<String>{
     var names = [];
     for(object in _entities){
-      names.push(object.raw.name);
+      if(type == null){
+        names.push(object.raw.name);
+      }
+      else if(object.raw.type == type){
+        names.push(object.raw.name);
+      }
     }
     return names;
   }

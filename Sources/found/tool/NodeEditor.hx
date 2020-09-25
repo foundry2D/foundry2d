@@ -70,9 +70,13 @@ class NodeEditor {
 				nodePanY = -(kha.System.windowHeight() - NodeEditor.height);
 
 			var updatedObjectList = State.active.getObjectNames();
+			var updatedSpriteList = State.active.getObjectNames("sprite_object");
 			for (node in NodeEditor.selectedNode.nodes.nodesSelected) {
 				if (node.type == "GetObjectNode") {
 					node.buttons[0].data = updatedObjectList;
+				}
+				else if(node.type == "FlipSpriteNode"){
+					node.buttons[0].data = updatedSpriteList;
 				}
 			}
 		}
@@ -150,6 +154,8 @@ class NodeEditor {
 						pushNodeToSelectedGroup(FoundryNode.onInitNode);
 					if (ui.button("On Update"))
 						pushNodeToSelectedGroup(FoundryNode.onUpdateNode);
+					if (ui.button("MultiEvent"))
+						pushNodeToSelectedGroup(FoundryNode.multiEventNode);
 				}
 				if (ui.panel(Id.handle(), "Input")) {
 					if (ui.button("On Mouse"))
@@ -178,6 +184,10 @@ class NodeEditor {
 				if (ui.panel(Id.handle(), "Object")) {
 					if (ui.button("Get Object"))
 						pushNodeToSelectedGroup(FoundryNode.getObjectNode);
+				}
+				if (ui.panel(Id.handle(), "Sprite")) {
+					if (ui.button("Flip Sprite"))
+						pushNodeToSelectedGroup(FoundryNode.flipSpriteNode);
 				}
 				if (ui.panel(Id.handle(), "Physics")) {
 					if (ui.button("Apply Force To Rigidbody"))

@@ -45,6 +45,43 @@ class FoundryNode {
 		buttons: [],
 		color: -4962746
 	};
+	public static var multiEventNode:TNode = {
+		id: 0,
+		name: "Multiple Events",
+		type: "MultiEventNode",
+		x: 200,
+		y: 200,
+		inputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name: "In",
+				type: "ACTION",
+				color: 0xffaa4444,
+				default_value: ""
+			},
+			{
+				id: 1,
+				node_id: 0,
+				name: "In",
+				type: "ACTION",
+				color: 0xffaa4444,
+				default_value: ""
+			}
+		],
+		outputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name: "Out",
+				type: "ACTION",
+				color: 0xffaa4444,
+				default_value: ""
+			}
+		],
+		buttons: [],
+		color: -4962746
+	};
 	public static var onMouseNode:TNode = {
 		id: 0,
 		name: "On Mouse",
@@ -131,7 +168,15 @@ class FoundryNode {
 				type: "ACTION",
 				color: 0xffaa4444,
 				default_value: ""
-			}
+			},
+			{
+				id: 1,
+				node_id: 0,
+				name: "isActive",
+				type: "BOOLEAN",
+				color: -10822566,
+				default_value: 0.0
+			},
 		],
 		buttons: [
 			{
@@ -465,6 +510,58 @@ class FoundryNode {
 		],
 		color: -4962746
 	};
+	public static var flipSpriteNode:TNode = {
+		id: 0,
+		name: "Flip Sprite",
+		type: "FlipSpriteNode",
+		x: 200,
+		y: 200,
+		inputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name: "In",
+				type: "ACTION",
+				color: 0xffaa4444,
+				default_value: ""
+			},
+			{
+				id: 1,
+				node_id: 0,
+				name: "selectedSpriteName",
+				type: "OBJECT",
+				color: -4934476,
+				default_value: null
+			},
+			{
+				id: 2,
+				node_id: 0,
+				name: "FlipX",
+				type: "BOOLEAN",
+				color: -10822566,
+				default_value: 0.0
+			},
+			{
+				id: 3,
+				node_id: 0,
+				name: "FlipY",
+				type: "BOOLEAN",
+				color: -10822566,
+				default_value: 0.0
+			}
+		],
+		outputs: [],
+		buttons: [
+			{
+				name: "selectedSpriteName",
+				type: "ENUM",
+				data: [""],
+				output: 0,
+				default_value: 0
+			}
+		],
+		color: -4962746
+	}
 	public static var applyForceToRigidbodyNode:TNode = {
 		id: 0,
 		name: "Apply Force To Rigidbody",

@@ -62,7 +62,7 @@ class LogicNodeInput {
 
 	@:allow(found.node.LogicNode)
 	function get():Dynamic {
-		return node.get(from);
+		return node != null ? node.get(from):null;
 	}
 
 	@:allow(found.node.LogicNode)

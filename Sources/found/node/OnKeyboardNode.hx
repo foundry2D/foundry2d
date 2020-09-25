@@ -7,7 +7,7 @@ class OnKeyboardNode extends LogicNode {
 	public var keyCode:String;
 
 	static var keyboardEventTypes:Array<String> = ["Pressed", "Down", "Released"];
-
+	var isDown:Bool = false;
 	public static function getKeyboardEventTypes() {
 		return keyboardEventTypes;
 	}
@@ -31,7 +31,12 @@ class OnKeyboardNode extends LogicNode {
 				keyboardEventOccured = keyboard.released(keyCode);
 		}
 
+		isDown = keyboardEventOccured;
+		
 		if (keyboardEventOccured)
 			runOutput(0);
+	}
+	override function get(from:Int):Dynamic {
+		return isDown;
 	}
 }

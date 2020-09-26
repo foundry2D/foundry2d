@@ -64,7 +64,7 @@ class Sprite extends Object {
 		data.curAnim = animation;
 	}
 	
-	override public function update(dt:Float): Void {
+	override function update(dt:Float): Void {
 		if(data == null)return;
 		super.update(dt);
 		data.animation.next();

@@ -6,21 +6,14 @@ import found.object.Object.MoveData;
 class TestScript extends found.Trait {
     public function new(){
         super();
-        notifyOnInit(function (){
-        //     this.object.translate(center);
-        //     // this.object.rotate(function (data:RotateData){
-        //     //     data._rotations.z+= 10*data.dt;
-        //     //     return data;
-        //     // },1.0);
+        notifyOnInit(function(){
+            this.object.onCollision({tileId: 70,objectName: "Tilemap",onEnter:onCollisionEnter });
         });
-        notifyOnUpdate(function(dt:Float){
-            // this.object.rotate(function (data:RotateData){
-            //     data._rotations.z+= 10*data.dt;
-            //     return data;
-            // },dt);
-            // State.active.cam.x-=1.0;
-            // this.object.translate(move,dt);
-            // this.object.rotation+= 10*dt;
-        });
+    }
+    function onCollisionEnter(body:echo.Body,otherBody:echo.Body,data:Array<echo.data.Data.CollisionData>){
+        if(body == this.object.body){
+            trace(body.x +" "+body.y+ "x Y from current Object");
+        }
+        trace("Collided on spikes");
     }
 }

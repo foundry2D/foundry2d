@@ -1,11 +1,14 @@
 package found.object;
 
 import kha.simd.Float32x4;
-import found.math.Vec2;
 import kha.Canvas;
 import kha.math.Vector2;
 import kha.math.Vector3;
+
 import found.data.SceneFormat;
+
+import echo.Body;
+import echo.data.Data.CollisionData;
 
 #if js
 typedef MoveData ={
@@ -26,6 +29,18 @@ typedef RotateData ={
 	@:optional public var from:Vector2;
 	@:optional public var towards:Vector2;
 }
+
+#if js
+typedef CollisionDef ={
+#else
+@:structInit class CollisionDef{
+#end
+	public var objectName:String;
+	@:optional public var tileId:Int;
+	@:optional public var onEnter:Body->Body->Array<CollisionData>->Void;
+	@:optional public var onStay:Body->Body->Array<CollisionData>->Void;
+	@:optional public var onExit:Body->Body->Void;
+} 
 
 class Object {
 	#if debug
@@ -63,6 +78,60 @@ class Object {
 		}
 
 		return body = b;
+	}
+
+	@:access(found.anim.Tilemap)
+	public function onCollision(data:CollisionDef){
+		if(State.active == null || !Scene.ready) return false;
+
+		if(this.body == null){
+			#if debug
+			error("Current object doesn't have a body");
+			#end
+			return false;
+		}
+
+		var obj:Null<Object> = State.active.getObject(data.objectName);
+		if(obj != null){
+			if(data.tileId != null && Std.isOfType(obj,found.anim.Tilemap)){
+				var tile:Null<found.anim.Tile> = cast(obj,found.anim.Tilemap).tiles.get(data.tileId);
+				if(tile != null){
+					for(b in tile.bodies){
+						State.active.physics_world.listen(this.body,b,{enter: data.onEnter,stay: data.onStay,exit: data.onExit});
+					}
+					return true;
+				}
+				#if debug
+				else {
+					var id:Int = data.tileId;
+					var name:String = data.objectName;
+					error('Tilemap $name did not have a tileId of value $id');
+				}
+				#end
+			}
+			else if(obj.body != null){
+				State.active.physics_world.listen(this.body,obj.body,{enter: data.onEnter,stay: data.onStay,exit: data.onExit});
+				return true;
+			}
+			#if debug
+			else{
+				var name:String = data.objectName;
+				if(data.tileId != null){
+					error('Object $name was not of type Tilemap');
+				}
+				else{
+					error('The body of Object $name was null');
+				}
+			}
+			#end
+		}
+		#if debug
+		else{
+			var name:String = data.objectName;
+			error('Object with name $name was not found in Scene');
+		}
+		#end
+		return false;
 	}
 
 	function makeBody(scene:Scene,p_raw:TObj){
@@ -188,7 +257,7 @@ class Object {
 			deactivate();
 	}
 
-	public function update(dt:Float){
+	function update(dt:Float){
 		if (!Scene.ready) return;
 		
 		if(body != null){

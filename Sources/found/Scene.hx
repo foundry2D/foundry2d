@@ -294,7 +294,7 @@ class Scene {
   }
 
   public function getObject(name:String){
-    if(name=="" || name == null)return null;
+    if(name=="")return null;
     for(object in _entities){
       if(object.raw.name == name){
           return object;

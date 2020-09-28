@@ -855,4 +855,49 @@ class FoundryNode {
 		buttons: [],
 		color: -4962746
 	};
+	public static var playAnimationNode:TNode = {
+		id: 0,
+		name: "Play Animation",
+		type: "PlayAnimationNode",
+		x: 200,
+		y: 200,
+		inputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name: "In",
+				type: "ACTION",
+				color: 0xffaa4444,
+				default_value: ""
+			},
+			{
+				id: 0,
+				node_id: 0,
+				name: "Animation Name",
+				type: "STRING",
+				color: -4934476,
+				default_value: ""
+			},
+			{
+				id: 0,
+				node_id: 0,
+				name: "Object",
+				type: "OBJECT",
+				color: -16067936,
+				default_value: null
+			}
+		],
+		outputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name: "Out",
+				type: "ACTION",
+				color: 0xffaa4444,
+				default_value: ""
+			}
+		],
+		buttons: [],
+		color: -4962746
+	};
 }

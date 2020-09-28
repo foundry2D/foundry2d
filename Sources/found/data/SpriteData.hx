@@ -55,6 +55,18 @@ class SpriteData {
 		var frame:TFrame = {id:index,start:0.0,tw:w,th:h};
 		return anims.push(Animation.create(frame))-1;
 	}
+
+	public function setCurrentAnimationByName(animationName:String) {
+		for (i in 0...anims.length) {
+			if (anims[i].name == animationName) {
+				curAnim = i;
+				return;
+			}				
+		}
+
+		trace('Animation with name: $animationName does not exist');
+	}
+
 	function animLoad(anim:TAnimation) {
 		anims.push(Animation.fromDefinition(anim));
 	}

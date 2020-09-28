@@ -63,6 +63,10 @@ class Sprite extends Object {
 	public function setAnimation(animation: Int): Void {
 		data.curAnim = animation;
 	}
+
+	public function setAnimationByName(animationName: String): Void {		
+		data.setCurrentAnimationByName(animationName);
+	}
 	
 	override function update(dt:Float): Void {
 		if(data == null)return;

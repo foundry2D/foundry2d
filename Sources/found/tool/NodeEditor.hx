@@ -207,6 +207,10 @@ class NodeEditor {
 					if (ui.button("Set Camera Follow Target"))
 						pushNodeToSelectedGroup(FoundryNode.setCameraFollowTargetNode);
 				}
+				if (ui.panel(Id.handle(), "Animation")) {
+					if (ui.button("Play Animation"))
+						pushNodeToSelectedGroup(FoundryNode.playAnimationNode);					
+				}
 			}
 		}
 	}

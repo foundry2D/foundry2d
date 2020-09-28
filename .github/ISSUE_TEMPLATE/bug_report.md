@@ -18,6 +18,8 @@ https://github.com/foundry2D/foundry2d/issues?q=is%3Aissue
 **OS/device including version:**
 <!-- Specify GPU model, drivers, and the backend (non-DXR or DXR) if graphics-related. -->
 
+**Browser:**
+<!-- Specify browser name. Examples: Chrome,Firefox,Brave,Opera,Safari,etc. -->
 
 **Issue description:**
 <!-- What happened, and what was expected. -->

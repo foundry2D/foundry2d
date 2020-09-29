@@ -90,6 +90,8 @@ class TileEditor {
         if(!visible || selectedTilemapIdIndex < 0 || mouse == null)return;
         ui.begin(canvas.g2);
         
+        ui.enabled = !zui.Popup.show;
+
         if(map == null){
             map = cast(found.State.active._entities[tilemapIds[selectedTilemapIdIndex]]);
             curTile = map.tiles[0];

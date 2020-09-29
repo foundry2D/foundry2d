@@ -9,6 +9,9 @@ import found.anim.Tilemap;
 #if editor
 import found.math.Util.Cli;
 #end
+#if debug
+import kha.graphics2.GraphicsExtension;
+#end
 import found.anim.Sprite;
 import haxe.ds.ArraySort;
 import kha.Canvas;
@@ -269,8 +272,20 @@ class Scene {
       physics_world.for_each(function(f:echo.Body){
         if(f == null || f.shapes.length <= 0 || !f.active)return;
         canvas.g2.color = kha.Color.fromBytes(255,0,0,64);
-        var bds = f.bounds();
-        canvas.g2.fillRect(bds.min_x-cam.position.x,bds.min_y-cam.position.y,bds.width,bds.height);
+        for(shape in f.shapes){
+          var bds = shape.bounds();
+          switch(shape.type){
+            case RECT:
+              canvas.g2.fillRect(bds.min_x-cam.position.x,bds.min_y-cam.position.y,bds.width,bds.height);
+            case CIRCLE:
+              var radius = bds.height * 0.5;
+              GraphicsExtension.fillCircle(canvas.g2,bds.min_x-cam.position.x+radius,bds.min_y-cam.position.y+radius,radius);
+            case POLYGON:
+              var poly = cast(shape,echo.shape.Polygon);
+              GraphicsExtension.fillPolygon(canvas.g2,-cam.position.x,-cam.position.y,cast(poly.vertices));
+          }
+          
+        }
         canvas.g2.color = kha.Color.White;
       });
     }

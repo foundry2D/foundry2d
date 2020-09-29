@@ -210,14 +210,13 @@ class TileEditor {
                     ui.g.color = kha.Color.White;
                     if(found.State.active.physics_world != null){
                         if(ui.button("Edit Selected Tile Collisions") && curTile != null && !tileHandle.changed){
-                            if(curTile.body == null || !curTile.raw.rigidBodies.exists(curTile.tileId)){
+                            if(!curTile.raw.rigidBodies.exists(curTile.tileId)){
                                 if(!curTile.raw.rigidBodies.exists(curTile.tileId)){
                                     var body = echo.Body.defaults;
                                     body.mass = 0;//Make the body static
                                     body.shapes = [];
                                     curTile.raw.rigidBodies.set(curTile.tileId,body);
                                 }
-                                curTile.body = new echo.Body(curTile.raw.rigidBodies.get(curTile.tileId));
                             }
                             CollisionEditorDialog.open(null,cast(curTile));
                             changed = true;

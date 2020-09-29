@@ -212,6 +212,7 @@ class Tilemap extends Object{
             for(body in tile.bodies){
                 scene.physics_world.remove(body);
             }
+            tile.bodies.splice(0,tile.bodies.length);
         }
     }
 }

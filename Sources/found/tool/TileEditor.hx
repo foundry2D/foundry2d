@@ -212,6 +212,9 @@ class TileEditor {
                     ui.g.color = kha.Color.White;
                     if(found.State.active.physics_world != null){
                         if(ui.button("Edit Selected Tile Collisions") && curTile != null && !tileHandle.changed){
+                            if(curTile.raw.rigidBodies == null){
+                                curTile.raw.rigidBodies = new Map<Int, echo.data.Options.BodyOptions>();
+                            }
                             if(!curTile.raw.rigidBodies.exists(curTile.tileId)){
                                 if(!curTile.raw.rigidBodies.exists(curTile.tileId)){
                                     var body = echo.Body.defaults;
@@ -459,7 +462,7 @@ class TileEditor {
                 else {
                     rawData.map.set(curTile.tileId,[index]);
                 }
-                if(curTile.raw.rigidBodies.exists(curTile.tileId)){
+                if(curTile.raw.rigidBodies != null && curTile.raw.rigidBodies.exists(curTile.tileId)){
                     var body = curTile.raw.rigidBodies.get(curTile.tileId);
                     body.x = map.x2p(map.x(index))+map.position.x;
                     body.y = map.y2p(map.y(index))+map.position.y;

@@ -56,6 +56,10 @@ class Sprite extends Object {
 
 	}
 	
+	override function set_raw(data:TObj):TObj {
+		return this.data.raw = cast(super.set_raw(data));
+	}
+
 	override function get_raw():TObj {
 		return this.data.raw;
 	}
@@ -121,7 +125,5 @@ class Sprite extends Object {
 		return _h = value;
 	}
 
-	override function set_raw(data:TObj):TObj {
-		return this.data.raw = cast(super.set_raw(data));
-	}
+	
 }

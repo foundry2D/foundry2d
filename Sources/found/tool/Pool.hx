@@ -1,9 +1,6 @@
 package found.tool;
 
 import kha.Canvas;
-using kha.graphics2.GraphicsExtension;
-import kha.Color;
-import kha.Assets;
 
 import found.object.Object;
 

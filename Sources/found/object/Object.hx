@@ -81,14 +81,16 @@ class Object {
 	}
 
 	@:access(found.anim.Tilemap)
-	public function onCollision(data:CollisionDef){
-		if(State.active == null || !Scene.ready) return false;
+	public function onCollision(data:CollisionDef) : Array<echo.Listener> {
+		var collisionListeners:Array<echo.Listener> = [];
+
+		if(State.active == null || !Scene.ready) return collisionListeners;
 
 		if(this.body == null){
 			#if debug
 			error("Current object doesn't have a body");
 			#end
-			return false;
+			return collisionListeners;
 		}
 
 		var obj:Null<Object> = State.active.getObject(data.objectName);
@@ -97,9 +99,10 @@ class Object {
 				var tile:Null<found.anim.Tile> = cast(obj,found.anim.Tilemap).tiles.get(data.tileId);
 				if(tile != null){
 					for(b in tile.bodies){
-						State.active.physics_world.listen(this.body,b,{enter: data.onEnter,stay: data.onStay,exit: data.onExit});
+						var newCollisionListener:echo.Listener = State.active.physics_world.listen(this.body,b,{enter: data.onEnter,stay: data.onStay,exit: data.onExit});
+						collisionListeners.push(newCollisionListener);
 					}
-					return true;
+					return collisionListeners;
 				}
 				#if debug
 				else {
@@ -110,8 +113,9 @@ class Object {
 				#end
 			}
 			else if(obj.body != null){
-				State.active.physics_world.listen(this.body,obj.body,{enter: data.onEnter,stay: data.onStay,exit: data.onExit});
-				return true;
+				var newCollisionListener:echo.Listener = State.active.physics_world.listen(this.body,obj.body,{enter: data.onEnter,stay: data.onStay,exit: data.onExit});
+				collisionListeners.push(newCollisionListener);
+				return collisionListeners;
 			}
 			#if debug
 			else{
@@ -131,7 +135,13 @@ class Object {
 			error('Object with name $name was not found in Scene');
 		}
 		#end
-		return false;
+		return collisionListeners;
+	}
+
+	public function removeCollisionListeners(collisionListeners:Array<echo.Listener>) {
+		for(listener in collisionListeners) {
+			State.active.physics_world.listeners.remove(listener);
+		}		
 	}
 
 	function makeBody(scene:Scene,p_raw:TObj){

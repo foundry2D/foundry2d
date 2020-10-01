@@ -900,4 +900,49 @@ class FoundryNode {
 		buttons: [],
 		color: -4962746
 	};
+	public static var onCollisionNode:TNode = {
+		id: 0,
+		name: "On Collision",
+		type: "OnCollisionNode",
+		x: 200,
+		y: 200,
+		inputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name: "Object",
+				type: "OBJECT",
+				color: -4934476,
+				default_value: null
+			}
+		],
+		outputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name: "On Enter",
+				type: "ACTION",
+				color: 0xffaa4444,
+				default_value: ""
+			},
+			{
+				id: 0,
+				node_id: 0,
+				name: "On Stay",
+				type: "ACTION",
+				color: 0xffaa4444,
+				default_value: ""
+			},
+			{
+				id: 0,
+				node_id: 0,
+				name: "On Exit",
+				type: "ACTION",
+				color: 0xffaa4444,
+				default_value: ""
+			}
+		],
+		buttons: [],
+		color: -4962746
+	};
 }

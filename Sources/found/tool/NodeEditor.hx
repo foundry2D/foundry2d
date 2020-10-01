@@ -211,6 +211,10 @@ class NodeEditor {
 					if (ui.button("Play Animation"))
 						pushNodeToSelectedGroup(FoundryNode.playAnimationNode);					
 				}
+				if (ui.panel(Id.handle(), "Collision")) {
+					if (ui.button("On Collision Event"))
+						pushNodeToSelectedGroup(FoundryNode.onCollisionNode);					
+				}
 			}
 		}
 	}

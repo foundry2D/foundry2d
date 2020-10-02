@@ -44,7 +44,7 @@ class Sfx {
     var first = bytes.get(position + 0);
     var second  = bytes.get(position + 1);
     var s:Float  = (second << 8) | first;
-    return s/32768.0;
+    return (s/32768.0)-1.0;
   }
   public static function play(name:String, ?volume:Float = 0.3){
     Data.getSound(name,function(snd:kha.Sound){
@@ -77,8 +77,7 @@ class Sfx {
           var arr:kha.arrays.Float32Array = new Float32Array(length);
           var div:Float = 1.0/32768.0;
           for(i in 0...length){
-            trace(bytesToSingle(snd.compressedData,i));
-            arr.set(i,bytesToSingle(snd.compressedData,i));
+            arr.set(i,div * data.readS16LE(i));
           }
           snd.uncompressedData = arr;
           done();

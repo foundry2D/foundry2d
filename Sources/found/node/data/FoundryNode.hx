@@ -945,4 +945,102 @@ class FoundryNode {
 		buttons: [],
 		color: -4962746
 	};
+	public static var playMusicNode:TNode = {
+		id: 0,
+		name: "Play Music",
+		type: "PlayMusicNode",
+		x: 200,
+		y: 200,
+		inputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name: "In",
+				type: "ACTION",
+				color: 0xffaa4444,
+				default_value: ""
+			},
+			{
+				id: 1,
+				node_id: 1,
+				name: "Music alias",
+				type: "STRING",
+				color: -4934476,
+				default_value: ""
+			}
+		],
+		outputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name: "OnFinished",
+				type: "ACTION",
+				color: 0xffaa4444,
+				default_value: ""
+			}
+		],
+		buttons: [
+			{
+				name: "loop",
+				type: "BOOL",
+				output: 0,
+				default_value: false
+			},
+			{
+				name: "volume",
+				type: "VALUE",
+				min: 0.0,
+				max: 1.0,
+				output: 0,
+				default_value: 1.0
+			}
+		],
+		color: -4962746
+	};
+	public static var playSfxNode:TNode = {
+		id: 0,
+		name: "Play Sound",
+		type: "PlaySfxNode",
+		x: 200,
+		y: 200,
+		inputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name: "In",
+				type: "ACTION",
+				color: 0xffaa4444,
+				default_value: ""
+			},
+			{
+				id: 1,
+				node_id: 1,
+				name: "Sound alias",
+				type: "STRING",
+				color: -4934476,
+				default_value: ""
+			}
+		],
+		outputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name: "OnFinished",
+				type: "ACTION",
+				color: 0xffaa4444,
+				default_value: ""
+			},
+		],
+		buttons: [
+			{
+				name: "volume",
+				type: "VALUE",
+				min: 0.0,
+				max: 1.0,
+				output: 0,
+				default_value: 1.0
+			}
+		],
+		color: -4962746
+	};
 }

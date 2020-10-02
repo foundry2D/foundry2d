@@ -167,7 +167,7 @@ class Found {
   static function render(framebuffer:Framebuffer){
     _app.render(framebuffer);
   }
-
+  #if kha_html5
   static function html(){
 
     document.documentElement.style.padding = '0';
@@ -187,6 +187,7 @@ class Found {
     window.onresize = resize;
     resize();
   }
+  #end
 }
 
 typedef FoundConfig = {

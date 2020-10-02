@@ -190,6 +190,8 @@ class NodeEditor {
 						pushNodeToSelectedGroup(FoundryNode.flipSpriteNode);
 				}
 				if (ui.panel(Id.handle(), "Physics")) {
+					if (ui.button("On Collision Event"))
+						pushNodeToSelectedGroup(FoundryNode.onCollisionNode);
 					if (ui.button("Apply Force To Rigidbody"))
 						pushNodeToSelectedGroup(FoundryNode.applyForceToRigidbodyNode);
 					if (ui.button("Apply Impulse To Rigidbody"))
@@ -211,9 +213,11 @@ class NodeEditor {
 					if (ui.button("Play Animation"))
 						pushNodeToSelectedGroup(FoundryNode.playAnimationNode);					
 				}
-				if (ui.panel(Id.handle(), "Collision")) {
-					if (ui.button("On Collision Event"))
-						pushNodeToSelectedGroup(FoundryNode.onCollisionNode);					
+				if (ui.panel(Id.handle(), "Audio")) {
+					if (ui.button("Play Music"))
+						pushNodeToSelectedGroup(FoundryNode.playMusicNode);
+					if (ui.button("Play Sfx"))
+						pushNodeToSelectedGroup(FoundryNode.playSfxNode);					
 				}
 			}
 		}

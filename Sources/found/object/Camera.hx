@@ -1,7 +1,8 @@
 package found.object;
 
-import hxmath.math.Vector2;
+
 import kha.Canvas;
+import kha.math.Vector2;
 import found.data.SceneFormat.TCameraData;
 import found.math.Util;
 

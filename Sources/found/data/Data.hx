@@ -1,5 +1,7 @@
 package found.data;
 
+import kha.arrays.Float32Array;
+import kha.Sound;
 import haxe.Json;
 import haxe.io.BytesInput;
 import found.data.SceneFormat;
@@ -124,7 +126,7 @@ class Data {
 			assetsLoaded++;
 		},function(failed:kha.AssetError){
 			var error = failed.error;
-			var path = failed.url; 
+			var path = failed.url;
 			trace('Asset at path: $path failed to load because of $error');
 		});
 	}
@@ -177,7 +179,6 @@ class Data {
 				assetsLoaded++;
 			});
 		}else{
-
 			// @:Incomplete: process format in Kha
 			getImageFromPath(p, readable, function(b:kha.Image) {
 				cachedImages.set(file, b);
@@ -198,13 +199,26 @@ class Data {
 		cachedImages.remove(handle);
 	}
 
+
+	#if wasmfs
+	static function getSoundFromPath(path:String, done:kha.Sound -> Void, ?failed:Null<kha.AssetError -> Void>, ?pos:Null<haxe.PosInfos>){
+		getBlob(path,function(data:kha.Blob){
+			var bytes = data.toBytes();
+			var snd = new kha.Sound();
+			snd.compressedData = bytes;
+			done(snd);
+		});
+	}
+	#else
+	static var getSoundFromPath = kha.Assets.loadSoundFromPath; 
+	#end
 	/**
 	 * Load sound file from disk into ram.
 	 *
 	 * @param	file A String matching the file name of the sound file on disk.
 	 * @param	done Completion handler function to do something after the sound is loaded.
 	 */
-	public static function getSound(file:String, done:kha.Sound->Void) {
+	public static function getSound(file:String, done:kha.Sound->Void, ?alias:String) {
 		#if soundcompress
 		if (file.endsWith('.wav')) file = file.substring(0, file.length - 4) + '.ogg';
 		#end
@@ -219,17 +233,20 @@ class Data {
 
 		var p = (file.charAt(0) == '/' || file.charAt(1) == ':') ? file : dataPath + file;
 
-		kha.Assets.loadSoundFromPath(p, function(b:kha.Sound) {
+		getSoundFromPath(p, function(b:kha.Sound) {
 			#if soundcompress
 			b.uncompress(function () {
 			#end
-				cachedSounds.set(file, b);
+				var key = alias != null ? alias: file;
+				cachedSounds.set(key, b);
 				for (f in loadingSounds.get(file)) f(b);
 				loadingSounds.remove(file);
 				assetsLoaded++;
 			#if soundcompress
 			});
 			#end
+		},function(error:kha.AssetError){
+			trace('Couldn\'t load $p because of $error');
 		});
 	}
 

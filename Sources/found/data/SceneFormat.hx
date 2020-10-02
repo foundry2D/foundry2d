@@ -38,6 +38,17 @@ typedef TSceneFormat = {
 }
 
 #if js
+typedef TAudioData = {
+#else
+@:structInit class TAudioData {
+#end
+    var type:Int; //types: Sfx = 0; Music = 1;
+    var path:String;
+    var volume:Float;
+    @:optional var alias:Null<String>;
+}
+
+#if js
 typedef TObj = {
 #else
 @:structInit class TObj {
@@ -57,6 +68,7 @@ typedef TObj = {
     @:optional public var rigidBody: Null<echo.data.Options.BodyOptions>;
     @:optional public var children:Null<Array<TObj>>;
     @:optional public var traits:Null<Array<TTrait>>;
+    @:optional public var sounds:Null<Array<TAudioData>>;
 }
 
 

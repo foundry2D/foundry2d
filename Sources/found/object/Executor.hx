@@ -11,7 +11,7 @@ class Executor<T> {
     var actions:Array<T->T> = [];
     var datas:Array<T> = [];
     var uids:Array<Int> = [];
-    #if !kha_krom
+    #if (!kha_krom && !android)
     var workers:Array<Worker> = [];
     var rest:Worker;
     #end
@@ -65,7 +65,7 @@ class Executor<T> {
     // final targets anyways
     public function execute(){
         if(!found.Scene.ready || State.active._entities.length == 0) return;
-        #if (kha_html5 || kha_krom)
+        #if (kha_html5 || kha_krom || android)
         for(i in 0...actions.length){
             set({out: actions[i](datas[i]),uid: uids[i]});
         }

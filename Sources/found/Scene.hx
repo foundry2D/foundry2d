@@ -138,15 +138,8 @@ class Scene {
         case "sprite_object":
           var data:TSpriteData = SceneFormat.getData(e);
           new Sprite(data,function (s:Sprite){
-              createTraits(data.traits,s);
               addToStateArray(s);
           });
-        // case "rect_object":
-        //   var data:TRectData = SceneFormat.getData(e);
-        //   var out = new Rectangle(data.position.x,data.position.y,Std.int(data.width),Std.int(data.height));
-        //   out.raw = data;
-        //   createTraits(data.traits,out);
-        //   _entities.push(out);
         case "tilemap_object":
           var data:TTilemapData = SceneFormat.getData(e);
           new Tilemap(data,function(tilemap:Tilemap){
@@ -158,7 +151,6 @@ class Scene {
           if(out.uid == 0)
             cam = out;
           out.raw = data;
-          createTraits(data.traits,out);
           addToStateArray(out);
         case "emitter_object":
         default:
@@ -178,19 +170,20 @@ class Scene {
     if(!Scene.ready #if editor ||  !App.editorui.isPlayMode #end)
       return;
       
+    if (App.traitInits.length > 0) {
+      for (f in App.traitInits) { App.traitInits.length > 0 ? f() : break; }
+      App.traitInits.splice(0, App.traitInits.length);
+ 
+    }
 
     for (entity in activeEntities) entity.update(dt);
 
     physicsUpdate(STEP);
 
+
     var i = 0;
 		var l = App.traitUpdates.length;
 		while (i < l) {
-			if (App.traitInits.length > 0) {
-				for (f in App.traitInits) { App.traitInits.length > 0 ? f() : break; }
-				App.traitInits.splice(0, App.traitInits.length);
-   
-			}
 			App.traitUpdates[i](dt);
 			// Account for removed traits
 			l <= App.traitUpdates.length ? i++ : l = App.traitUpdates.length;

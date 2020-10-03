@@ -236,6 +236,7 @@ class Object {
 
 	var traits:Array<Trait> = [];
 
+	@:access(found.Scene)
 	public function new(p_raw:TObj){
 		if(_translations == null) _translations = new Executor<MoveData>("_positions");
 		if(_rotates == null) _rotates = new Executor<RotateData>("_rotations");
@@ -265,6 +266,7 @@ class Object {
 			activate();
 		else
 			deactivate();
+		Scene.createTraits(p_raw.traits,this);
 	}
 
 	function update(dt:Float){

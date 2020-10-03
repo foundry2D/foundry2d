@@ -169,7 +169,13 @@ class Scene {
   public function update(dt:Float){
     if(!Scene.ready #if editor ||  !App.editorui.isPlayMode #end)
       return;
-      
+    
+    if (App.traitAwakes.length > 0) {
+      for (f in App.traitAwakes) { App.traitAwakes.length > 0 ? f() : break; }
+      App.traitAwakes.splice(0, App.traitAwakes.length);
+ 
+    }
+    
     if (App.traitInits.length > 0) {
       for (f in App.traitInits) { App.traitInits.length > 0 ? f() : break; }
       App.traitInits.splice(0, App.traitInits.length);
@@ -410,6 +416,10 @@ class Scene {
   }
   @:access(found.Trait)
   static function addToApp(t:Trait){
+    if (t._awake != null) {
+      for (f in t._awake) App.notifyOnAwake(f);
+      // t._init = null;
+    }
     if (t._init != null) {
       for (f in t._init) App.notifyOnInit(f);
       // t._init = null;

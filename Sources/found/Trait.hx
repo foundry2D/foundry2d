@@ -15,6 +15,7 @@ class Trait {
 	public var object:Object;
 
 	var _add:Array<Void->Void> = null;
+	var _awake:Array<Void->Void> = null;
 	var _init:Array<Void->Void> = null;
 	var _remove:Array<Void->Void> = null;
 	var _update:Array<Float->Void> = null;
@@ -31,6 +32,12 @@ class Trait {
 	public function notifyOnAdd(f:Void->Void) {
 		if (_add == null) _add = [];
 		_add.push(f);
+	}
+
+	public function notifyOnAwake(f:Void->Void) {
+		if (_awake == null) _awake = [];
+		_awake.push(f);
+		App.notifyOnAwake(f);
 	}
 
 	public function notifyOnInit(f:Void->Void) {

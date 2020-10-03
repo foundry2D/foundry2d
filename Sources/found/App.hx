@@ -12,6 +12,7 @@ class App {
 	private var _imageQuality:ImageScaleQuality;
 	static var onResets: Array<Void->Void> = null;
 	static var onEndFrames: Array<Void->Void> = null;
+	static var traitAwakes:Array<Void->Void> = [];
 	static var traitInits:Array<Void->Void> = [];
 	static var traitUpdates:Array<Float->Void> = [];
 	static var traitLateUpdates:Array<Void->Void> = [];
@@ -139,6 +140,17 @@ class App {
   }
 
 	// Hooks
+	public static function notifyOnAwake(f:Void->Void) {
+		for(func in traitAwakes){
+			if(Reflect.compareMethods(func,f)) return;
+		}
+		traitAwakes.push(f);
+	}
+
+	public static function removeAwake(f:Void->Void) {
+		traitAwakes.remove(f);
+	}
+
 	public static function notifyOnInit(f:Void->Void) {
 		for(func in traitInits){
 			if(Reflect.compareMethods(func,f)) return;

@@ -16,6 +16,9 @@ typedef MoveData ={
 @:structInit class MoveData{
 #end
 	public var _positions:Vector2;
+	@:optional public var target:Vector2;
+	@:optional public var speed:Float;
+	@:optional public var step:Float;
 	@:optional public var dt:Float;
 	@:optional public var collider:Float;
 } 
@@ -180,11 +183,41 @@ class Object {
 	 * @param	func The function to be executed in the other thread.
 	 * @param	dt The delta time to be used; defaults to 1.0.
 	 */
-	public function translate(func:MoveData->MoveData, ?dt:Float = 1.0){
-		_translations.add(
-		func,
-		{_positions:new Vector2(_positions[uid].x,_positions[uid].y),dt: dt}
-		,uid);
+	public function translate(func:MoveData->MoveData,?data:MoveData = null,?dt:Float = 1.0){
+		if(data == null){
+			data = {_positions:new Vector2(_positions[uid].x,_positions[uid].y),dt: dt};
+		}
+		_translations.add(func,data,uid);
+	}
+	/**
+	 * 	Moves from object position to target by the step. 
+	 *	If target is within step units length, object position becomes target.
+	 * @param	target Target position to move towards.
+	 * @param	step step units to move by.
+	 */
+	public function moveTowards(target:Vector2,step:Float) {
+		var data:MoveData = {
+			_positions:new Vector2(_positions[uid].x,_positions[uid].y),
+			target:new Vector2(target.x,target.y),
+			step:step
+		};
+		_translations.add(moveTo,data,uid);
+	}
+	function moveTo(data:MoveData){
+		var delta:Vector2 = data.target.sub(data._positions);      // Gap vector
+		var len2:Float =  delta.dot(delta); // Squared length of the gap
+
+		if(len2 < data.step * data.step){
+			data._positions = data.target;
+			return data;
+		}	
+
+		// Unit vector that points from `pos` to `target`
+		var direction:Vector2 = delta.div(Math.sqrt(len2));
+
+		// Perform the step
+		data._positions = data._positions.add(direction.mult(data.step));
+		return data;
 	}
 
 	public var rotation(get,never):kha.math.Vector3;
@@ -316,6 +349,9 @@ class Object {
 			body.active = value;
 		if(value && active != value){
 			for(t in traits){
+				if(t._awake != null){
+					for (f in t._awake) App.notifyOnAwake(f);
+				}
 				if (t._init != null) {
 					for (f in t._init) App.notifyOnInit(f);
 				}
@@ -339,6 +375,9 @@ class Object {
 		}
 		else if(!value && active != value){
 			for(t in traits){
+				if(t._awake != null){
+					for (f in t._awake) App.removeAwake(f);
+				}
 				if (t._init != null) {
 					for (f in t._init) App.removeInit(f);
 				}

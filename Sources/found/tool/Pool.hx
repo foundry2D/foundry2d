@@ -3,16 +3,19 @@ package found.tool;
 import kha.Canvas;
 
 import found.object.Object;
+import found.data.SceneFormat;
 
 class Pool<O:Object> extends Object {
 	public var entity:Array<O>;
 	public var max:Int;
+	var objectData:TObj;
 
 	private var _count:Int = 0;
 
-	public function new(max:Int = 100){
-		super();
-		this.max = max;
+	public function new(data:TPool,objectData:TObj){
+		super(data);
+		this.max = data.maxAmount;
+		this.objectData = objectData;
 		entity = [];
 	}
 
@@ -57,10 +60,11 @@ class Pool<O:Object> extends Object {
 		return -1;
 	}
 
-	public function add(object:O):O {
+	public function add():O {
 		var full:Bool = entity.length >= max;
 		if (!full){
-			entity.push(object);
+			var obj:O = new O(objectData);
+			entity.push();
 			return object;
 		} else {
 			var index = first();

@@ -71,6 +71,14 @@ typedef TObj = {
     @:optional public var sounds:Null<Array<TAudioData>>;
 }
 
+#if js
+typedef TPool = {
+    >TObj,
+#else
+@:structInit class TPool extends TObj {
+#end
+    public var maxAmount:Int;
+}
 
 #if js
 typedef TCollisionData = {

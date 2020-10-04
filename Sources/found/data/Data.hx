@@ -139,12 +139,17 @@ class Data {
 		var p = (file.charAt(0) == '/' || file.charAt(1) == ':') ? file : dataPath + file;
 
 		if(Reflect.hasField(Assets.blobs,file)){
-			kha.Assets.loadBlob(file,function(b:kha.Blob) {
+			var onDone = function(b:kha.Blob) {
 				cachedBlobs.set(file, b);
 				for (f in loadingBlobs.get(file)) f(b);
 				loadingBlobs.remove(file);
 				assetsLoaded++;
-			});
+			};
+			if(Assets.progress >= 1.0){
+				onDone(Assets.blobs.get(file));
+			}else {
+				kha.Assets.loadBlob(file,onDone);
+			}
 		}
 		else {
 			getData(p, function(b:kha.Blob) {

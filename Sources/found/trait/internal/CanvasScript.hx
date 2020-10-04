@@ -90,6 +90,10 @@ class CanvasScript extends Trait {
 			if (canvas == null || !visible) return;
 			
 			if (onReady != null) { onReady(); onReady = null; }
+			if(this.object != null){
+				canvas.x = this.object.position.x;
+				canvas.y = this.object.position.y;
+			}
 			
 			setCanvasDimensions(kha.System.windowWidth(), kha.System.windowHeight());
 			var events = Canvas.draw(cui, canvas, g);

@@ -397,7 +397,7 @@ class Scene {
 				}
 				var traitInst = createTraitClassInstance(t.classname, args);
 				if (traitInst == null) {
-					trace("Error: Trait '" + t.classname + "' referenced in object '" + object.name + "' not found");
+					error("Trait '" + t.classname + "' referenced in object '" + object.name + "' not found");
 					continue;
 				}
 				if (t.props != null) {

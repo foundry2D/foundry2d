@@ -1,5 +1,6 @@
 package found.data;
 
+import kha.Assets;
 import kha.arrays.Float32Array;
 import kha.Sound;
 import haxe.Json;
@@ -70,31 +71,49 @@ class Data {
 
 		// If no extension specified, set to .arm
 		var compressed = file.endsWith('.lz4');
-		var isJson = file.endsWith('.json');
+		var isJson = file.endsWith('.json') || file.endsWith('_json');
 		var ext = (compressed || isJson || file.endsWith('.arm')) ? '' : '.arm';
-
-		khafs.Fs.getContent(file + ext, function(b:String) {
-			if (compressed) {
-				#if arm_compress
-				#end
-			}
-
-			var parsed:TSceneFormat = null;
-			if (isJson) {
-				// var s = b.toString();
+		
+		if(Reflect.hasField(Assets.blobs,file)){
+			kha.Assets.loadBlob(file,function(b:kha.Blob) {
+				if (compressed) {
+					#if arm_compress
+					#end
+				}
+				var parsed:TSceneFormat = null;
 				try{
-					parsed = /*s.charAt(0) == "{" ? */DataLoader.parse(b) /*: ArmPack.decode(b.toBytes())*/;
+					parsed = /*s.charAt(0) == "{" ? */DataLoader.parse(b.toString()) /*: ArmPack.decode(b.toBytes())*/;
 				}
 				catch(e:Dynamic){
 					trace(e);
 				}
-			}
-			else {
-				// parsed = ArmPack.decode(b.toBytes());
-			}
-
-			returnSceneRaw(file, parsed);
-		});
+				returnSceneRaw(file, parsed);
+			});
+		}
+		else {
+			khafs.Fs.getContent(file + ext, function(b:String) {
+				if (compressed) {
+					#if arm_compress
+					#end
+				}
+	
+				var parsed:TSceneFormat = null;
+				if (isJson) {
+					// var s = b.toString();
+					try{
+						parsed = /*s.charAt(0) == "{" ? */DataLoader.parse(b) /*: ArmPack.decode(b.toBytes())*/;
+					}
+					catch(e:Dynamic){
+						trace(e);
+					}
+				}
+				else {
+					// parsed = ArmPack.decode(b.toBytes());
+				}
+	
+				returnSceneRaw(file, parsed);
+			});
+		}
 	}
 
 	static function returnSceneRaw(file:String, parsed:TSceneFormat) {
@@ -118,17 +137,27 @@ class Data {
 		loadingBlobs.set(file, [done]); // Start loading
 
 		var p = (file.charAt(0) == '/' || file.charAt(1) == ':') ? file : dataPath + file;
-		trace(p);
-		getData(p, function(b:kha.Blob) {
-			cachedBlobs.set(file, b);
-			for (f in loadingBlobs.get(file)) f(b);
-			loadingBlobs.remove(file);
-			assetsLoaded++;
-		},function(failed:kha.AssetError){
-			var error = failed.error;
-			var path = failed.url;
-			trace('Asset at path: $path failed to load because of $error');
-		});
+
+		if(Reflect.hasField(Assets.blobs,file)){
+			kha.Assets.loadBlob(file,function(b:kha.Blob) {
+				cachedBlobs.set(file, b);
+				for (f in loadingBlobs.get(file)) f(b);
+				loadingBlobs.remove(file);
+				assetsLoaded++;
+			});
+		}
+		else {
+			getData(p, function(b:kha.Blob) {
+				cachedBlobs.set(file, b);
+				for (f in loadingBlobs.get(file)) f(b);
+				loadingBlobs.remove(file);
+				assetsLoaded++;
+			},function(failed:kha.AssetError){
+				var error = failed.error;
+				var path = failed.url;
+				trace('Asset at path: $path failed to load because of $error');
+			});
+		}
 	}
 
     public static function deleteBlob(handle:String) {

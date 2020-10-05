@@ -43,14 +43,13 @@ class NodeEditor {
 	public static var nodesArray:Array<LogicTreeData> = [];
 	public static var selectedNode:LogicTreeData = null;
 
-	static var gameplayNodes:Map<String,Array<TNode>>= new Map<String,Array<TNode>>();
+	static var gameplayNodes:Map<String, Array<TNode>> = new Map<String, Array<TNode>>();
 
-	public static function addCustomNode(section:String,node:Dynamic) {
-		if(gameplayNodes.exists(section)){
+	public static function addCustomNode(section:String, node:Dynamic) {
+		if (gameplayNodes.exists(section)) {
 			gameplayNodes.get(section).push(node);
-		}
-		else {
-			gameplayNodes.set(section,[node]);
+		} else {
+			gameplayNodes.set(section, [node]);
 		}
 	}
 
@@ -203,6 +202,10 @@ class NodeEditor {
 						pushNodeToSelectedGroup(FoundryNode.getObjectNode);
 					if (ui.button("Spawn Object"))
 						pushNodeToSelectedGroup(FoundryNode.spawnObjectNode);
+					if (ui.button("Destroy Object"))
+						pushNodeToSelectedGroup(FoundryNode.destroyObjectNode);
+					if (ui.button("Destroy Object Outside View"))
+						pushNodeToSelectedGroup(FoundryNode.destroyObjectOutsideViewNode);
 				}
 				if (ui.panel(Id.handle(), "Sprite")) {
 					if (ui.button("Flip Sprite"))
@@ -244,13 +247,13 @@ class NodeEditor {
 				}
 			}
 			if (ui.tab(nodeMenuTabHandle, "Custom")) {
-				for(sec in gameplayNodes.keys()){
+				for (sec in gameplayNodes.keys()) {
 					if (ui.panel(Id.handle(), sec)) {
 						var nodes = gameplayNodes.get(sec);
-						for(node in nodes){
+						for (node in nodes) {
 							if (ui.button(node.name))
 								pushNodeToSelectedGroup(node);
-						}			
+						}
 					}
 				}
 			}

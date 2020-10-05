@@ -16,6 +16,9 @@ class SpawnObjectNode extends LogicNode {
 			for (object in spawnedObjects) {
 				found.State.active.remove(object);
 			}
+
+			while (spawnedObjects.length > 0)
+				spawnedObjects.pop();
 		});
 	}
 

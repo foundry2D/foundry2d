@@ -227,10 +227,9 @@ class Scene {
 
     var ordered = _entities.copy();
     if(cullOffset != 0){
-      var data:Float32x4 = Float32x4.loadFast(cam.position.x,cam.position.y,Found.WIDTH,Found.HEIGHT);
       var objects:Array<Object> = [];
       for(i in 0...ordered.length) {
-        if(ordered[i].isVisible(cullOffset,data)){
+        if(ordered[i].isVisible(cullOffset,getCameraView())){
           objects.push(ordered[i]);
         }
       }
@@ -293,7 +292,9 @@ class Scene {
 
   }
 
-  
+  public function getCameraView() : Float32x4 {
+    return Float32x4.loadFast(cam.position.x,cam.position.y,Found.WIDTH,Found.HEIGHT);
+  }
 
   public function getObjectNames(?type:String):Array<String>{
     var names = [];

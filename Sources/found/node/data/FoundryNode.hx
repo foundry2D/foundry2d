@@ -695,6 +695,71 @@ class FoundryNode {
 		buttons: [],
 		color: -4962746
 	};
+	public static var destroyObjectNode:TNode = {
+		id: 0,
+		name: "Destroy Object",
+		type: "DestroyObjectNode",
+		x: 200,
+		y: 200,
+		inputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name: "In",
+				type: "ACTION",
+				color: 0xffaa4444,
+				default_value: ""
+			},
+			{
+				id: 0,
+				node_id: 0,
+				name: "Object",
+				type: "OBJECT",
+				color: -4934476,
+				default_value: null
+			}
+		],
+		outputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name: "Out",
+				type: "ACTION",
+				color: 0xffaa4444,
+				default_value: ""
+			}
+		],
+		buttons: [],
+		color: -4962746
+	};
+	public static var destroyObjectOutsideViewNode:TNode = {
+		id: 0,
+		name: "Destroy Object Outside View",
+		type: "DestroyObjectOutsideViewNode",
+		x: 200,
+		y: 200,
+		inputs: [			
+			{
+				id: 0,
+				node_id: 0,
+				name: "Object",
+				type: "OBJECT",
+				color: -4934476,
+				default_value: null
+			},
+			{
+				id: 0,
+				node_id: 0,
+				name: "OffsetFromView",
+				type: "VALUE",
+				color: -10183681,
+				default_value: 0.0
+			}
+		],
+		outputs: [],
+		buttons: [],
+		color: -4962746
+	};
 	public static var flipSpriteNode:TNode = {
 		id: 0,
 		name: "Flip Sprite",

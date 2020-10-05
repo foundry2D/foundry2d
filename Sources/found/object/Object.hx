@@ -178,7 +178,7 @@ class Object {
 	}
 	public var center(get,never):Vector2;
 	function get_center() {
-		return new Vector2(position.x + 0.5 * width, position.y + 0.5 * height);
+		return new Vector2(position.x + 0.5 * width * scale.x, position.y + 0.5 * height * scale.y);
 	}
 	/**
 	 * Add a translation function to be executed in another thread. 
@@ -250,6 +250,9 @@ class Object {
 	function rotateToward(data:RotateData) {
 		var direction = data.towards.sub(data.from);
 		var angle = Util.radToDeg(Math.atan2(direction.y, direction.x));
+		if(angle < 0){
+			angle+=360;
+		}
 		data._rotations.z = angle;
 		return data;
 	}
@@ -283,8 +286,16 @@ class Object {
 		return _height;
 	}	
 
-	public var layer:Int = 0;
-	public var depth:Float = 0.0;
+	public var layer(get,never):Int;
+	function get_layer(){
+		return raw.layer;
+	}
+	public var depth(get,never):Float;
+	function get_depth(){
+		if(!Scene.zsort)
+			return position.y + height;
+		return raw.depth;
+	}
 
 	var traits:Array<Trait> = [];
 
@@ -306,9 +317,6 @@ class Object {
 		this.width = p_raw.width;
 		this.height = p_raw.height;
 
-		this.layer = p_raw.layer;
-		this.depth = p_raw.depth;
-
 		if(p_raw.active)
 			activate();
 		else
@@ -324,9 +332,6 @@ class Object {
 			body.x = position.x;
 			body.y = position.y;
 		}
-		
-		if(!Scene.zsort)
-			depth = position.y + height;
 	}
 
 	public function render(canvas:Canvas){

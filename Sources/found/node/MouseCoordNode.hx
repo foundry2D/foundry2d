@@ -12,8 +12,8 @@ class MouseCoordNode extends LogicNode {
 		var mouse = Input.getMouse();
 
 		if (from == 0) {
-			coords.x = mouse.x;
-			coords.y = mouse.y;
+			coords.x = mouse.x+State.active.cam.position.x;
+			coords.y = mouse.y+State.active.cam.position.y;
 			return coords;
 		} else if (from == 1) {
 			move.x = mouse.movementX;

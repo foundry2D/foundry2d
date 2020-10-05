@@ -43,6 +43,17 @@ class NodeEditor {
 	public static var nodesArray:Array<LogicTreeData> = [];
 	public static var selectedNode:LogicTreeData = null;
 
+	static var gameplayNodes:Map<String,Array<TNode>>= new Map<String,Array<TNode>>();
+
+	public static function addCustomNode(section:String,node:Dynamic) {
+		if(gameplayNodes.exists(section)){
+			gameplayNodes.get(section).push(node);
+		}
+		else {
+			gameplayNodes.set(section,[node]);
+		}
+	}
+
 	public var nodeCanvasWindowHandle = Id.handle();
 	public var nodeMenuWindowHandle = Id.handle();
 	public var nodeMenuTabHandle = Id.handle();
@@ -218,6 +229,17 @@ class NodeEditor {
 						pushNodeToSelectedGroup(FoundryNode.playMusicNode);
 					if (ui.button("Play Sfx"))
 						pushNodeToSelectedGroup(FoundryNode.playSfxNode);					
+				}
+			}
+			if (ui.tab(nodeMenuTabHandle, "Custom")) {
+				for(sec in gameplayNodes.keys()){
+					if (ui.panel(Id.handle(), sec)) {
+						var nodes = gameplayNodes.get(sec);
+						for(node in nodes){
+							if (ui.button(node.name))
+								pushNodeToSelectedGroup(node);
+						}			
+					}
 				}
 			}
 		}

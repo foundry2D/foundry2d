@@ -252,7 +252,7 @@ private class FPS {
 		if(canvas.g2 == null || State.active == null || State.active.cam == null) return;
 		if(ui == null)ui = new zui.Zui({font: kha.Assets.fonts.font_default});
 
-		canvas.g2.pushTransformation(FastMatrix3.translation(-State.active.cam.position.x,-State.active.cam.position.y));
+		canvas.g2.pushTranslation(State.active.cam.position.x,State.active.cam.position.y);
 		var oldScale = ui.SCALE();
 		var width = 60;
 		var height = 20;
@@ -268,12 +268,12 @@ private class FPS {
 		ui.t.ACCENT_COL =ui.t.WINDOW_BG_COL= kha.Color.Transparent;
 		
 		fpsHandle.redraws = lastFps != fps ? 2 : 0;
-		if(ui.window(fpsHandle,Std.int(cam.x),Std.int(cam.y), width, height,false))ui.text('Fps: $fps');
+		if(ui.window(fpsHandle,0,0, width, height,false))ui.text('Fps: $fps');
+		canvas.g2.popTransformation();
 		ui.end();
 		ui.setScale(oldScale);
 		ui.t.ACCENT_COL = accentCol;
 		ui.t.WINDOW_BG_COL = windowBgColor;
-		canvas.g2.popTransformation();
 	}
 
 	public inline function addFrame():Void frames++;

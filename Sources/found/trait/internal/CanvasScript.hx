@@ -1,5 +1,6 @@
 package found.trait.internal;
 
+import kha.math.Vector2;
 import kha.Assets;
 import found.Trait;
 import zui.Zui;
@@ -90,13 +91,17 @@ class CanvasScript extends Trait {
 			if (canvas == null || !visible) return;
 			
 			if (onReady != null) { onReady(); onReady = null; }
-			if(this.object != null){
-				canvas.x = this.object.position.x;
-				canvas.y = this.object.position.y;
-			}
+			var hasPos:Bool = this.object != null;
 			
+			if(hasPos){
+				g.pushTranslation(this.object.position.x,this.object.position.y);
+			}
+
 			setCanvasDimensions(kha.System.windowWidth(), kha.System.windowHeight());
 			var events = Canvas.draw(cui, canvas, g);
+
+			if(hasPos)
+				g.popTransformation();
 
 			g.end();
             for(key in customDraw.keys()){

@@ -1,5 +1,7 @@
 package found.object;
 
+import found.math.Util;
+import haxe.ds.Vector;
 import kha.simd.Float32x4;
 import kha.Canvas;
 import kha.math.Vector2;
@@ -174,8 +176,9 @@ class Object {
 	function get_position() {
 		return _positions[uid];
 	}
-	function getCenterPosition() {
-		return new Vector2(get_position().x + 0.5 * get_width(), get_position().y + 0.5 * get_height());
+	public var center(get,never):Vector2;
+	function get_center() {
+		return new Vector2(position.x + 0.5 * width, position.y + 0.5 * height);
 	}
 	/**
 	 * Add a translation function to be executed in another thread. 
@@ -230,6 +233,27 @@ class Object {
 		_rotates.add(func,{_rotations: _rotations[uid],dt: dt,from: from,towards: towards},uid);
 	}
 
+	/**
+	 * 	Rotate object to look at target position. 
+	 *	If target is within step units length, object position becomes target.
+	 * @param	targetPosition Target position to look towards.
+	 */
+	public function rotateTowardPosition(targetPosition:Vector2) {
+		var data:RotateData = {
+			_rotations: new Vector3(_rotations[uid].x,_rotations[uid].y, _rotations[uid].z),
+			from: new Vector2(center.x, center.y),
+			towards: new Vector2(targetPosition.x, targetPosition.y)
+		};
+		_rotates.add(rotateToward,data,uid);
+	}
+
+	function rotateToward(data:RotateData) {
+		var direction = data.towards.sub(data.from);
+		var angle = Util.radToDeg(Math.atan2(direction.y, direction.x));
+		data._rotations.z = angle;
+		return data;
+	}
+
 	public var scale(get,never):Vector2;
 	function get_scale(){
 		return _scales[uid];
@@ -247,8 +271,6 @@ class Object {
 	}
 	function set_width(f:Float){
 		_width = f;
-		// if(center != null)
-		// 	center.x = _width*0.5;
 		return _width;
 	}
 	public var height(get,set):Float;
@@ -258,11 +280,8 @@ class Object {
 	}
 	function set_height(f:Float){
 		_height = f;
-		// if(center != null)
-		// 	center.y = _height*0.5;
 		return _height;
-	}
-	public var center:Vector2;
+	}	
 
 	public var layer:Int = 0;
 	public var depth:Float = 0.0;
@@ -289,17 +308,13 @@ class Object {
 
 		this.layer = p_raw.layer;
 		this.depth = p_raw.depth;
-		
-		
-		
-		
 
-		center = new Vector2(width * scale.x * 0.5, height * scale.y * 0.5);
 		if(p_raw.active)
 			activate();
 		else
 			deactivate();
-		Scene.createTraits(p_raw.traits,this);
+
+		Scene.createTraits(p_raw.traits,this);		
 	}
 
 	function update(dt:Float){
@@ -312,10 +327,6 @@ class Object {
 		
 		if(!Scene.zsort)
 			depth = position.y + height;
-
-		center.x = width * scale.x * 0.5;
-		center.y = height * scale.y * 0.5;
-
 	}
 
 	public function render(canvas:Canvas){

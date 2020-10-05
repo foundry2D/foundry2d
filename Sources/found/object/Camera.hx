@@ -50,11 +50,11 @@ class Camera extends Object {
 	public override function update(dt:Float) {
 		if (target == null)
 			return;
-		if (offsetX < Math.abs(Math.abs(this.viewX) - target.getCenterPosition().x)) {
-			this.position.x = Util.lerp(this.position.x, target.getCenterPosition().x - 0.5 * Found.WIDTH, camSpeedX * dt);
+		if (offsetX < Math.abs(Math.abs(this.viewX) - target.center.x)) {
+			this.position.x = Util.lerp(this.position.x, target.center.x - 0.5 * Found.WIDTH, camSpeedX * dt);
 		}
-		if (offsetY < Math.abs(Math.abs(this.viewY) - target.getCenterPosition().y)) {
-			this.position.y = Util.lerp(this.position.y, target.getCenterPosition().y - 0.5 * Found.HEIGHT, camSpeedY * dt);
+		if (offsetY < Math.abs(Math.abs(this.viewY) - target.center.y)) {
+			this.position.y = Util.lerp(this.position.y, target.center.y - 0.5 * Found.HEIGHT, camSpeedY * dt);
 		}
 	}
 

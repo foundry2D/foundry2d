@@ -25,7 +25,7 @@ class OnCollisionNode extends LogicNode {
 			}
 			#if debug
 			else {
-				error("Top-down controller needs the object to have a Rigidbody");
+				error("On Collision node needs an object to check collisions with");
 			}
 			#end
 		});

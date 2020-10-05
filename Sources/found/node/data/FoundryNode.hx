@@ -367,6 +367,64 @@ class FoundryNode {
 		],
 		buttons: []
 	};
+	public static var getPositionNode:TNode = {
+		id: 0,
+		name: "Get Position",
+		type: "GetPositionNode",
+		x: 200,
+		y: 200,
+		color: -4962746,
+		inputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name: "Object",
+				type: "OBJECT",
+				color: -4934476,
+				default_value: null
+			}
+		],
+		outputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name: "Position Vec2",
+				type: "VECTOR2",
+				color: -7929601,
+				default_value: new kha.math.FastVector2(0.0, 0.0)
+			}
+		],
+		buttons: []
+	};
+	public static var getCenterNode:TNode = {
+		id: 0,
+		name: "Get Center",
+		type: "GetCenterNode",
+		x: 200,
+		y: 200,
+		color: -4962746,
+		inputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name: "Object",
+				type: "OBJECT",
+				color: -4934476,
+				default_value: null
+			}
+		],
+		outputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name: "Center Vec2",
+				type: "VECTOR2",
+				color: -7929601,
+				default_value: new kha.math.FastVector2(0.0, 0.0)
+			}
+		],
+		buttons: []
+	};
 	public static var setObjectLocationNode:TNode = {
 		id: 0,
 		name: "Set Object Location",
@@ -412,6 +470,35 @@ class FoundryNode {
 		],
 		buttons: []
 	};
+	public static var getRotationNode:TNode = {
+		id: 0,
+		name: "Get Rotation",
+		type: "GetRotationNode",
+		x: 200,
+		y: 200,
+		color: -4962746,
+		inputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name: "Object",
+				type: "OBJECT",
+				color: -4934476,
+				default_value: null
+			}
+		],
+		outputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name: "Rotation",
+				type: "VALUE",
+				color: -10183681,
+				default_value: 0
+			}
+		],
+		buttons: []
+	};
 	public static var translateObjectNode:TNode = {
 		id: 0,
 		name: "Translate Object",
@@ -439,7 +526,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Vec2",
+				name: "Position Vec2",
 				type: "VECTOR2",
 				color: -7929601,
 				default_value: new kha.math.FastVector2(0.0, 0.0)
@@ -451,6 +538,51 @@ class FoundryNode {
 				type: "VALUE",
 				color: -10183681,
 				default_value: 1.0
+			}
+		],
+		outputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name: "Out",
+				type: "ACTION",
+				color: 0xffaa4444,
+				default_value: ""
+			}
+		],
+		buttons: []
+	};
+	public static var rotateTowardPositionNode:TNode = {
+		id: 0,
+		name: "Rotate Toward Position",
+		type: "RotateTowardPositionNode",
+		x: 200,
+		y: 200,
+		color: -4962746,
+		inputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name: "In",
+				type: "ACTION",
+				color: 0xffaa4444,
+				default_value: ""
+			},
+			{
+				id: 0,
+				node_id: 0,
+				name: "Object",
+				type: "OBJECT",
+				color: -4934476,
+				default_value: null
+			},
+			{
+				id: 0,
+				node_id: 0,
+				name: "Position Vec2",
+				type: "VECTOR2",
+				color: -7929601,
+				default_value: new kha.math.FastVector2(0.0, 0.0)
 			}
 		],
 		outputs: [
@@ -508,6 +640,59 @@ class FoundryNode {
 				default_value: 0
 			}
 		],
+		color: -4962746
+	};
+	public static var spawnObjectNode:TNode = {
+		id: 0,
+		name: "Spawn Object",
+		type: "SpawnObjectNode",
+		x: 200,
+		y: 200,
+		inputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name: "In",
+				type: "ACTION",
+				color: 0xffaa4444,
+				default_value: ""
+			},
+			{
+				id: 0,
+				node_id: 0,
+				name: "Object",
+				type: "OBJECT",
+				color: -4934476,
+				default_value: null
+			},
+			{
+				id: 0,
+				node_id: 0,
+				name: "Position Vec2",
+				type: "VECTOR2",
+				color: -7929601,
+				default_value: new kha.math.FastVector2(0.0, 0.0)
+			},
+			{
+				id: 0,
+				node_id: 0,
+				name: "Rotation",
+				type: "VALUE",
+				color: -10183681,
+				default_value: 0.0
+			}
+		],
+		outputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name: "Out",
+				type: "ACTION",
+				color: 0xffaa4444,
+				default_value: ""
+			}
+		],
+		buttons: [],
 		color: -4962746
 	};
 	public static var flipSpriteNode:TNode = {
@@ -779,6 +964,26 @@ class FoundryNode {
 				default_value: Input.Keyboard.getKeyCodeStringValues().indexOf("space")
 			}
 		],
+		color: -4962746
+	};
+	public static var bulletMovementNode:TNode = {
+		id: 0,
+		name: "Bullet Movement",
+		type: "BulletMovementNode",
+		x: 200,
+		y: 200,
+		inputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name: "Speed",
+				type: "VALUE",
+				color: -10183681,
+				default_value: 300.0
+			}
+		],
+		outputs: [],
+		buttons: [],
 		color: -4962746
 	};
 	public static var setCameraTargetPositionNode:TNode = {

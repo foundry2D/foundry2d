@@ -85,7 +85,7 @@ class Logic {
 
 		// Get node name
 		var name =  node_name(node);
-		trace("Begun parse: "+name);
+
 		// Check if node already exists
 		if (parsed_nodes.indexOf(name) != -1) {
 			return name;
@@ -222,7 +222,6 @@ class Logic {
 	}
 
 	static function createClassInstance(className:String, args:Array<Dynamic>):Dynamic {
-		trace(packageName + '.' + className);
 		var cname = Type.resolveClass(packageName + '.' + className);
 		if (cname == null) return null;
 		return Type.createInstance(cname, args);

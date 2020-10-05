@@ -25,7 +25,7 @@ class NodeEditor {
 	public static var x:Int;
 	public static var y:Int;
 
-	public function new(ui:zui.Zui,px:Int, py:Int, w:Int, h:Int) {
+	public function new(ui:zui.Zui, px:Int, py:Int, w:Int, h:Int) {
 		this.visible = false;
 		setAll(px, py, w, h);
 		ui.g.end();
@@ -65,7 +65,7 @@ class NodeEditor {
 	public function render(ui:zui.Zui) {
 		if (!visible)
 			return;
-		
+
 		var nodePanX:Float = 0.0;
 		var nodePanY:Float = 0.0;
 		if (NodeEditor.selectedNode != null) {
@@ -85,19 +85,17 @@ class NodeEditor {
 			for (node in NodeEditor.selectedNode.nodes.nodesSelected) {
 				if (node.type == "GetObjectNode") {
 					node.buttons[0].data = updatedObjectList;
-				}
-				else if(node.type == "FlipSpriteNode"){
+				} else if (node.type == "FlipSpriteNode") {
 					node.buttons[0].data = updatedSpriteList;
 				}
 			}
 		}
 		if (ui.window(nodeCanvasWindowHandle, NodeEditor.x, NodeEditor.y, NodeEditor.width, NodeEditor.height)) {
 			ui.g.color = kha.Color.White;
-			ui.g.drawImage(grid,nodePanX,nodePanY);
+			ui.g.drawImage(grid, nodePanX, nodePanY);
 			renderNodes(ui);
 		}
 		renderNodesMenu(ui);
-		
 	}
 
 	public function renderNodes(ui:Zui) {
@@ -187,14 +185,24 @@ class NodeEditor {
 						pushNodeToSelectedGroup(FoundryNode.joinVec2Node);
 				}
 				if (ui.panel(Id.handle(), "Transform")) {
+					if (ui.button("Get Position"))
+						pushNodeToSelectedGroup(FoundryNode.getPositionNode);
+					if (ui.button("Get Center"))
+						pushNodeToSelectedGroup(FoundryNode.getCenterNode);
 					if (ui.button("Set Object Location"))
 						pushNodeToSelectedGroup(FoundryNode.setObjectLocationNode);
+					if (ui.button("Get Rotation"))
+						pushNodeToSelectedGroup(FoundryNode.getRotationNode);
 					if (ui.button("Translate Object"))
 						pushNodeToSelectedGroup(FoundryNode.translateObjectNode);
+					if (ui.button("Rotate Toward Position"))
+						pushNodeToSelectedGroup(FoundryNode.rotateTowardPositionNode);
 				}
 				if (ui.panel(Id.handle(), "Object")) {
 					if (ui.button("Get Object"))
 						pushNodeToSelectedGroup(FoundryNode.getObjectNode);
+					if (ui.button("Spawn Object"))
+						pushNodeToSelectedGroup(FoundryNode.spawnObjectNode);
 				}
 				if (ui.panel(Id.handle(), "Sprite")) {
 					if (ui.button("Flip Sprite"))
@@ -214,6 +222,10 @@ class NodeEditor {
 					if (ui.button("Platformer 2D Controller"))
 						pushNodeToSelectedGroup(FoundryNode.platformer2DControllerNode);
 				}
+				if (ui.panel(Id.handle(), "Movement")) {
+					if (ui.button("Bullet Movement"))
+						pushNodeToSelectedGroup(FoundryNode.bulletMovementNode);
+				}
 				if (ui.panel(Id.handle(), "Camera")) {
 					if (ui.button("Set Camera Position"))
 						pushNodeToSelectedGroup(FoundryNode.setCameraTargetPositionNode);
@@ -222,13 +234,13 @@ class NodeEditor {
 				}
 				if (ui.panel(Id.handle(), "Animation")) {
 					if (ui.button("Play Animation"))
-						pushNodeToSelectedGroup(FoundryNode.playAnimationNode);					
+						pushNodeToSelectedGroup(FoundryNode.playAnimationNode);
 				}
 				if (ui.panel(Id.handle(), "Audio")) {
 					if (ui.button("Play Music"))
 						pushNodeToSelectedGroup(FoundryNode.playMusicNode);
 					if (ui.button("Play Sfx"))
-						pushNodeToSelectedGroup(FoundryNode.playSfxNode);					
+						pushNodeToSelectedGroup(FoundryNode.playSfxNode);
 				}
 			}
 			if (ui.tab(nodeMenuTabHandle, "Custom")) {

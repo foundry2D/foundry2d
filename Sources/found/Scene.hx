@@ -126,11 +126,11 @@ class Scene {
   }
 
   #if editor
-  public function addEntity(e:TObj,?isEditor = false){
+  public function addEntity(e:TObj,?isEditor = false) : Object {
     if(!isEditor && this.raw._entities.length == this._entities.length)
       warn(Cli.byellow+"WARNING:"+Cli.reset+" This function should only be used for "+Cli.bred+"EDITOR"+Cli.reset+" developpement");
   #else
-  function addEntity(e:TObj){
+  function addEntity(e:TObj) : Object {
   #end  
     switch(e.type){
         case "object":
@@ -157,6 +157,7 @@ class Scene {
           trace("Data with name"+e.name+"was not added because it's type is not implemented");
 
       }
+      return _entities[_entities.length - 1];
   }
 
   function addPhysicsWorld(opts:echo.data.Options.WorldOptions) {
@@ -221,7 +222,7 @@ class Scene {
 
   @:access(found.App)
   public function render(canvas:Canvas){
-    if(raw._entities.length != _entities.length)
+    if(!Scene.ready && raw._entities.length != _entities.length)
       return;// This scene is not ready to render
 
     var ordered = _entities.copy();
@@ -372,7 +373,7 @@ class Scene {
   }
 
   static function createTraits(traits:Array<TTrait>, object:Object) {
-		if (traits == null) return;
+    if (traits == null) return;
 		for (t in traits) {
       if (t.type == "VisualScript") {
         Data.getBlob(t.classname, function(blob:kha.Blob) {
@@ -384,7 +385,10 @@ class Scene {
             object.removeTrait(existentTrait);
           }
           object.addTrait(visualTrait);
-          addToApp(visualTrait);
+
+          if(object.active) {
+            addToApp(visualTrait);
+          }
         }, true);
       }
 			else if (t.type == "Script") {
@@ -410,7 +414,10 @@ class Scene {
 					}
 				}
 				object.addTrait(traitInst);
-        addToApp(traitInst);
+        
+        if(object.active) {
+          addToApp(traitInst);
+        }
       }
 		}
   }

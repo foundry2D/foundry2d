@@ -352,7 +352,7 @@ class Scene {
     if (entities.length == 0) return;
     if(zsort){
       ArraySort.sort(entities, function(ent1:Object, ent2:Object){
-        if ((ent1.layer < ent2.layer || ent1.layer == ent2.layer)  && (ent1.depth < ent2.depth || ent1.depth == ent2.depth)){
+        if (ent1.layer < ent2.layer || (ent1.layer == ent2.layer && (ent1.depth < ent2.depth || ent1.depth == ent2.depth))){
           return -1;
         } else if (ent1.layer == ent2.layer && Math.floor(ent1.depth) == Math.floor(ent2.depth)){
           return 0;

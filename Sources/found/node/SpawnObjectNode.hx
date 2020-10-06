@@ -24,7 +24,7 @@ class SpawnObjectNode extends LogicNode {
 
 		if (inputs[1].node != null) {
 			selectedObjectToSpawn = cast(inputs[1].get());
-			var spawnedObject:Object = found.State.active.addEntity(selectedObjectToSpawn.raw, true);
+			var spawnedObject:Object = found.State.active.spawn(selectedObjectToSpawn.raw);
 			spawnedObjects.push(spawnedObject);
 
 			spawnedObject.activate();
@@ -41,8 +41,8 @@ class SpawnObjectNode extends LogicNode {
 	}
 
 	function moveObjectToSpawnPoint(data:MoveData) {
-		data._positions.x = spawnPosition.x - selectedObjectToSpawn.width/2;
-		data._positions.y = spawnPosition.y - selectedObjectToSpawn.width/2;
+		data._positions.x = spawnPosition.x - selectedObjectToSpawn.width / 2;
+		data._positions.y = spawnPosition.y - selectedObjectToSpawn.width / 2;
 		return data;
 	}
 

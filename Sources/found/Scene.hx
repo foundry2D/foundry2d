@@ -327,15 +327,25 @@ class Scene {
     _entities = new Array<Object>();
   }
 
+  @:access(found.object.Object)
+  public function spawn(objectData:TObj) : Object {    
+    var spawnedObject:Object = addEntity(objectData);
+    spawnedObject.spawned = true;
+    return spawnedObject;
+  }
+
   public function add(entity:Object){
     entity.active = true;
     _entities.push(entity);
   }
 
+  @:access(found.object.Object)
   public function remove(entity:Object){
     entity.active = false;
-    _entities.remove(entity);
-    entity = null;
+    if(entity.spawned) {
+      _entities.remove(entity);
+      entity = null;
+    }
   }
 
   function depth(entities:Array<Object>){

@@ -69,6 +69,7 @@ class Object {
 	static var uidCounter = -1;
 	public final uid:Int;
 	public var active(default, set):Bool;
+	private var spawned:Bool = false;
 
 	public var body(default, set):echo.Body = null;
 	function set_body(b:echo.Body) {

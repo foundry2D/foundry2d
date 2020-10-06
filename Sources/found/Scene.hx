@@ -128,7 +128,7 @@ class Scene {
   #if editor
   public function addEntity(e:TObj,?isEditor = false) : Object {
     if(!isEditor && this.raw._entities.length == this._entities.length)
-      warn(Cli.byellow+"WARNING:"+Cli.reset+" This function should only be used for "+Cli.bred+"EDITOR"+Cli.reset+" developpement");
+      error("This function should only be used for EDITOR developpement");
   #else
   function addEntity(e:TObj) : Object {
   #end  
@@ -154,7 +154,7 @@ class Scene {
           addToStateArray(out);
         case "emitter_object":
         default:
-          trace("Data with name"+e.name+"was not added because it's type is not implemented");
+          warn("Data with name"+e.name+"was not added because it's type is not implemented");
 
       }
       return _entities[_entities.length - 1];
@@ -329,7 +329,7 @@ class Scene {
 
   @:access(found.object.Object)
   public function spawn(objectData:TObj) : Object {    
-    var spawnedObject:Object = addEntity(objectData);
+    var spawnedObject:Object = addEntity(objectData #if editor ,true#end);
     spawnedObject.spawned = true;
     return spawnedObject;
   }

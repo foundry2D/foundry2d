@@ -75,7 +75,7 @@ class Data {
 		var ext = (compressed || isJson || file.endsWith('.arm')) ? '' : '.arm';
 		
 		if(Reflect.hasField(Assets.blobs,file)){
-			kha.Assets.loadBlob(file,function(b:kha.Blob) {
+			getBlob(file,function(b:kha.Blob) {
 				if (compressed) {
 					#if arm_compress
 					#end

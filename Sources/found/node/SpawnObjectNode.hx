@@ -13,12 +13,8 @@ class SpawnObjectNode extends LogicNode {
 		super(tree);
 
 		tree.notifyOnRemove(function() {
-			for (object in spawnedObjects) {
-				found.State.active.remove(object);
-			}
-
 			while (spawnedObjects.length > 0)
-				spawnedObjects.pop();
+				found.State.active.remove(spawnedObjects.pop());
 		});
 	}
 

@@ -209,8 +209,6 @@ class Scene {
 			l <= App.traitLateUpdates.length ? i++ : l = App.traitLateUpdates.length;
 		}
     
-    if (App.onEndFrames != null) for (f in App.onEndFrames) f();
-    
     //@:Incomplete: We should maybe add the possibility to have multithreaded
     // calls in LateUpdate and execute them after. For now we will focus on having this in the normal update.
 

@@ -18,28 +18,7 @@ class App {
 	static var traitLateUpdates:Array<Void->Void> = [];
 	static var traitRenders:Array<kha.graphics4.Graphics->Void> = [];
 	static var traitRenders2D:Array<kha.graphics2.Graphics->Void> = [];
-	var screenOffsetX(default,set) = 0.0;
-	function set_screenOffsetX(value:Float){
-		//Have a look here: https://github.com/Kha-Samples/Kha2D/blob/master/Sources/kha2d/Scene.hx#L181
-		// if (collisionLayer != null) {
-		// 	screenOffsetX = Std.int(Math.min(Math.max(0, camx - width / 2), collisionLayer.getMap().getWidth() * collisionLayer.getMap().getTileset().TILE_WIDTH - width));
-		// 	if (getWidth() < width) screenOffsetX = 0;
-		// }
-		// else 
-		screenOffsetX = value;
-		return screenOffsetX;
-	}
-	var screenOffsetY(default,set) = 0.0;
-	function set_screenOffsetY(value:Float){
-		// Have a look here: https://github.com/Kha-Samples/Kha2D/blob/master/Sources/kha2d/Scene.hx#L193
-		// if (collisionLayer != null) {
-		// 	screenOffsetY = Std.int(Math.min(Math.max(0, camy - height / 2), collisionLayer.getMap().getHeight() * collisionLayer.getMap().getTileset().TILE_HEIGHT /*+ camyHack*/ - height));
-		// 	if (getHeight() < height) screenOffsetY = 0;
-		// }
-		// else 
-		screenOffsetY = value;
-		return screenOffsetY;
-	}
+
 	public static function init(_appReady:Void->Void) {
 		new App(_appReady);
 	}
@@ -80,10 +59,6 @@ class App {
 	public function update(dt:Float):Void {
 		if (State.active != null){
 			State.active.update(dt);
-			if(State.active.cam != null){
-				screenOffsetX = State.active.cam.position.x;
-				screenOffsetY = State.active.cam.position.y;
-			}
 		}
 		#if editor
 		editorui.update(dt);
@@ -262,7 +237,6 @@ private class FPS {
 			height*=2;
 		}
 		ui.begin(canvas.g2);
-		var cam = State.active.cam.position;
 		var accentCol = ui.t.ACCENT_COL;
 		var windowBgColor = ui.t.WINDOW_BG_COL;
 		ui.t.ACCENT_COL =ui.t.WINDOW_BG_COL= kha.Color.Transparent;

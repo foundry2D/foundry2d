@@ -16,14 +16,6 @@ class State extends Scene {
 		
 	}
 
-	override public function update(dt:Float){
-		super.update(dt);
-	}
-
-	override public function render(canvas:Canvas){
-		super.render(canvas);
-	}
-
 	public static function setup(?loadingPath:String = ""){
 		_states = new Map<String, String>();
 		if(loadingPath != ""){

@@ -74,46 +74,20 @@ class Data {
 		var isJson = file.endsWith('.json') || file.endsWith('_json');
 		var ext = (compressed || isJson || file.endsWith('.arm')) ? '' : '.arm';
 		
-		if(Reflect.hasField(Assets.blobs,file)){
-			getBlob(file,function(b:kha.Blob) {
-				if (compressed) {
-					#if arm_compress
-					#end
-				}
-				var parsed:TSceneFormat = null;
-				try{
-					parsed = /*s.charAt(0) == "{" ? */DataLoader.parse(b.toString()) /*: ArmPack.decode(b.toBytes())*/;
-				}
-				catch(e:Dynamic){
-					trace(e);
-				}
-				returnSceneRaw(file, parsed);
-			});
-		}
-		else {
-			khafs.Fs.getContent(file + ext, function(b:String) {
-				if (compressed) {
-					#if arm_compress
-					#end
-				}
-	
-				var parsed:TSceneFormat = null;
-				if (isJson) {
-					// var s = b.toString();
-					try{
-						parsed = /*s.charAt(0) == "{" ? */DataLoader.parse(b) /*: ArmPack.decode(b.toBytes())*/;
-					}
-					catch(e:Dynamic){
-						trace(e);
-					}
-				}
-				else {
-					// parsed = ArmPack.decode(b.toBytes());
-				}
-	
-				returnSceneRaw(file, parsed);
-			});
-		}
+		getBlob(file,function(b:kha.Blob) {
+			if (compressed) {
+				#if arm_compress
+				#end
+			}
+			var parsed:TSceneFormat = null;
+			try{
+				parsed = /*s.charAt(0) == "{" ? */DataLoader.parse(b.toString()) /*: ArmPack.decode(b.toBytes())*/;
+			}
+			catch(e:Dynamic){
+				trace(e);
+			}
+			returnSceneRaw(file, parsed);
+		});
 	}
 
 	static function returnSceneRaw(file:String, parsed:TSceneFormat) {

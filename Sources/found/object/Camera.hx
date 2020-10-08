@@ -50,7 +50,7 @@ class Camera extends Object {
 	public override function render(canvas:Canvas) {
 		if (!Scene.ready)
 			return;
-		if (target != null){
+		if (target != null #if editor && App.editorui.isPlayMode#end ){
 			if (offsetX < Math.abs(Math.abs(this.viewX) - target.center.x)) {
 				this.position.x = Util.lerp(this.position.x, target.center.x - 0.5 * Found.WIDTH, camSpeedX * Timer.delta);
 			}

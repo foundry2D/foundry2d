@@ -158,6 +158,8 @@ class NodeEditor {
 			}
 			if (ui.tab(nodeMenuTabHandle, "Foundry2d")) {
 				if (ui.panel(Id.handle(), "Event")) {
+					if (ui.button("On Add"))
+						pushNodeToSelectedGroup(FoundryNode.onAddNode);
 					if (ui.button("On Init"))
 						pushNodeToSelectedGroup(FoundryNode.onInitNode);
 					if (ui.button("On Update"))

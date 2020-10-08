@@ -5,6 +5,26 @@ import kha.math.FastVector2;
 
 @:access(Input.Keyboard)
 class FoundryNode {
+	public static var onAddNode:TNode = {
+		id: 0,
+		name: "On Add",
+		type: "OnAddNode",
+		x: 200,
+		y: 200,
+		inputs: [],
+		outputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name: "Out",
+				type: "ACTION",
+				color: 0xffaa4444,
+				default_value: ""
+			}
+		],
+		buttons: [],
+		color: -4962746
+	};
 	public static var onInitNode:TNode = {
 		id: 0,
 		name: "On Init",
@@ -1180,7 +1200,15 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Object",
+				name: "In",
+				type: "ACTION",
+				color: 0xffaa4444,
+				default_value: ""
+			},
+			{
+				id: 0,
+				node_id: 0,
+				name: "Selected Object",
 				type: "OBJECT",
 				color: -4934476,
 				default_value: null
@@ -1210,6 +1238,14 @@ class FoundryNode {
 				type: "ACTION",
 				color: 0xffaa4444,
 				default_value: ""
+			},
+			{
+				id: 0,
+				node_id: 0,
+				name: "Object collided",
+				type: "OBJECT",
+				color: -4934476,
+				default_value: null
 			}
 		],
 		buttons: [],

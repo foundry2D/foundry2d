@@ -14,7 +14,7 @@ class DestroyObjectOutsideViewNode extends LogicNode {
         var viewOffsetToDestroyAt:Int = inputs[1].get();
 
 		if (inputs[0].node != null) {
-			objectToDestroy = cast(inputs[1].get());
+			objectToDestroy = cast(inputs[0].get());
 		} else {
 			objectToDestroy = tree.object;
 		}

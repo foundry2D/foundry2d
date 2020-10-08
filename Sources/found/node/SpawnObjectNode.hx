@@ -41,8 +41,8 @@ class SpawnObjectNode extends LogicNode {
 	}
 
 	function moveObjectToSpawnPoint(data:MoveData) {
-		data._positions.x = spawnPosition.x - selectedObjectToSpawn.width / 2;
-		data._positions.y = spawnPosition.y - selectedObjectToSpawn.width / 2;
+		data._positions.x = spawnPosition.x - selectedObjectToSpawn.width * 0.5;
+		data._positions.y = spawnPosition.y - selectedObjectToSpawn.height * 0.5;
 		return data;
 	}
 

@@ -14,7 +14,7 @@ class Logic {
 
 	public static var enumTexts: String->Array<String> = null;
 
-	public static var packageName = "found.node";
+	public static var packageNames:Array<String> = ["found.node","gameplay"];
 
 	public static function getNode(id: Int): TNode {
 		for (n in nodes) if (n.id == id) return n;
@@ -222,9 +222,12 @@ class Logic {
 	}
 
 	static function createClassInstance(className:String, args:Array<Dynamic>):Dynamic {
-		var cname = Type.resolveClass(packageName + '.' + className);
-		if (cname == null) return null;
-		return Type.createInstance(cname, args);
+		for(pname in packageNames){
+			var cname = Type.resolveClass(pname + '.' + className);
+			if (cname == null) continue;
+			return Type.createInstance(cname, args);
+		}
+		return null;
 	}
 }
 

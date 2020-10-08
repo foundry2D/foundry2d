@@ -26,8 +26,14 @@ import found.data.SceneFormat;
 
 class Sprite extends Object {
 	private var data:SpriteData;
-	private var _w: Float;
-	private var _h: Float;
+	@:isVar private var _w(get,default): Float;
+	function get__w(){
+		return _w * scale.x;
+	}
+	@:isVar private var _h(get,default): Float;
+	function get__h(){
+		return _h * scale.y;
+	}
 
 	public var flip:Vector2;
 	

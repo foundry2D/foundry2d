@@ -10,40 +10,47 @@ class OnCollisionNode extends LogicNode {
 
 		collisionListeners = [];
 
-		tree.notifyOnInit(function() {
-			if (inputs[0].node != null) {
-				var selectedCollidingObject:Object = cast(inputs[0].get());
-
-				var collisionDef:CollisionDef = {
-					objectName: selectedCollidingObject.raw.name,
-					onEnter: onCollisionEnterEvent,
-					onStay: onCollisionStayEvent,
-					onExit: onCollisionExitEvent
-				};
-
-				collisionListeners = collisionListeners.concat(tree.object.onCollision(collisionDef));
-			}
-			#if debug
-			else {
-				error("On Collision node needs an object to check collisions with");
-			}
-			#end
-		});
-
 		tree.notifyOnRemove(function() {
 			tree.object.removeCollisionListeners(collisionListeners);
 		});
 	}
 
+	override function run(from:Int) {
+		if (inputs[1].node != null) {
+			var selectedCollidingObject:Object = cast(inputs[1].get());
+
+			var collisionDef:CollisionDef = {
+				objectName: selectedCollidingObject.raw.name,
+				onEnter: onCollisionEnterEvent,
+				onStay: onCollisionStayEvent,
+				onExit: onCollisionExitEvent
+			};
+
+			collisionListeners = collisionListeners.concat(tree.object.onCollision(collisionDef));
+		}
+		#if debug
+		else {
+			error("On Collision node needs an object to check collisions with");
+		}
+		#end
+	}
+	var lastBody:echo.Body;
 	function onCollisionEnterEvent(body:echo.Body, otherBody:echo.Body, data:Array<echo.data.Data.CollisionData>) {
+		lastBody = otherBody;
 		runOutput(0);
 	}
 
 	function onCollisionStayEvent(body:echo.Body, otherBody:echo.Body, data:Array<echo.data.Data.CollisionData>) {
+		lastBody = otherBody;
 		runOutput(1);
 	}
 
 	function onCollisionExitEvent(body:echo.Body, otherBody:echo.Body) {
+		lastBody = otherBody;
 		runOutput(2);
+	}
+
+	override function get(from:Int):Dynamic {
+		return lastBody.object;
 	}
 }

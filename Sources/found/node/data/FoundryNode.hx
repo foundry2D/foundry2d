@@ -102,6 +102,79 @@ class FoundryNode {
 		buttons: [],
 		color: -4962746
 	};
+	public static var eventListenNode:TNode = {
+		id: 0,
+		name: "Event Listener",
+		type: "EventListenNode",
+		x: 200,
+		y: 200,
+		inputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name: "In",
+				type: "ACTION",
+				color: 0xffaa4444,
+				default_value: ""
+			},
+			{
+				id: 0,
+				node_id: 0,
+				name: "Event Name",
+				type: "STRING",
+				color: -4934476,
+				default_value: ""
+			}
+		],
+		outputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name: "Out",
+				type: "ACTION",
+				color: 0xffaa4444,
+				default_value: ""
+			}
+		],
+		buttons: [],
+		color: -4962746
+	};
+	public static var sendEventNode:TNode = {
+		id: 0,
+		name: "Send Event",
+		type: "SendEventNode",
+		x: 200,
+		y: 200,
+		inputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name: "In",
+				type: "ACTION",
+				color: 0xffaa4444,
+				default_value: ""
+			},
+			{
+				id: 0,
+				node_id: 0,
+				name: "Event Name",
+				type: "STRING",
+				color: -4934476,
+				default_value: ""
+			},
+			{
+				id: 0,
+				node_id: 0,
+				name: "Object",
+				type: "OBJECT",
+				color: -4934476,
+				default_value: null
+			}
+		],
+		outputs: [],
+		buttons: [],
+		color: -4962746
+	};
 	public static var onMouseNode:TNode = {
 		id: 0,
 		name: "On Mouse",
@@ -383,6 +456,74 @@ class FoundryNode {
 				type: "VECTOR2",
 				color: -7929601,
 				default_value: [0.0, 0.0]
+			}
+		],
+		buttons: []
+	};
+	public static var everyXNode:TNode = {
+		id: 0,
+		name: "Every X ms",
+		type: "EveryXNode",
+		x: 200,
+		y: 200,
+		color: -4962746,
+		inputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name: "Number of ms",
+				type: "VALUE",
+				color: -10183681,
+				default_value: 0.0
+			}
+			
+		],
+		outputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name: "Out",
+				type: "ACTION",
+				color: 0xffaa4444,
+				default_value: ""
+			}
+		],
+		buttons: []
+	};
+	public static var cooldownNode:TNode = {
+		id: 0,
+		name: "X s Cooldown",
+		type: "CooldownNode",
+		x: 200,
+		y: 200,
+		color: -4962746,
+		inputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name: "In",
+				type: "ACTION",
+				color: 0xffaa4444,
+				default_value: ""
+			},
+			{
+				id: 0,
+				node_id: 0,
+				name: "Number of ms",
+				type: "VALUE",
+				color: -10183681,
+				default_value: 0.0
+			}
+			
+		],
+		outputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name: "Out",
+				type: "ACTION",
+				color: 0xffaa4444,
+				default_value: ""
 			}
 		],
 		buttons: []

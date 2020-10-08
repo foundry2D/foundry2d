@@ -166,6 +166,10 @@ class NodeEditor {
 						pushNodeToSelectedGroup(FoundryNode.onUpdateNode);
 					if (ui.button("MultiEvent"))
 						pushNodeToSelectedGroup(FoundryNode.multiEventNode);
+					if (ui.button("Event Listener"))
+						pushNodeToSelectedGroup(FoundryNode.eventListenNode);
+					if (ui.button("Send Event"))
+						pushNodeToSelectedGroup(FoundryNode.sendEventNode);
 				}
 				if (ui.panel(Id.handle(), "Input")) {
 					if (ui.button("On Mouse"))
@@ -185,6 +189,13 @@ class NodeEditor {
 					if (ui.button("Join Vec2"))
 						pushNodeToSelectedGroup(FoundryNode.joinVec2Node);
 				}
+				if (ui.panel(Id.handle(), "Time")) {
+					if (ui.button("Every X ms"))
+						pushNodeToSelectedGroup(FoundryNode.everyXNode);
+					if (ui.button("Cooldown"))
+						pushNodeToSelectedGroup(FoundryNode.cooldownNode);
+				}
+
 				if (ui.panel(Id.handle(), "Transform")) {
 					if (ui.button("Get Position"))
 						pushNodeToSelectedGroup(FoundryNode.getPositionNode);

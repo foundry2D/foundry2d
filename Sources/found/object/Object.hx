@@ -94,13 +94,13 @@ class Object {
 
 		if(this.body == null){
 			#if debug
-			error("Current object doesn't have a body");
+			error("Current object doesn't have a rigidbody");
 			#end
 			return collisionListeners;
 		}
 
-		var obj:Null<Object> = State.active.getObject(data.objectName);
-		if(obj != null){
+		var obj:Array<Object> = State.active.getObjects(data.objectName);
+		if(obj.length > 0){
 			if(data.tileId != null && Std.isOfType(obj,found.anim.Tilemap)){
 				var tile:Null<found.anim.Tile> = cast(obj,found.anim.Tilemap).tiles.get(data.tileId);
 				if(tile != null){
@@ -118,9 +118,11 @@ class Object {
 				}
 				#end
 			}
-			else if(obj.body != null){
-				var newCollisionListener:echo.Listener = State.active.physics_world.listen(this.body,obj.body,{enter: data.onEnter,stay: data.onStay,exit: data.onExit});
-				collisionListeners.push(newCollisionListener);
+			else if(obj[0].body != null){
+				for(object in obj){
+					var newCollisionListener:echo.Listener = State.active.physics_world.listen(this.body,object.body,{enter: data.onEnter,stay: data.onStay,exit: data.onExit});
+					collisionListeners.push(newCollisionListener);
+				}
 				return collisionListeners;
 			}
 			#if debug
@@ -160,6 +162,7 @@ class Object {
 		}
 		
 		this.body = scene.physics_world.add(new echo.Body(p_raw.rigidBody));
+		body.object = this;
 	}
 
 	function on_physics_move(x:Float,y:Float){
@@ -168,7 +171,7 @@ class Object {
 			data._positions.y = y;
 
 			return data;
-		});
+		},null,false);
 	}
 
 	static final _positions:Array<Vector2> = [];
@@ -179,7 +182,7 @@ class Object {
 	}
 	public var center(get,never):Vector2;
 	function get_center() {
-		return new Vector2(position.x + 0.5 * width * scale.x, position.y + 0.5 * height * scale.y);
+		return new Vector2(position.x + 0.5 * width, position.y + 0.5 * height);
 	}
 	/**
 	 * Add a translation function to be executed in another thread. 
@@ -187,11 +190,17 @@ class Object {
 	 * @param	func The function to be executed in the other thread.
 	 * @param	dt The delta time to be used; defaults to 1.0.
 	 */
-	public function translate(func:MoveData->MoveData,?data:MoveData = null,?dt:Float = 1.0){
+	public function translate(func:MoveData->MoveData,?data:MoveData = null,?onPhysics:Bool = true){
 		if(data == null){
-			data = {_positions:new Vector2(_positions[uid].x,_positions[uid].y),dt: dt};
+			data = {_positions:new Vector2(_positions[uid].x,_positions[uid].y),dt:Timer.delta};
 		}
-		_translations.add(func,data,uid);
+
+		_translations.add(func,data,uid,function(data:MoveData){
+			if(body != null && onPhysics){
+				body.x = data._positions.x;
+				body.y = data._positions.y;
+			}
+		});
 	}
 	/**
 	 * 	Moves from object position to target by the step. 
@@ -205,7 +214,12 @@ class Object {
 			target:new Vector2(target.x,target.y),
 			step:step
 		};
-		_translations.add(moveTo,data,uid);
+		_translations.add(moveTo,data,uid,function(data:MoveData){
+			if(body != null){
+				body.x = data._positions.x;
+				body.y = data._positions.y;
+			}
+		});
 	}
 	function moveTo(data:MoveData){
 		var delta:Vector2 = data.target.sub(data._positions);      // Gap vector
@@ -230,8 +244,12 @@ class Object {
 	}
 	static var _rotations:Array<kha.math.Vector3> = [];
 	static var _rotates:Executor<RotateData> = null;
-	public function rotate(func:RotateData->RotateData, ?dt:Float = 1.0, ?from:Vector2,?towards:Vector2){
-		_rotates.add(func,{_rotations: _rotations[uid],dt: dt,from: from,towards: towards},uid);
+	public function rotate(func:RotateData->RotateData,?from:Vector2,?towards:Vector2,?onPhysics:Bool = false){
+		_rotates.add(func,{_rotations: _rotations[uid],dt: Timer.delta,from: from,towards: towards},uid,function(data:RotateData){
+			if(body != null && onPhysics){
+				body.rotation = data._rotations.z;
+			}
+		});
 	}
 
 	/**
@@ -239,13 +257,17 @@ class Object {
 	 *	If target is within step units length, object position becomes target.
 	 * @param	targetPosition Target position to look towards.
 	 */
-	public function rotateTowardPosition(targetPosition:Vector2) {
+	public function rotateTowardPosition(targetPosition:Vector2,?onPhysics:Bool = false) {
 		var data:RotateData = {
 			_rotations: new Vector3(_rotations[uid].x,_rotations[uid].y, _rotations[uid].z),
 			from: new Vector2(center.x, center.y),
 			towards: new Vector2(targetPosition.x, targetPosition.y)
 		};
-		_rotates.add(rotateToward,data,uid);
+		_rotates.add(rotateToward,data,uid,function(data:RotateData){
+			if(body != null && onPhysics){
+				body.rotation = data._rotations.z;
+			}
+		});
 	}
 
 	function rotateToward(data:RotateData) {
@@ -265,7 +287,7 @@ class Object {
 	static var _scales:Array<Vector2> = [];
 	static var _scaler:Executor<Vector2> = null;
 	public function resize(func:Vector2->Vector2,?dt:Float = 1.0) {
-		_scaler.add(func,_scales[uid],uid);
+		_scaler.add(func,_scales[uid],uid,function(data:Vector2){});
 	}
 
 	private var _width:Float =0.0;
@@ -321,18 +343,7 @@ class Object {
 		if(p_raw.active)
 			activate();
 		else
-			deactivate();
-
-		Scene.createTraits(p_raw.traits,this);		
-	}
-
-	function update(dt:Float){
-		if (!Scene.ready) return;
-		
-		if(body != null){
-			body.x = position.x;
-			body.y = position.y;
-		}
+			deactivate();		
 	}
 
 	public function render(canvas:Canvas){

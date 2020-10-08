@@ -11,13 +11,14 @@ class Executor<T> {
     var actions:Array<T->T> = [];
     var datas:Array<T> = [];
     var uids:Array<Int> = [];
+    var sets:Array<T->Void> = [];
     #if (!kha_krom && !android)
     var workers:Array<Worker> = [];
     var rest:Worker;
     #end
     public function new(p_field:String){
         #if debug
-        if(Scheduler.time() == 0) trace("You cant create Executors before the Scheduler has been created.Solution: Create your executor in the new function of your class.");
+        if(Scheduler.time() == 0) warn("You cant create Executors before the Scheduler has been created.Solution: Create your executor in the new function of your class.");
         #end
         field = p_field;
         #if kha_kore
@@ -49,15 +50,17 @@ class Executor<T> {
         else{
             modified[data.uid] = data.out;
         }
+        data.set(data.out);
         #if editor
         if(found.App.editorui.inspector != null)
             found.App.editorui.inspector.updateField(data.uid,field,modified[data.uid]);
         #end
     }
-    public function add(func:T->T,data:T,uid:Int){
+    public function add(func:T->T,data:T,uid:Int,set:T->Void){
         actions.push(func);
         datas.push(data);
         uids.push(uid);
+        sets.push(set);
     }
     // @:Incomplete. We should use webworkers in the futur for html5(fixing khamake creation of workers)
     // And look at adding multithreading in Krom. As of now this would take too much time
@@ -67,16 +70,17 @@ class Executor<T> {
         if(!found.Scene.ready || State.active._entities.length == 0) return;
         #if (kha_html5 || kha_krom || android)
         for(i in 0...actions.length){
-            set({out: actions[i](datas[i]),uid: uids[i]});
+            set({out: actions[i](datas[i]),uid: uids[i], set: sets[i]});
         }
         actions = [];
         datas= [];
-        uids= [];
+        uids = [];
+        sets = [];
         #else
         if(actions.length % threads == 0){
             var len:Int = Std.int(actions.length/threads);
             for(i in 0...threads){
-                workers[i].post({actions: actions.splice(0,len),datas: datas.splice(0,len), uids: uids.splice(0,len)});
+                workers[i].post({actions: actions.splice(0,len),datas: datas.splice(0,len), uids: uids.splice(0,len), sets: sets.splice(0,len)});
             }
         }
         else{
@@ -84,10 +88,10 @@ class Executor<T> {
             var rlen = actions.length % threads;
             for(i in 0...threads){
                 if(actions.length < len)continue;
-                workers[i].post({actions: actions.splice(0,len),datas: datas.splice(0,len), uids: uids.splice(0,len)});
+                workers[i].post({actions: actions.splice(0,len),datas: datas.splice(0,len), uids: uids.splice(0,len), sets: sets.splice(0,len)});
             }
             if(len > 1)
-                rest.post({actions: actions.splice(0,rlen),datas: datas.splice(0,rlen), uids: uids.splice(0,rlen)});
+                rest.post({actions: actions.splice(0,rlen),datas: datas.splice(0,rlen), uids: uids.splice(0,rlen), sets: sets.splice(0,rlen)});
         }
         #end
     }

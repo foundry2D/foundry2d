@@ -8,7 +8,7 @@ class Action {
         kha.Worker.notifyWorker(function(message:Dynamic){
             var actions:Array<Any> = message.actions;
             for(i in 0...actions.length){
-                kha.Worker.postFromWorker({out: message.actions[i](message.datas[i]), uid: message.uids[i]});
+                kha.Worker.postFromWorker({out: message.actions[i](message.datas[i]), uid: message.uids[i],set: message.sets[i]});
             }
         });
         #end

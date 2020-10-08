@@ -101,16 +101,16 @@ class Scene {
   @:access(found.object.Object)
   function addToStateArray(object:Object){
 
-      _entities.push(object);
+    _entities.push(object);
 
-      if(physics_world != null){// Add rigidbody to Object
-        if(object.raw.rigidBody != null){
-          _entities[_entities.length-1].makeBody(this,object.raw);
-        } 
-        if(Std.is(object, Tilemap)){
-          var map:Tilemap = cast(object,Tilemap);
-          map.makeBodies(this);
-        }
+    if(physics_world != null){// Add rigidbody to Object
+      if(object.raw.rigidBody != null){
+        _entities[_entities.length-1].makeBody(this,object.raw);
+      } 
+      if(Std.is(object, Tilemap)){
+        var map:Tilemap = cast(object,Tilemap);
+        map.makeBodies(this);
+      }
     }
     if(object.active){
       activeEntities.push(object);
@@ -118,6 +118,8 @@ class Scene {
     else{
       inactiveEntities.push(object);
     }
+
+    createTraits(object.raw.traits,object);
 
     if(!Scene.ready && raw._entities.length == _entities.length){
       Scene.ready = true;
@@ -182,11 +184,13 @@ class Scene {
       App.traitInits.splice(0, App.traitInits.length);
  
     }
-
-    for (entity in activeEntities) entity.update(dt);
-
+    
     physicsUpdate(STEP);
 
+    // Call deferred actions
+    for(exe in Executor.executors){
+      exe.execute();
+    }
 
     var i = 0;
 		var l = App.traitUpdates.length;
@@ -223,7 +227,7 @@ class Scene {
     if(!Scene.ready && raw._entities.length != _entities.length)
       return;// This scene is not ready to render
 
-    var ordered = _entities.copy();
+    var ordered = #if editor !App.editorui.isPlayMode ? _entities.copy(): #end activeEntities.copy() ;
     if(cullOffset != 0){
       var objects:Array<Object> = [];
       for(i in 0...ordered.length) {
@@ -307,6 +311,18 @@ class Scene {
     return names;
   }
 
+  public function getObjects(name:String){
+    if(name=="")return null;
+    var objects:Array<Object> = [];
+    for(object in _entities){
+      if(object.raw.name == name){
+          objects.push(object);
+      }
+    }
+    return objects;
+
+  }
+
   public function getObject(name:String){
     if(name=="")return null;
     for(object in _entities){
@@ -344,6 +360,8 @@ class Scene {
     entity.active = false;
     if(entity.spawned) {
       _entities.remove(entity);
+      inactiveEntities.remove(entity);
+      entity.body = null;
       entity = null;
     }
   }

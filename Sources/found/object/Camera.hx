@@ -47,20 +47,17 @@ class Camera extends Object {
 		return this.position.y + 0.5 * Found.HEIGHT;
 	}
 
-	public override function update(dt:Float) {
-		if (target == null)
-			return;
-		if (offsetX < Math.abs(Math.abs(this.viewX) - target.center.x)) {
-			this.position.x = Util.lerp(this.position.x, target.center.x - 0.5 * Found.WIDTH, camSpeedX * dt);
-		}
-		if (offsetY < Math.abs(Math.abs(this.viewY) - target.center.y)) {
-			this.position.y = Util.lerp(this.position.y, target.center.y - 0.5 * Found.HEIGHT, camSpeedY * dt);
-		}
-	}
-
 	public override function render(canvas:Canvas) {
 		if (!Scene.ready)
 			return;
+		if (target != null){
+			if (offsetX < Math.abs(Math.abs(this.viewX) - target.center.x)) {
+				this.position.x = Util.lerp(this.position.x, target.center.x - 0.5 * Found.WIDTH, camSpeedX * Timer.delta);
+			}
+			if (offsetY < Math.abs(Math.abs(this.viewY) - target.center.y)) {
+				this.position.y = Util.lerp(this.position.y, target.center.y - 0.5 * Found.HEIGHT, camSpeedY * Timer.delta);
+			}
+		}
 		#if debug
 		canvas.g2.color = kha.Color.Red;
 		canvas.g2.drawRect(0.5 * Found.WIDTH - this.position.x, 0.5 * Found.HEIGHT - this.position.y, offsetX, offsetX);

@@ -77,15 +77,18 @@ class Sprite extends Object {
 		data.setCurrentAnimationByName(animationName);
 	}
 	
-	override function update(dt:Float): Void {
+	function animate(): Void {
 		if(data == null)return;
-		super.update(dt);
 		data.animation.next();
 	}
 	
 	override public function render(canvas: Canvas): Void {
 		if(data == null)return;
 		super.render(canvas);
+		#if editor 
+		if(App.editorui.isPlayMode)
+		#end
+			animate();
 		if (data.image != null) {
 			var frame = data.animation.get();
 			var tx = frame.tx != null ? frame.tx: Std.int(frame.id * _w) % data.image.width;

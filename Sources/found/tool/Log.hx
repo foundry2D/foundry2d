@@ -40,6 +40,12 @@ class Log {
     }
     static function log(v:Dynamic, ?infos:Null<haxe.PosInfos>){
         oldTrace(v,infos);
+        var t:String = v;
+        if(!StringTools.contains(t,"ERROR") && !StringTools.contains(t,"WARNING")){
+            for(logger in customLogs){
+                logger(v,infos);
+            }
+        }
     }
     static function initialize() {
         oldTrace = haxe.Log.trace;

@@ -134,6 +134,18 @@ class Util {
 	{	if(value % grid == 0) return value;
 		return value += grid - Math.floor(value) % grid;
 	}
+
+	/**
+	 * Returns the sign of x.
+	 * sgn(0) = 0.
+	 */
+	 inline public static function sign(x:Float):Int {
+		return (x > 0) ? 1 : (x < 0 ? -1 : 0);
+	}
+	inline public static function signEq(x:Float,y:Float):Bool {
+		return Util.sign(x)==Util.sign(y);
+	}
+	
 }
 
 /**

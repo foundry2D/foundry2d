@@ -2,6 +2,7 @@ let project = new Project('found');
 project.addAssets('defaults/**');
 project.addSources('Sources');
 project.addDefine("found");
+project.addDefine("zui_translate");
 project.addParameter('found.trait');
 project.addParameter("--macro keep('found.trait')");
 project.addParameter('found.node');

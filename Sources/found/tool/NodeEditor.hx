@@ -43,6 +43,21 @@ class NodeEditor {
 	public static var nodesArray:Array<LogicTreeData> = [];
 	public static var selectedNode:LogicTreeData = null;
 
+	static var panX(get,never):Float;
+	static function get_panX() {
+		if(NodeEditor.selectedNode != null){
+			return NodeEditor.selectedNode.nodes.panX * NodeEditor.selectedNode.nodes.SCALE() % 40 - 40;
+		}
+		return 0.0;
+	}
+	static var panY(get,never):Float;
+	static function get_panY() {
+		if(NodeEditor.selectedNode != null){
+			return NodeEditor.selectedNode.nodes.panY * NodeEditor.selectedNode.nodes.SCALE() % 40 - 40;
+		}
+		return 0.0;
+	}
+
 	static var gameplayNodes:Map<String, Array<TNode>> = new Map<String, Array<TNode>>();
 
 	public static function addCustomNode(section:String, node:Dynamic) {
@@ -60,7 +75,7 @@ class NodeEditor {
 	public function redraw() {
 		nodeCanvasWindowHandle.redraws = nodeMenuWindowHandle.redraws = nodeMenuTabHandle.redraws = 2;
 	}
-
+	
 	public function render(ui:zui.Zui) {
 		if (!visible)
 			return;
@@ -68,8 +83,8 @@ class NodeEditor {
 		var nodePanX:Float = 0.0;
 		var nodePanY:Float = 0.0;
 		if (NodeEditor.selectedNode != null) {
-			nodePanX += NodeEditor.selectedNode.nodes.panX * NodeEditor.selectedNode.nodes.SCALE() % 40 - 40;
-			nodePanY += NodeEditor.selectedNode.nodes.panY * NodeEditor.selectedNode.nodes.SCALE() % 40 - 40;
+			nodePanX += panX;
+			nodePanY += panY;
 			if (nodePanX > 0.0)
 				nodePanX = 0;
 			else if (Math.abs(nodePanX) > kha.System.windowWidth() - NodeEditor.width)
@@ -190,9 +205,9 @@ class NodeEditor {
 						pushNodeToSelectedGroup(FoundryNode.joinVec2Node);
 				}
 				if (ui.panel(Id.handle(), "Time")) {
-					if (ui.button("Every X ms"))
+					if (ui.button("Every X Seconds"))
 						pushNodeToSelectedGroup(FoundryNode.everyXNode);
-					if (ui.button("Cooldown"))
+					if (ui.button("Cooldown X Seconds"))
 						pushNodeToSelectedGroup(FoundryNode.cooldownNode);
 				}
 
@@ -215,6 +230,8 @@ class NodeEditor {
 						pushNodeToSelectedGroup(FoundryNode.getObjectNode);
 					if (ui.button("Spawn Object"))
 						pushNodeToSelectedGroup(FoundryNode.spawnObjectNode);
+					if (ui.button("Is Object Outside View"))
+						pushNodeToSelectedGroup(FoundryNode.isObjectOutsideViewNode);
 					if (ui.button("Destroy Object"))
 						pushNodeToSelectedGroup(FoundryNode.destroyObjectNode);
 					if (ui.button("Destroy Object Outside View"))
@@ -281,6 +298,10 @@ class NodeEditor {
 	}
 
 	public static function pushNodeToSelectedGroup(tnode:TNode) {
+		var valueX = panX;
+		var valueY = panY;
+		tnode.x = valueX * -1 + NodeEditor.width * 0.5;
+		tnode.y = valueY * -1 + NodeEditor.height * 0.5;
 		selectedNode.nodeCanvas.nodes.push(NodeCreator.createNode(tnode, selectedNode.nodes, selectedNode.nodeCanvas));
 	}
 

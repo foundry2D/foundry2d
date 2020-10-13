@@ -17,7 +17,7 @@
             "traits":[
                 {
                     "type": "Script",
-                    "class_name": "found.trait.internal.LoadingScript"
+                    "classname": "found.trait.internal.LoadingScript"
                 }
             ],
             "rigidBody":{

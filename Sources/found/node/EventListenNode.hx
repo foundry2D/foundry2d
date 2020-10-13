@@ -6,12 +6,14 @@ class EventListenNode extends LogicNode {
 
 	public function new(tree:LogicTree) {
 		super(tree);
-		tree.notifyOnInit(addEvent);
 		tree.notifyOnRemove(removeEvent);
+	}
+	override function run(from:Int) {
+		addEvent();
 	}
 	var eventName:String;
 	function addEvent() {
-		eventName = inputs[0].get();
+		eventName = inputs[1].get();
 		if(eventName != "" && eventName != null){
 			Event.add(eventName,onEvent,tree.object.uid);
 		}

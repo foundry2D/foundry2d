@@ -462,7 +462,7 @@ class FoundryNode {
 	};
 	public static var everyXNode:TNode = {
 		id: 0,
-		name: "Every X ms",
+		name: "Every X sec",
 		type: "EveryXNode",
 		x: 200,
 		y: 200,
@@ -471,7 +471,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Number of ms",
+				name: "Number of sec",
 				type: "VALUE",
 				color: -10183681,
 				default_value: 0.0
@@ -509,7 +509,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Number of ms",
+				name: "Number of sec",
 				type: "VALUE",
 				color: -10183681,
 				default_value: 0.0
@@ -732,7 +732,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Object",
+				name: "Object to Rotate",
 				type: "OBJECT",
 				color: -4934476,
 				default_value: null
@@ -918,6 +918,43 @@ class FoundryNode {
 			}
 		],
 		outputs: [],
+		buttons: [],
+		color: -4962746
+	};
+	public static var isObjectOutsideViewNode:TNode = {
+		id: 0,
+		name: "Is Object Outside View",
+		type: "IsObjectOutsideViewNode",
+		x: 200,
+		y: 200,
+		inputs: [			
+			{
+				id: 0,
+				node_id: 0,
+				name: "Object",
+				type: "OBJECT",
+				color: -4934476,
+				default_value: null
+			},
+			{
+				id: 0,
+				node_id: 0,
+				name: "OffsetFromView",
+				type: "VALUE",
+				color: -10183681,
+				default_value: 0.0
+			}
+		],
+		outputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name: "Out",
+				type: "ACTION",
+				color: 0xffaa4444,
+				default_value: ""
+			}
+		],
 		buttons: [],
 		color: -4962746
 	};
@@ -1199,6 +1236,14 @@ class FoundryNode {
 		x: 200,
 		y: 200,
 		inputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name: "Reset Vel & angle",
+				type: "ACTION",
+				color: 0xffaa4444,
+				default_value: ""
+			},
 			{
 				id: 0,
 				node_id: 0,

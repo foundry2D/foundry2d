@@ -260,14 +260,6 @@ class Scene {
     if(ordered.length > 0)
       canvas.g2.popTransformation();
     
-    //@TODO: Evaluate if we still need this in render... ?
-    if (App.traitInits.length > 0 #if editor && App.editorui.isPlayMode #end) {
-			for (f in App.traitInits) { App.traitInits.length > 0 ? f() : break; }
-			App.traitInits.splice(0, App.traitInits.length);
-      for(exe in Executor.executors){
-        exe.execute();
-      }
-    }
     #if debug
     if(physics_world != null && Found.collisionsDraw){
       physics_world.for_each(function(f:echo.Body){

@@ -32,7 +32,7 @@ class CanvasScript extends Trait {
 	 * @param canvasName Name of the canvas
 	 * @param font font file (Optional)
 	 */
-	public function new(canvasName: String, font: String = "font_default.ttf",b_canvas:kha.Blob=null) {
+	public function new(canvasName: String, font: String = "font_default.ttf",b_canvas:kha.Blob=null,?noWarn:Bool=false) {
         super();
         
         customDraw = new Map<String,kha.graphics2.Graphics->TElement->Void>();
@@ -42,7 +42,7 @@ class CanvasScript extends Trait {
             if (tBlob != null) {
                 Canvas.themes = haxe.Json.parse(tBlob.toString());
             }
-            else {
+            else if(!noWarn){
 				warn("\"_themes.json\" is empty! Using default theme instead.");
             }
 

@@ -182,7 +182,11 @@ class Scene {
     if (App.traitInits.length > 0) {
       for (f in App.traitInits) { App.traitInits.length > 0 ? f() : break; }
       App.traitInits.splice(0, App.traitInits.length);
- 
+
+        // Call deferred actions for init and awake
+      for(exe in Executor.executors){
+        exe.execute();
+      }
     }
     
     physicsUpdate(STEP);

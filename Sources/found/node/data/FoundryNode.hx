@@ -460,6 +460,117 @@ class FoundryNode {
 		],
 		buttons: []
 	};
+	public static var addVec2Node:TNode = {
+		id: 0,
+		name: "Add Vec2",
+		type: "AddVec2Node",
+		x: 200,
+		y: 200,
+		color: -4962746,
+		inputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name: "Fisrt Vec2",
+				type: "VECTOR2",
+				color: -7929601,
+				default_value: [0.0, 0.0]
+			},
+			{
+				id: 0,
+				node_id: 0,
+				name: "Second Vec2",
+				type: "VECTOR2",
+				color: -7929601,
+				default_value: [0.0, 0.0]
+			}
+		],
+		outputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name: "Vec2",
+				type: "VECTOR2",
+				color: -7929601,
+				default_value: [0.0, 0.0]
+			}
+		],
+		buttons: []
+	};
+	public static var multiplyVec2Node:TNode = {
+		id: 0,
+		name: "Multiply Vec2",
+		type: "MultiplyVec2Node",
+		x: 200,
+		y: 200,
+		color: -4962746,
+		inputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name: "Fisrt Vec2",
+				type: "VECTOR2",
+				color: -7929601,
+				default_value: [0.0, 0.0]
+			},
+			{
+				id: 0,
+				node_id: 0,
+				name: "Multiplier",
+				type: "VALUE",
+				color: -10183681,
+				default_value: 0.0
+			}
+		],
+		outputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name: "Vec2",
+				type: "VECTOR2",
+				color: -7929601,
+				default_value: [0.0, 0.0]
+			}
+		],
+		buttons: []
+	};
+	public static var multiplyVec2sNode:TNode = {
+		id: 0,
+		name: "Multiply Vec2's",
+		type: "MultiplyVec2sNode",
+		x: 200,
+		y: 200,
+		color: -4962746,
+		inputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name: "Fisrt Vec2",
+				type: "VECTOR2",
+				color: -7929601,
+				default_value: [0.0, 0.0]
+			},
+			{
+				id: 0,
+				node_id: 0,
+				name: "Second Vec2",
+				type: "VECTOR2",
+				color: -7929601,
+				default_value: [0.0, 0.0]
+			}
+		],
+		outputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name: "Vec2",
+				type: "VECTOR2",
+				color: -7929601,
+				default_value: [0.0, 0.0]
+			}
+		],
+		buttons: []
+	};
 	public static var everyXNode:TNode = {
 		id: 0,
 		name: "Every X sec",
@@ -579,6 +690,64 @@ class FoundryNode {
 				id: 0,
 				node_id: 0,
 				name: "Center Vec2",
+				type: "VECTOR2",
+				color: -7929601,
+				default_value: new kha.math.FastVector2(0.0, 0.0)
+			}
+		],
+		buttons: []
+	};
+	public static var getForwardNode:TNode = {
+		id: 0,
+		name: "Get Forward",
+		type: "GetForwardNode",
+		x: 200,
+		y: 200,
+		color: -4962746,
+		inputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name: "Object",
+				type: "OBJECT",
+				color: -4934476,
+				default_value: null
+			}
+		],
+		outputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name: "Forward Vec2",
+				type: "VECTOR2",
+				color: -7929601,
+				default_value: new kha.math.FastVector2(0.0, 0.0)
+			}
+		],
+		buttons: []
+	};
+	public static var getWidthHeightNode:TNode = {
+		id: 0,
+		name: "Get Width/Height",
+		type: "GetWidthHeightNode",
+		x: 200,
+		y: 200,
+		color: -4962746,
+		inputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name: "Object",
+				type: "OBJECT",
+				color: -4934476,
+				default_value: null
+			}
+		],
+		outputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name: "Width/Height Vec2",
 				type: "VECTOR2",
 				color: -7929601,
 				default_value: new kha.math.FastVector2(0.0, 0.0)

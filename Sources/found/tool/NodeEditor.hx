@@ -203,6 +203,12 @@ class NodeEditor {
 						pushNodeToSelectedGroup(FoundryNode.splitVec2Node);
 					if (ui.button("Join Vec2"))
 						pushNodeToSelectedGroup(FoundryNode.joinVec2Node);
+					if (ui.button("Add Vec2"))
+						pushNodeToSelectedGroup(FoundryNode.addVec2Node);
+					if (ui.button("Multiply Vec2"))
+						pushNodeToSelectedGroup(FoundryNode.multiplyVec2Node);
+					if (ui.button("Multiply 2 Vec2"))
+						pushNodeToSelectedGroup(FoundryNode.multiplyVec2sNode);
 				}
 				if (ui.panel(Id.handle(), "Time")) {
 					if (ui.button("Every X Seconds"))
@@ -216,6 +222,10 @@ class NodeEditor {
 						pushNodeToSelectedGroup(FoundryNode.getPositionNode);
 					if (ui.button("Get Center"))
 						pushNodeToSelectedGroup(FoundryNode.getCenterNode);
+					if (ui.button("Get Forward"))
+						pushNodeToSelectedGroup(FoundryNode.getForwardNode);
+					if (ui.button("Get Width/Height"))
+						pushNodeToSelectedGroup(FoundryNode.getWidthHeightNode);
 					if (ui.button("Set Object Location"))
 						pushNodeToSelectedGroup(FoundryNode.setObjectLocationNode);
 					if (ui.button("Get Rotation"))

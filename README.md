@@ -9,4 +9,6 @@ Foundry is a real-time and all in one game engine. The goal is performance, ease
 
 [![Support this project on Patreon](https://c5.patreon.com/external/logo/become_a_patron_button.png)](https://www.patreon.com/user?u=11154829)
 
+![Mundusnine github stats](https://github-readme-stats.vercel.app/api?username=mundusnine&theme=dark&show_icons=true)
+
 

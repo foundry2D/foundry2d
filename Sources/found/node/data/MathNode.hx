@@ -4,10 +4,10 @@ import kha.Color;
 import zui.Nodes.TNode;
 
 class MathNode {
-
+	public static inline function _tr(s: String) { return s; }
 	public static var maths: TNode = {
 		id: 0,
-		name: "Maths",
+		name:_tr("Maths"),
 		type: "MathNode",
 		x: 200,
 		y: 200,
@@ -16,7 +16,7 @@ class MathNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Value",
+				name:_tr("Value"),
 				type: "VALUE",
 				color: -10183681,
 				default_value: 0.0,
@@ -25,7 +25,7 @@ class MathNode {
 			{
 				id: 1,
 				node_id: 0,
-				name: "Value",
+				name:_tr("Value"),
 				type: "VALUE",
 				color: -10183681,
 				default_value: 0.0,
@@ -36,7 +36,7 @@ class MathNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "value",
+				name:_tr("value"),
 				type: "Value",
 				color: -10183681,
 				default_value: 0.0
@@ -44,7 +44,7 @@ class MathNode {
 		],
 		buttons: [
 			{
-				name: "operations",
+				name:_tr("operations"),
 				type: "ENUM",
 				data: ["Add", "Subtract", "Multiply", "Divide"],
 				output: 0,
@@ -55,7 +55,7 @@ class MathNode {
 
 	public static var radtodeg: TNode = {
 		id: 0,
-		name: "Radian to Degre",
+		name:_tr("Radian to Degre"),
 		type: "RadToDegNode",
 		x: 200,
 		y: 200,
@@ -64,7 +64,7 @@ class MathNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Rad",
+				name:_tr("Rad"),
 				type: "VALUE",
 				color: -10183681,
 				default_value: 0.0,
@@ -75,7 +75,7 @@ class MathNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Deg",
+				name:_tr("Deg"),
 				type: "Value",
 				color: -10183681,
 				default_value: 0.0
@@ -86,7 +86,7 @@ class MathNode {
 
 	public static var degtorad: TNode = {
 		id: 0,
-		name: "Degree to Radian",
+		name:_tr("Degree to Radian"),
 		type: "DegToRadNode",
 		x: 200,
 		y: 200,
@@ -95,7 +95,7 @@ class MathNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Deg",
+				name:_tr("Deg"),
 				type: "VALUE",
 				color: -10183681,
 				default_value: 0.0,
@@ -106,7 +106,7 @@ class MathNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Rad",
+				name:_tr("Rad"),
 				type: "Value",
 				color: -10183681,
 				default_value: 0.0
@@ -117,7 +117,7 @@ class MathNode {
 
 	public static var randf: TNode = {
 		id: 0,
-		name: "Random (Float)",
+		name:_tr("Random (Float)"),
 		type: "RandFNode",
 		x: 200,
 		y: 200,
@@ -126,7 +126,7 @@ class MathNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Float",
+				name:_tr("Float"),
 				type: "VALUE",
 				color: -10183681,
 				default_value: 0.0,
@@ -135,7 +135,7 @@ class MathNode {
 			{
 				id: 1,
 				node_id: 0,
-				name: "Float",
+				name:_tr("Float"),
 				type: "VALUE",
 				color: -10183681,
 				default_value: 0.0,
@@ -146,7 +146,7 @@ class MathNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Float",
+				name:_tr("Float"),
 				type: "Value",
 				color: -10183681,
 				default_value: 0.0
@@ -157,7 +157,7 @@ class MathNode {
 
 	public static var randi: TNode = {
 		id: 0,
-		name: "Random (Int)",
+		name:_tr("Random (Int)"),
 		type: "RandINode",
 		x: 200,
 		y: 200,
@@ -166,7 +166,7 @@ class MathNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Int",
+				name:_tr("Int"),
 				type: "VALUE",
 				color: -10183681,
 				default_value: 0,
@@ -176,7 +176,7 @@ class MathNode {
 			{
 				id: 1,
 				node_id: 0,
-				name: "Int",
+				name:_tr("Int"),
 				type: "VALUE",
 				color: -10183681,
 				default_value: 0,
@@ -188,7 +188,7 @@ class MathNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Int",
+				name:_tr("Int"),
 				type: "Value",
 				color: -10183681,
 				default_value: 0

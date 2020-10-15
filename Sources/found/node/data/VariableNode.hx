@@ -4,9 +4,10 @@ import kha.Color;
 import zui.Nodes.TNode;
 
 class VariableNode {
+	public static inline function _tr(s: String) { return s; }
 	public static var string:TNode = {
 		id: 0,
-		name: "String",
+		name:_tr("String"),
 		type: "StringNode",
 		x: 200,
 		y: 200,
@@ -15,7 +16,7 @@ class VariableNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "String",
+				name:_tr("String"),
 				type: "STRING",
 				color: -4934476,
 				default_value: ""
@@ -25,7 +26,7 @@ class VariableNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "String",
+				name:_tr("String"),
 				type: "STRING",
 				color: -4934476,
 				default_value: ""
@@ -36,7 +37,7 @@ class VariableNode {
 
 	public static var float:TNode = {
 		id: 0,
-		name: "Float",
+		name:_tr("Float"),
 		type: "FloatNode",
 		x: 200,
 		y: 200,
@@ -45,7 +46,7 @@ class VariableNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Float",
+				name:_tr("Float"),
 				type: "VALUE",
 				color: -10183681,
 				default_value: 0.0,
@@ -56,7 +57,7 @@ class VariableNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Float",
+				name:_tr("Float"),
 				type: "VALUE",
 				color: -10183681,
 				default_value: 0.0
@@ -67,7 +68,7 @@ class VariableNode {
 
 	public static var int:TNode = {
 		id: 0,
-		name: "Int",
+		name:_tr("Int"),
 		type: "IntegerNode",
 		x: 200,
 		y: 200,
@@ -76,7 +77,7 @@ class VariableNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Int",
+				name:_tr("Int"),
 				type: "VALUE",
 				color: -10183681,
 				default_value: 0,
@@ -88,7 +89,7 @@ class VariableNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Int",
+				name:_tr("Int"),
 				type: "VALUE",
 				color: -10183681,
 				default_value: 0
@@ -99,7 +100,7 @@ class VariableNode {
 
 	public static var boolean:TNode = {
 		id: 0,
-		name: "Boolean",
+		name:_tr("Boolean"),
 		type: "BoolNode",
 		x: 200,
 		y: 200,
@@ -108,7 +109,7 @@ class VariableNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Bool",
+				name:_tr("Bool"),
 				type: "BOOLEAN",
 				color: -10822566,
 				default_value: ""
@@ -118,7 +119,7 @@ class VariableNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Bool",
+				name:_tr("Bool"),
 				type: "BOOLEAN",
 				color: -10822566,
 				default_value: ""
@@ -129,7 +130,7 @@ class VariableNode {
 
 	public static var vector2:TNode = {
 		id: 0,
-		name: "Vector2",
+		name:_tr("Vector2"),
 		type: "Vector2Node",
 		x: 200,
 		y: 200,
@@ -138,7 +139,7 @@ class VariableNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "X",
+				name:_tr("X"),
 				type: "VALUE",
 				color: -10183681,
 				default_value: 0.0,
@@ -147,7 +148,7 @@ class VariableNode {
 			{
 				id: 1,
 				node_id: 0,
-				name: "Y",
+				name:_tr("Y"),
 				type: "VALUE",
 				color: -10183681,
 				default_value: 0.0,
@@ -158,7 +159,7 @@ class VariableNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Vec2",
+				name:_tr("Vec2"),
 				type: "VECTOR2",
 				color: -7929601,
 				default_value: [0.0, 0.0]
@@ -166,7 +167,7 @@ class VariableNode {
 			{
 				id: 1,
 				node_id: 0,
-				name: "Normalised Vec2",
+				name:_tr("Normalised Vec2"),
 				type: "VECTOR2",
 				color: -7929601,
 				default_value: [0.0, 0.0]

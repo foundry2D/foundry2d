@@ -5,9 +5,10 @@ import kha.math.FastVector2;
 
 @:access(Input.Keyboard)
 class FoundryNode {
+	public static inline function _tr(s: String) { return s; }
 	public static var onAddNode:TNode = {
 		id: 0,
-		name: "On Add",
+		name:_tr("On Add"),
 		type: "OnAddNode",
 		x: 200,
 		y: 200,
@@ -16,7 +17,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Out",
+				name:_tr("Out"),
 				type: "ACTION",
 				color: 0xffaa4444,
 				default_value: ""
@@ -27,7 +28,7 @@ class FoundryNode {
 	};
 	public static var onInitNode:TNode = {
 		id: 0,
-		name: "On Init",
+		name:_tr("On Init"),
 		type: "InitNode",
 		x: 200,
 		y: 200,
@@ -36,7 +37,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Out",
+				name:_tr("Out"),
 				type: "ACTION",
 				color: 0xffaa4444,
 				default_value: ""
@@ -47,7 +48,7 @@ class FoundryNode {
 	};
 	public static var onUpdateNode:TNode = {
 		id: 0,
-		name: "On Update",
+		name:_tr("On Update"),
 		type: "UpdateNode",
 		x: 200,
 		y: 200,
@@ -56,7 +57,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Out",
+				name:_tr("Out"),
 				type: "ACTION",
 				color: 0xffaa4444,
 				default_value: ""
@@ -67,7 +68,7 @@ class FoundryNode {
 	};
 	public static var multiEventNode:TNode = {
 		id: 0,
-		name: "Multiple Events",
+		name:_tr("Multiple Events"),
 		type: "MultiEventNode",
 		x: 200,
 		y: 200,
@@ -75,7 +76,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "In",
+				name:_tr("In"),
 				type: "ACTION",
 				color: 0xffaa4444,
 				default_value: ""
@@ -83,7 +84,7 @@ class FoundryNode {
 			{
 				id: 1,
 				node_id: 0,
-				name: "In",
+				name:_tr("In"),
 				type: "ACTION",
 				color: 0xffaa4444,
 				default_value: ""
@@ -93,7 +94,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Out",
+				name:_tr("Out"),
 				type: "ACTION",
 				color: 0xffaa4444,
 				default_value: ""
@@ -104,7 +105,7 @@ class FoundryNode {
 	};
 	public static var eventListenNode:TNode = {
 		id: 0,
-		name: "Event Listener",
+		name:_tr("Event Listener"),
 		type: "EventListenNode",
 		x: 200,
 		y: 200,
@@ -112,7 +113,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "In",
+				name:_tr("In"),
 				type: "ACTION",
 				color: 0xffaa4444,
 				default_value: ""
@@ -120,7 +121,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Event Name",
+				name:_tr("Event Name"),
 				type: "STRING",
 				color: -4934476,
 				default_value: ""
@@ -130,7 +131,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Out",
+				name:_tr("Out"),
 				type: "ACTION",
 				color: 0xffaa4444,
 				default_value: ""
@@ -141,7 +142,7 @@ class FoundryNode {
 	};
 	public static var sendEventNode:TNode = {
 		id: 0,
-		name: "Send Event",
+		name:_tr("Send Event"),
 		type: "SendEventNode",
 		x: 200,
 		y: 200,
@@ -149,7 +150,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "In",
+				name:_tr("In"),
 				type: "ACTION",
 				color: 0xffaa4444,
 				default_value: ""
@@ -157,7 +158,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Event Name",
+				name:_tr("Event Name"),
 				type: "STRING",
 				color: -4934476,
 				default_value: ""
@@ -165,7 +166,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Object",
+				name:_tr("Object"),
 				type: "OBJECT",
 				color: -4934476,
 				default_value: null
@@ -177,7 +178,7 @@ class FoundryNode {
 	};
 	public static var onMouseNode:TNode = {
 		id: 0,
-		name: "On Mouse",
+		name:_tr("On Mouse"),
 		type: "OnMouseNode",
 		x: 200,
 		y: 200,
@@ -186,7 +187,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Out",
+				name:_tr("Out"),
 				type: "ACTION",
 				color: 0xffaa4444,
 				default_value: ""
@@ -194,14 +195,14 @@ class FoundryNode {
 		],
 		buttons: [
 			{
-				name: "mouseEventType",
+				name:_tr("mouseEventType"),
 				type: "ENUM",
 				data: OnMouseNode.getMouseButtonEventTypes(),
 				output: 0,
 				default_value: 0
 			},
 			{
-				name: "mouseButton",
+				name:_tr("mouseButton"),
 				type: "ENUM",
 				data: Input.Mouse.getMouseButtonStringValues(),
 				output: 0,
@@ -212,7 +213,7 @@ class FoundryNode {
 	};
 	public static var mouseCoordNode:TNode = {
 		id: 0,
-		name: "Mouse Coord",
+		name:_tr("Mouse Coord"),
 		type: "MouseCoordNode",
 		x: 200,
 		y: 200,
@@ -221,7 +222,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Position",
+				name:_tr("Position"),
 				type: "VECTOR2",
 				color: -7929601,
 				default_value: ""
@@ -229,7 +230,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Movement",
+				name:_tr("Movement"),
 				type: "VECTOR2",
 				color: -7929601,
 				default_value: ""
@@ -237,7 +238,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Wheel Delta",
+				name:_tr("Wheel Delta"),
 				type: "VALUE",
 				color: -10183681,
 				default_value: ""
@@ -248,7 +249,7 @@ class FoundryNode {
 	};
 	public static var onKeyboardNode:TNode = {
 		id: 0,
-		name: "On Keyboard",
+		name:_tr("On Keyboard"),
 		type: "OnKeyboardNode",
 		x: 200,
 		y: 200,
@@ -257,7 +258,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Out",
+				name:_tr("Out"),
 				type: "ACTION",
 				color: 0xffaa4444,
 				default_value: ""
@@ -265,7 +266,7 @@ class FoundryNode {
 			{
 				id: 1,
 				node_id: 0,
-				name: "isActive",
+				name:_tr("isActive"),
 				type: "BOOLEAN",
 				color: -10822566,
 				default_value: 0.0
@@ -273,14 +274,14 @@ class FoundryNode {
 		],
 		buttons: [
 			{
-				name: "keyboardEventType",
+				name:_tr("keyboardEventType"),
 				type: "ENUM",
 				data: OnKeyboardNode.getKeyboardEventTypes(),
 				output: 0,
 				default_value: 0
 			},
 			{
-				name: "keyCode",
+				name:_tr("keyCode"),
 				type: "ENUM",
 				data: Input.Keyboard.getKeyCodeStringValues(),
 				output: 0,
@@ -291,7 +292,7 @@ class FoundryNode {
 	};
 	public static var onGamepadAxisInputNode:TNode = {
 		id: 0,
-		name: "On Gamepad Axis Input",
+		name:_tr("On Gamepad Axis Input"),
 		type: "OnGamepadAxisInputNode",
 		x: 200,
 		y: 200,
@@ -299,7 +300,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Gamepad Index",
+				name:_tr("Gamepad Index"),
 				type: "VALUE",
 				color: -10183681,
 				default_value: 0
@@ -309,7 +310,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Out",
+				name:_tr("Out"),
 				type: "ACTION",
 				color: 0xffaa4444,
 				default_value: ""
@@ -317,7 +318,7 @@ class FoundryNode {
 			{
 				id: 1,
 				node_id: 0,
-				name: "Float Axis Value",
+				name:_tr("Float Axis Value"),
 				type: "FLOAT",
 				color: -10183681,
 				default_value: 0.0
@@ -325,7 +326,7 @@ class FoundryNode {
 		],
 		buttons: [
 			{
-				name: "selectedAxisName",
+				name:_tr("selectedAxisName"),
 				type: "ENUM",
 				data: Input.Gamepad.getAxisStringValues(),
 				output: 0,
@@ -336,7 +337,7 @@ class FoundryNode {
 	};
 	public static var onGamepadButtonInputNode:TNode = {
 		id: 0,
-		name: "On Gamepad Button Input",
+		name:_tr("On Gamepad Button Input"),
 		type: "OnGamepadButtonInputNode",
 		x: 200,
 		y: 200,
@@ -344,7 +345,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Gamepad Index",
+				name:_tr("Gamepad Index"),
 				type: "VALUE",
 				color: -10183681,
 				default_value: 0
@@ -354,7 +355,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Out",
+				name:_tr("Out"),
 				type: "ACTION",
 				color: 0xffaa4444,
 				default_value: ""
@@ -362,7 +363,7 @@ class FoundryNode {
 			{
 				id: 1,
 				node_id: 0,
-				name: "Int Button Value",
+				name:_tr("Int Button Value"),
 				type: "INT",
 				color: -10183681,
 				default_value: 0.0
@@ -370,14 +371,14 @@ class FoundryNode {
 		],
 		buttons: [
 			{
-				name: "selectedButtonEventType",
+				name:_tr("selectedButtonEventType"),
 				type: "ENUM",
 				data: OnGamepadButtonInputNode.getButtonEventTypes(),
 				output: 0,
 				default_value: 0
 			},
 			{
-				name: "selectedButtonName",
+				name:_tr("selectedButtonName"),
 				type: "ENUM",
 				data: Input.Gamepad.getButtonStringValues(),
 				output: 0,
@@ -388,7 +389,7 @@ class FoundryNode {
 	};
 	public static var splitVec2Node:TNode = {
 		id: 0,
-		name: "Split Vec2",
+		name:_tr("Split Vec2"),
 		type: "SplitVec2Node",
 		x: 200,
 		y: 200,
@@ -397,7 +398,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Vec2",
+				name:_tr("Vec2"),
 				type: "VECTOR2",
 				color: -7929601,
 				default_value: [0.0, 0.0]
@@ -407,7 +408,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "X",
+				name:_tr("X"),
 				type: "VALUE",
 				color: -10183681,
 				default_value: 0.0
@@ -415,7 +416,7 @@ class FoundryNode {
 			{
 				id: 1,
 				node_id: 0,
-				name: "Y",
+				name:_tr("Y"),
 				type: "VALUE",
 				color: -10183681,
 				default_value: 0.0
@@ -425,7 +426,7 @@ class FoundryNode {
 	};
 	public static var joinVec2Node:TNode = {
 		id: 0,
-		name: "Join Vec2",
+		name:_tr("Join Vec2"),
 		type: "JoinVec2Node",
 		x: 200,
 		y: 200,
@@ -434,7 +435,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "X",
+				name:_tr("X"),
 				type: "VALUE",
 				color: -10183681,
 				default_value: 0.0
@@ -442,7 +443,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Y",
+				name:_tr("Y"),
 				type: "VALUE",
 				color: -10183681,
 				default_value: 0.0
@@ -452,7 +453,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Vec2",
+				name:_tr("Vec2"),
 				type: "VECTOR2",
 				color: -7929601,
 				default_value: [0.0, 0.0]
@@ -462,7 +463,7 @@ class FoundryNode {
 	};
 	public static var addVec2Node:TNode = {
 		id: 0,
-		name: "Add Vec2",
+		name:_tr("Add Vec2"),
 		type: "AddVec2Node",
 		x: 200,
 		y: 200,
@@ -471,7 +472,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Fisrt Vec2",
+				name:_tr("Fisrt Vec2"),
 				type: "VECTOR2",
 				color: -7929601,
 				default_value: [0.0, 0.0]
@@ -479,7 +480,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Second Vec2",
+				name:_tr("Second Vec2"),
 				type: "VECTOR2",
 				color: -7929601,
 				default_value: [0.0, 0.0]
@@ -489,7 +490,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Vec2",
+				name:_tr("Vec2"),
 				type: "VECTOR2",
 				color: -7929601,
 				default_value: [0.0, 0.0]
@@ -499,7 +500,7 @@ class FoundryNode {
 	};
 	public static var multiplyVec2Node:TNode = {
 		id: 0,
-		name: "Multiply Vec2",
+		name:_tr("Multiply Vec2"),
 		type: "MultiplyVec2Node",
 		x: 200,
 		y: 200,
@@ -508,7 +509,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Fisrt Vec2",
+				name:_tr("Fisrt Vec2"),
 				type: "VECTOR2",
 				color: -7929601,
 				default_value: [0.0, 0.0]
@@ -516,7 +517,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Multiplier",
+				name:_tr("Multiplier"),
 				type: "VALUE",
 				color: -10183681,
 				default_value: 0.0
@@ -526,7 +527,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Vec2",
+				name:_tr("Vec2"),
 				type: "VECTOR2",
 				color: -7929601,
 				default_value: [0.0, 0.0]
@@ -536,7 +537,7 @@ class FoundryNode {
 	};
 	public static var multiplyVec2sNode:TNode = {
 		id: 0,
-		name: "Multiply Vec2's",
+		name:_tr("Multiply Vec2's"),
 		type: "MultiplyVec2sNode",
 		x: 200,
 		y: 200,
@@ -545,7 +546,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Fisrt Vec2",
+				name:_tr("Fisrt Vec2"),
 				type: "VECTOR2",
 				color: -7929601,
 				default_value: [0.0, 0.0]
@@ -553,7 +554,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Second Vec2",
+				name:_tr("Second Vec2"),
 				type: "VECTOR2",
 				color: -7929601,
 				default_value: [0.0, 0.0]
@@ -563,7 +564,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Vec2",
+				name:_tr("Vec2"),
 				type: "VECTOR2",
 				color: -7929601,
 				default_value: [0.0, 0.0]
@@ -573,7 +574,7 @@ class FoundryNode {
 	};
 	public static var everyXNode:TNode = {
 		id: 0,
-		name: "Every X sec",
+		name:_tr("Every X sec"),
 		type: "EveryXNode",
 		x: 200,
 		y: 200,
@@ -582,7 +583,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Number of sec",
+				name:_tr("Number of sec"),
 				type: "VALUE",
 				color: -10183681,
 				default_value: 0.0
@@ -593,7 +594,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Out",
+				name:_tr("Out"),
 				type: "ACTION",
 				color: 0xffaa4444,
 				default_value: ""
@@ -603,7 +604,7 @@ class FoundryNode {
 	};
 	public static var cooldownNode:TNode = {
 		id: 0,
-		name: "X s Cooldown",
+		name:_tr("X s Cooldown"),
 		type: "CooldownNode",
 		x: 200,
 		y: 200,
@@ -612,7 +613,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "In",
+				name:_tr("In"),
 				type: "ACTION",
 				color: 0xffaa4444,
 				default_value: ""
@@ -620,7 +621,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Number of sec",
+				name:_tr("Number of sec"),
 				type: "VALUE",
 				color: -10183681,
 				default_value: 0.0
@@ -631,7 +632,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Out",
+				name:_tr("Out"),
 				type: "ACTION",
 				color: 0xffaa4444,
 				default_value: ""
@@ -641,7 +642,7 @@ class FoundryNode {
 	};
 	public static var getPositionNode:TNode = {
 		id: 0,
-		name: "Get Position",
+		name:_tr("Get Position"),
 		type: "GetPositionNode",
 		x: 200,
 		y: 200,
@@ -650,7 +651,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Object",
+				name:_tr("Object"),
 				type: "OBJECT",
 				color: -4934476,
 				default_value: null
@@ -660,7 +661,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Position Vec2",
+				name:_tr("Position Vec2"),
 				type: "VECTOR2",
 				color: -7929601,
 				default_value: new kha.math.FastVector2(0.0, 0.0)
@@ -670,7 +671,7 @@ class FoundryNode {
 	};
 	public static var getCenterNode:TNode = {
 		id: 0,
-		name: "Get Center",
+		name:_tr("Get Center"),
 		type: "GetCenterNode",
 		x: 200,
 		y: 200,
@@ -679,7 +680,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Object",
+				name:_tr("Object"),
 				type: "OBJECT",
 				color: -4934476,
 				default_value: null
@@ -689,7 +690,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Center Vec2",
+				name:_tr("Center Vec2"),
 				type: "VECTOR2",
 				color: -7929601,
 				default_value: new kha.math.FastVector2(0.0, 0.0)
@@ -699,7 +700,7 @@ class FoundryNode {
 	};
 	public static var getForwardNode:TNode = {
 		id: 0,
-		name: "Get Forward",
+		name:_tr("Get Forward"),
 		type: "GetForwardNode",
 		x: 200,
 		y: 200,
@@ -708,7 +709,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Object",
+				name:_tr("Object"),
 				type: "OBJECT",
 				color: -4934476,
 				default_value: null
@@ -718,7 +719,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Forward Vec2",
+				name:_tr("Forward Vec2"),
 				type: "VECTOR2",
 				color: -7929601,
 				default_value: new kha.math.FastVector2(0.0, 0.0)
@@ -728,7 +729,7 @@ class FoundryNode {
 	};
 	public static var getWidthHeightNode:TNode = {
 		id: 0,
-		name: "Get Width/Height",
+		name:_tr("Get Width/Height"),
 		type: "GetWidthHeightNode",
 		x: 200,
 		y: 200,
@@ -737,7 +738,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Object",
+				name:_tr("Object"),
 				type: "OBJECT",
 				color: -4934476,
 				default_value: null
@@ -747,7 +748,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Width/Height Vec2",
+				name:_tr("Width/Height Vec2"),
 				type: "VECTOR2",
 				color: -7929601,
 				default_value: new kha.math.FastVector2(0.0, 0.0)
@@ -757,7 +758,7 @@ class FoundryNode {
 	};
 	public static var setObjectLocationNode:TNode = {
 		id: 0,
-		name: "Set Object Location",
+		name:_tr("Set Object Location"),
 		type: "SetObjectLocationNode",
 		x: 200,
 		y: 200,
@@ -766,7 +767,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "In",
+				name:_tr("In"),
 				type: "ACTION",
 				color: 0xffaa4444,
 				default_value: ""
@@ -774,7 +775,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Object",
+				name:_tr("Object"),
 				type: "OBJECT",
 				color: -4934476,
 				default_value: null
@@ -782,7 +783,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Vec2",
+				name:_tr("Vec2"),
 				type: "VECTOR2",
 				color: -7929601,
 				default_value: new kha.math.FastVector2(0.0, 0.0)
@@ -792,7 +793,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Out",
+				name:_tr("Out"),
 				type: "ACTION",
 				color: 0xffaa4444,
 				default_value: ""
@@ -802,7 +803,7 @@ class FoundryNode {
 	};
 	public static var getRotationNode:TNode = {
 		id: 0,
-		name: "Get Rotation",
+		name:_tr("Get Rotation"),
 		type: "GetRotationNode",
 		x: 200,
 		y: 200,
@@ -811,7 +812,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Object",
+				name:_tr("Object"),
 				type: "OBJECT",
 				color: -4934476,
 				default_value: null
@@ -821,7 +822,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Rotation",
+				name:_tr("Rotation"),
 				type: "VALUE",
 				color: -10183681,
 				default_value: 0
@@ -831,7 +832,7 @@ class FoundryNode {
 	};
 	public static var translateObjectNode:TNode = {
 		id: 0,
-		name: "Translate Object",
+		name:_tr("Translate Object"),
 		type: "TranslateObjectNode",
 		x: 200,
 		y: 200,
@@ -840,7 +841,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "In",
+				name:_tr("In"),
 				type: "ACTION",
 				color: 0xffaa4444,
 				default_value: ""
@@ -848,7 +849,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Object",
+				name:_tr("Object"),
 				type: "OBJECT",
 				color: -4934476,
 				default_value: null
@@ -856,7 +857,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Position Vec2",
+				name:_tr("Position Vec2"),
 				type: "VECTOR2",
 				color: -7929601,
 				default_value: new kha.math.FastVector2(0.0, 0.0)
@@ -864,7 +865,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Speed",
+				name:_tr("Speed"),
 				type: "VALUE",
 				color: -10183681,
 				default_value: 1.0
@@ -874,7 +875,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Out",
+				name:_tr("Out"),
 				type: "ACTION",
 				color: 0xffaa4444,
 				default_value: ""
@@ -884,7 +885,7 @@ class FoundryNode {
 	};
 	public static var rotateTowardPositionNode:TNode = {
 		id: 0,
-		name: "Rotate Toward Position",
+		name:_tr("Rotate Toward Position"),
 		type: "RotateTowardPositionNode",
 		x: 200,
 		y: 200,
@@ -893,7 +894,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "In",
+				name:_tr("In"),
 				type: "ACTION",
 				color: 0xffaa4444,
 				default_value: ""
@@ -901,7 +902,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Object to Rotate",
+				name:_tr("Object to Rotate"),
 				type: "OBJECT",
 				color: -4934476,
 				default_value: null
@@ -909,7 +910,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Position Vec2",
+				name:_tr("Position Vec2"),
 				type: "VECTOR2",
 				color: -7929601,
 				default_value: new kha.math.FastVector2(0.0, 0.0)
@@ -919,7 +920,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Out",
+				name:_tr("Out"),
 				type: "ACTION",
 				color: 0xffaa4444,
 				default_value: ""
@@ -929,7 +930,7 @@ class FoundryNode {
 	};
 	public static var getObjectNode:TNode = {
 		id: 0,
-		name: "Get Object",
+		name:_tr("Get Object"),
 		type: "GetObjectNode",
 		x: 200,
 		y: 200,
@@ -937,7 +938,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "In",
+				name:_tr("In"),
 				type: "ACTION",
 				color: 0xffaa4444,
 				default_value: ""
@@ -947,7 +948,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Out",
+				name:_tr("Out"),
 				type: "ACTION",
 				color: 0xffaa4444,
 				default_value: ""
@@ -955,7 +956,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Selected Object",
+				name:_tr("Selected Object"),
 				type: "OBJECT",
 				color: -4934476,
 				default_value: null
@@ -963,7 +964,7 @@ class FoundryNode {
 		],
 		buttons: [
 			{
-				name: "selectedObjectName",
+				name:_tr("selectedObjectName"),
 				type: "ENUM",
 				data: [""],
 				output: 0,
@@ -974,7 +975,7 @@ class FoundryNode {
 	};
 	public static var spawnObjectNode:TNode = {
 		id: 0,
-		name: "Spawn Object",
+		name:_tr("Spawn Object"),
 		type: "SpawnObjectNode",
 		x: 200,
 		y: 200,
@@ -982,7 +983,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "In",
+				name:_tr("In"),
 				type: "ACTION",
 				color: 0xffaa4444,
 				default_value: ""
@@ -990,7 +991,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Object",
+				name:_tr("Object"),
 				type: "OBJECT",
 				color: -4934476,
 				default_value: null
@@ -998,7 +999,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Position Vec2",
+				name:_tr("Position Vec2"),
 				type: "VECTOR2",
 				color: -7929601,
 				default_value: new kha.math.FastVector2(0.0, 0.0)
@@ -1006,7 +1007,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Rotation",
+				name:_tr("Rotation"),
 				type: "VALUE",
 				color: -10183681,
 				default_value: 0.0
@@ -1016,7 +1017,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Out",
+				name:_tr("Out"),
 				type: "ACTION",
 				color: 0xffaa4444,
 				default_value: ""
@@ -1027,7 +1028,7 @@ class FoundryNode {
 	};
 	public static var destroyObjectNode:TNode = {
 		id: 0,
-		name: "Destroy Object",
+		name:_tr("Destroy Object"),
 		type: "DestroyObjectNode",
 		x: 200,
 		y: 200,
@@ -1035,7 +1036,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "In",
+				name:_tr("In"),
 				type: "ACTION",
 				color: 0xffaa4444,
 				default_value: ""
@@ -1043,7 +1044,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Object",
+				name:_tr("Object"),
 				type: "OBJECT",
 				color: -4934476,
 				default_value: null
@@ -1053,7 +1054,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Out",
+				name:_tr("Out"),
 				type: "ACTION",
 				color: 0xffaa4444,
 				default_value: ""
@@ -1064,7 +1065,7 @@ class FoundryNode {
 	};
 	public static var destroyObjectOutsideViewNode:TNode = {
 		id: 0,
-		name: "Destroy Object Outside View",
+		name:_tr("Destroy Object Outside View"),
 		type: "DestroyObjectOutsideViewNode",
 		x: 200,
 		y: 200,
@@ -1072,7 +1073,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Object",
+				name:_tr("Object"),
 				type: "OBJECT",
 				color: -4934476,
 				default_value: null
@@ -1080,7 +1081,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "OffsetFromView",
+				name:_tr("OffsetFromView"),
 				type: "VALUE",
 				color: -10183681,
 				default_value: 0.0
@@ -1092,7 +1093,7 @@ class FoundryNode {
 	};
 	public static var isObjectOutsideViewNode:TNode = {
 		id: 0,
-		name: "Is Object Outside View",
+		name:_tr("Is Object Outside View"),
 		type: "IsObjectOutsideViewNode",
 		x: 200,
 		y: 200,
@@ -1100,7 +1101,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Object",
+				name:_tr("Object"),
 				type: "OBJECT",
 				color: -4934476,
 				default_value: null
@@ -1108,7 +1109,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "OffsetFromView",
+				name:_tr("OffsetFromView"),
 				type: "VALUE",
 				color: -10183681,
 				default_value: 0.0
@@ -1118,7 +1119,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Out",
+				name:_tr("Out"),
 				type: "ACTION",
 				color: 0xffaa4444,
 				default_value: ""
@@ -1129,7 +1130,7 @@ class FoundryNode {
 	};
 	public static var flipSpriteNode:TNode = {
 		id: 0,
-		name: "Flip Sprite",
+		name:_tr("Flip Sprite"),
 		type: "FlipSpriteNode",
 		x: 200,
 		y: 200,
@@ -1137,7 +1138,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "In",
+				name:_tr("In"),
 				type: "ACTION",
 				color: 0xffaa4444,
 				default_value: ""
@@ -1145,7 +1146,7 @@ class FoundryNode {
 			{
 				id: 1,
 				node_id: 0,
-				name: "selectedSpriteName",
+				name:_tr("selectedSpriteName"),
 				type: "OBJECT",
 				color: -4934476,
 				default_value: null
@@ -1153,7 +1154,7 @@ class FoundryNode {
 			{
 				id: 2,
 				node_id: 0,
-				name: "FlipX",
+				name:_tr("FlipX"),
 				type: "BOOLEAN",
 				color: -10822566,
 				default_value: 0.0
@@ -1161,7 +1162,7 @@ class FoundryNode {
 			{
 				id: 3,
 				node_id: 0,
-				name: "FlipY",
+				name:_tr("FlipY"),
 				type: "BOOLEAN",
 				color: -10822566,
 				default_value: 0.0
@@ -1170,7 +1171,7 @@ class FoundryNode {
 		outputs: [],
 		buttons: [
 			{
-				name: "selectedSpriteName",
+				name:_tr("selectedSpriteName"),
 				type: "ENUM",
 				data: [""],
 				output: 0,
@@ -1181,7 +1182,7 @@ class FoundryNode {
 	}
 	public static var applyForceToRigidbodyNode:TNode = {
 		id: 0,
-		name: "Apply Force To Rigidbody",
+		name:_tr("Apply Force To Rigidbody"),
 		type: "ApplyForceToRigidbodyNode",
 		x: 200,
 		y: 200,
@@ -1190,7 +1191,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "In",
+				name:_tr("In"),
 				type: "ACTION",
 				color: 0xffaa4444,
 				default_value: ""
@@ -1198,7 +1199,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Object",
+				name:_tr("Object"),
 				type: "OBJECT",
 				color: -4934476,
 				default_value: null
@@ -1206,7 +1207,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Vec2",
+				name:_tr("Vec2"),
 				type: "VECTOR2",
 				color: -7929601,
 				default_value: new kha.math.FastVector2(0.0, 0.0)
@@ -1216,7 +1217,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Out",
+				name:_tr("Out"),
 				type: "ACTION",
 				color: 0xffaa4444,
 				default_value: ""
@@ -1226,7 +1227,7 @@ class FoundryNode {
 	};
 	public static var applyImpulseToRigidbodyNode:TNode = {
 		id: 0,
-		name: "Apply Impulse To Rigidbody",
+		name:_tr("Apply Impulse To Rigidbody"),
 		type: "ApplyImpulseToRigidbodyNode",
 		x: 200,
 		y: 200,
@@ -1235,7 +1236,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "In",
+				name:_tr("In"),
 				type: "ACTION",
 				color: 0xffaa4444,
 				default_value: ""
@@ -1243,7 +1244,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Object",
+				name:_tr("Object"),
 				type: "OBJECT",
 				color: -4934476,
 				default_value: null
@@ -1251,7 +1252,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Vec2",
+				name:_tr("Vec2"),
 				type: "VECTOR2",
 				color: -7929601,
 				default_value: new kha.math.FastVector2(0.0, 0.0)
@@ -1261,7 +1262,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Out",
+				name:_tr("Out"),
 				type: "ACTION",
 				color: 0xffaa4444,
 				default_value: ""
@@ -1271,7 +1272,7 @@ class FoundryNode {
 	};
 	public static var topDownControllerNode:TNode = {
 		id: 0,
-		name: "Top-down Controller",
+		name:_tr("Top-down Controller"),
 		type: "TopDownControllerNode",
 		x: 200,
 		y: 200,
@@ -1279,7 +1280,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Custom Input Vec2",
+				name:_tr("Custom Input Vec2"),
 				type: "VECTOR2",
 				color: -7929601,
 				default_value: new kha.math.FastVector2(0.0, 0.0)
@@ -1287,7 +1288,7 @@ class FoundryNode {
 			{
 				id: 1,
 				node_id: 0,
-				name: "Speed",
+				name:_tr("Speed"),
 				type: "VALUE",
 				color: -10183681,
 				default_value: 300.0
@@ -1296,35 +1297,35 @@ class FoundryNode {
 		outputs: [],
 		buttons: [
 			{
-				name: "inputType",
+				name:_tr("inputType"),
 				type: "ENUM",
 				data: ["Use default input", "Use custom input"],
 				output: 0,
 				default_value: 0
 			},
 			{
-				name: "defaultUpKeyCode",
+				name:_tr("defaultUpKeyCode"),
 				type: "ENUM",
 				data: Input.Keyboard.getKeyCodeStringValues(),
 				output: 0,
 				default_value: Input.Keyboard.getKeyCodeStringValues().indexOf("up")
 			},
 			{
-				name: "defaultDownKeyCode",
+				name:_tr("defaultDownKeyCode"),
 				type: "ENUM",
 				data: Input.Keyboard.getKeyCodeStringValues(),
 				output: 0,
 				default_value: Input.Keyboard.getKeyCodeStringValues().indexOf("down")
 			},
 			{
-				name: "defaultLeftKeyCode",
+				name:_tr("defaultLeftKeyCode"),
 				type: "ENUM",
 				data: Input.Keyboard.getKeyCodeStringValues(),
 				output: 0,
 				default_value: Input.Keyboard.getKeyCodeStringValues().indexOf("left")
 			},
 			{
-				name: "defaultRightKeyCode",
+				name:_tr("defaultRightKeyCode"),
 				type: "ENUM",
 				data: Input.Keyboard.getKeyCodeStringValues(),
 				output: 0,
@@ -1335,7 +1336,7 @@ class FoundryNode {
 	};
 	public static var platformer2DControllerNode:TNode = {
 		id: 0,
-		name: "Platformer 2D Controller",
+		name:_tr("Platformer 2D Controller"),
 		type: "Platformer2DControllerNode",
 		x: 200,
 		y: 200,
@@ -1343,7 +1344,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Custom Input Vec2",
+				name:_tr("Custom Input Vec2"),
 				type: "VECTOR2",
 				color: -7929601,
 				default_value: new kha.math.FastVector2(0.0, 0.0)
@@ -1351,7 +1352,7 @@ class FoundryNode {
 			{
 				id: 1,
 				node_id: 0,
-				name: "Speed",
+				name:_tr("Speed"),
 				type: "VALUE",
 				color: -10183681,
 				default_value: 300.0
@@ -1359,7 +1360,7 @@ class FoundryNode {
 			{
 				id: 2,
 				node_id: 0,
-				name: "Jump Force",
+				name:_tr("Jump Force"),
 				type: "VALUE",
 				color: -10183681,
 				default_value: 1000.0
@@ -1368,28 +1369,28 @@ class FoundryNode {
 		outputs: [],
 		buttons: [
 			{
-				name: "inputType",
+				name:_tr("inputType"),
 				type: "ENUM",
 				data: ["Use default input", "Use custom input"],
 				output: 0,
 				default_value: 0
 			},
 			{
-				name: "defaultLeftKeyCode",
+				name:_tr("defaultLeftKeyCode"),
 				type: "ENUM",
 				data: Input.Keyboard.getKeyCodeStringValues(),
 				output: 0,
 				default_value: Input.Keyboard.getKeyCodeStringValues().indexOf("left")
 			},
 			{
-				name: "defaultRightKeyCode",
+				name:_tr("defaultRightKeyCode"),
 				type: "ENUM",
 				data: Input.Keyboard.getKeyCodeStringValues(),
 				output: 0,
 				default_value: Input.Keyboard.getKeyCodeStringValues().indexOf("right")
 			},
 			{
-				name: "defaultJumpKeyCode",
+				name:_tr("defaultJumpKeyCode"),
 				type: "ENUM",
 				data: Input.Keyboard.getKeyCodeStringValues(),
 				output: 0,
@@ -1400,7 +1401,7 @@ class FoundryNode {
 	};
 	public static var bulletMovementNode:TNode = {
 		id: 0,
-		name: "Bullet Movement",
+		name:_tr("Bullet Movement"),
 		type: "BulletMovementNode",
 		x: 200,
 		y: 200,
@@ -1408,7 +1409,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Reset Vel & angle",
+				name:_tr("Reset Vel & angle"),
 				type: "ACTION",
 				color: 0xffaa4444,
 				default_value: ""
@@ -1416,7 +1417,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Speed",
+				name:_tr("Speed"),
 				type: "VALUE",
 				color: -10183681,
 				default_value: 300.0
@@ -1428,7 +1429,7 @@ class FoundryNode {
 	};
 	public static var setCameraTargetPositionNode:TNode = {
 		id: 0,
-		name: "Set Camera Target Position",
+		name:_tr("Set Camera Target Position"),
 		type: "SetCameraTargetPositionNode",
 		x: 200,
 		y: 200,
@@ -1436,7 +1437,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "In",
+				name:_tr("In"),
 				type: "ACTION",
 				color: 0xffaa4444,
 				default_value: ""
@@ -1444,7 +1445,7 @@ class FoundryNode {
 			{
 				id: 1,
 				node_id: 0,
-				name: "Target Position Vec2",
+				name:_tr("Target Position Vec2"),
 				type: "VECTOR2",
 				color: -7929601,
 				default_value: new kha.math.FastVector2(0.0, 0.0)
@@ -1454,7 +1455,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Out",
+				name:_tr("Out"),
 				type: "ACTION",
 				color: 0xffaa4444,
 				default_value: ""
@@ -1465,7 +1466,7 @@ class FoundryNode {
 	};
 	public static var setCameraFollowTargetNode:TNode = {
 		id: 0,
-		name: "Set Camera Follow Target",
+		name:_tr("Set Camera Follow Target"),
 		type: "SetCameraFollowTargetNode",
 		x: 200,
 		y: 200,
@@ -1473,7 +1474,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "In",
+				name:_tr("In"),
 				type: "ACTION",
 				color: 0xffaa4444,
 				default_value: ""
@@ -1481,7 +1482,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Object",
+				name:_tr("Object"),
 				type: "OBJECT",
 				color: -4934476,
 				default_value: null
@@ -1491,7 +1492,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Out",
+				name:_tr("Out"),
 				type: "ACTION",
 				color: 0xffaa4444,
 				default_value: ""
@@ -1502,7 +1503,7 @@ class FoundryNode {
 	};
 	public static var playAnimationNode:TNode = {
 		id: 0,
-		name: "Play Animation",
+		name:_tr("Play Animation"),
 		type: "PlayAnimationNode",
 		x: 200,
 		y: 200,
@@ -1510,7 +1511,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "In",
+				name:_tr("In"),
 				type: "ACTION",
 				color: 0xffaa4444,
 				default_value: ""
@@ -1518,7 +1519,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Animation Name",
+				name:_tr("Animation Name"),
 				type: "STRING",
 				color: -4934476,
 				default_value: ""
@@ -1526,7 +1527,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Object",
+				name:_tr("Object"),
 				type: "OBJECT",
 				color: -16067936,
 				default_value: null
@@ -1536,7 +1537,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Out",
+				name:_tr("Out"),
 				type: "ACTION",
 				color: 0xffaa4444,
 				default_value: ""
@@ -1547,7 +1548,7 @@ class FoundryNode {
 	};
 	public static var onCollisionNode:TNode = {
 		id: 0,
-		name: "On Collision",
+		name:_tr("On Collision"),
 		type: "OnCollisionNode",
 		x: 200,
 		y: 200,
@@ -1555,7 +1556,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "In",
+				name:_tr("In"),
 				type: "ACTION",
 				color: 0xffaa4444,
 				default_value: ""
@@ -1563,7 +1564,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Selected Object",
+				name:_tr("Selected Object"),
 				type: "OBJECT",
 				color: -4934476,
 				default_value: null
@@ -1573,7 +1574,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "On Enter",
+				name:_tr("On Enter"),
 				type: "ACTION",
 				color: 0xffaa4444,
 				default_value: ""
@@ -1581,7 +1582,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "On Stay",
+				name:_tr("On Stay"),
 				type: "ACTION",
 				color: 0xffaa4444,
 				default_value: ""
@@ -1589,7 +1590,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "On Exit",
+				name:_tr("On Exit"),
 				type: "ACTION",
 				color: 0xffaa4444,
 				default_value: ""
@@ -1597,7 +1598,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "Object collided",
+				name:_tr("Object collided"),
 				type: "OBJECT",
 				color: -4934476,
 				default_value: null
@@ -1608,7 +1609,7 @@ class FoundryNode {
 	};
 	public static var playMusicNode:TNode = {
 		id: 0,
-		name: "Play Music",
+		name:_tr("Play Music"),
 		type: "PlayMusicNode",
 		x: 200,
 		y: 200,
@@ -1616,7 +1617,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "In",
+				name:_tr("In"),
 				type: "ACTION",
 				color: 0xffaa4444,
 				default_value: ""
@@ -1624,7 +1625,7 @@ class FoundryNode {
 			{
 				id: 1,
 				node_id: 1,
-				name: "Music alias",
+				name:_tr("Music alias"),
 				type: "STRING",
 				color: -4934476,
 				default_value: ""
@@ -1634,7 +1635,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "OnFinished",
+				name:_tr("OnFinished"),
 				type: "ACTION",
 				color: 0xffaa4444,
 				default_value: ""
@@ -1642,13 +1643,13 @@ class FoundryNode {
 		],
 		buttons: [
 			{
-				name: "loop",
+				name:_tr("loop"),
 				type: "BOOL",
 				output: 0,
 				default_value: false
 			},
 			{
-				name: "volume",
+				name:_tr("volume"),
 				type: "VALUE",
 				min: 0.0,
 				max: 1.0,
@@ -1660,7 +1661,7 @@ class FoundryNode {
 	};
 	public static var playSfxNode:TNode = {
 		id: 0,
-		name: "Play Sound",
+		name:_tr("Play Sound"),
 		type: "PlaySfxNode",
 		x: 200,
 		y: 200,
@@ -1668,7 +1669,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "In",
+				name:_tr("In"),
 				type: "ACTION",
 				color: 0xffaa4444,
 				default_value: ""
@@ -1676,7 +1677,7 @@ class FoundryNode {
 			{
 				id: 1,
 				node_id: 1,
-				name: "Sound alias",
+				name:_tr("Sound alias"),
 				type: "STRING",
 				color: -4934476,
 				default_value: ""
@@ -1686,7 +1687,7 @@ class FoundryNode {
 			{
 				id: 0,
 				node_id: 0,
-				name: "OnFinished",
+				name:_tr("OnFinished"),
 				type: "ACTION",
 				color: 0xffaa4444,
 				default_value: ""
@@ -1694,7 +1695,7 @@ class FoundryNode {
 		],
 		buttons: [
 			{
-				name: "volume",
+				name:_tr("volume"),
 				type: "VALUE",
 				min: 0.0,
 				max: 1.0,

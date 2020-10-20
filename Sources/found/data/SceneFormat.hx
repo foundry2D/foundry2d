@@ -191,7 +191,7 @@ typedef TTrait = {
 	public var type:String;
 	public var classname:String;
 	@:optional public var parameters:Null<Array<String>>; // constructor params
-	@:optional public var props:Null<Array<String>>; // name - value list
+    @:optional public var props:Null<Array<String>>; // name : type : value 
 }
 
 #if js

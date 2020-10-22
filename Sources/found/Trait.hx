@@ -2,6 +2,16 @@ package found;
 
 import found.object.Object;
 
+enum abstract PropertyType(Int) from Int to Int
+{
+	var int;
+	var bool;
+	var float;
+	var string;
+	var vector2i;
+	var vector2b;
+	var vector2;
+}
 #if editor
 @:autoBuild(ListTraits.build())
 #end
@@ -13,6 +23,45 @@ class Trait {
 	 * Object this trait belongs to.
 	 */
 	public var object:Object;
+
+	static var props:Map<String,Array<String>> = new Map<String,Array<String>>();
+
+	public static function hasTrait(classname:String) {
+		return props.exists(classname);
+	}
+	public static function getProps(classname:String):Array<String> {
+		if(props.exists(classname)){
+			var temp:Array<String> = props.get(classname);
+			var out:Array<String> = [];
+			if(Std.isOfType(temp,Array)){
+				return out.concat(temp);
+			}
+			else{
+				for(f in Reflect.fields(temp)){
+					out.push(Reflect.field(temp,f));
+				}
+				return out;
+			}
+		}
+		else {
+			return [];	
+		}
+	}
+	public static function addProps(classname:String,props:Array<String>){
+		if(Trait.props.exists(classname)){
+			Trait.props.set(classname,Trait.getProps(classname).concat(props));
+		}
+		else {
+			Trait.props.set(classname,Reflect.copy(props));
+		}
+	}
+	public static function removeProps(classname:String,props:Array<String>){
+		if(Trait.props.exists(classname)){
+			for(p in props){
+				Trait.props.get(classname).remove(p);
+			}
+		}
+	}
 
 	var _add:Array<Void->Void> = null;
 	var _awake:Array<Void->Void> = null;

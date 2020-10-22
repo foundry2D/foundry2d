@@ -102,6 +102,14 @@ class NodeEditor {
 				} else if (node.type == "FlipSpriteNode") {
 					node.buttons[0].data = updatedSpriteList;
 				}
+				else if(node.type == "GetPropNode"){
+					var props = Trait.getProps(node.buttons[0].data[0]);
+					var out = [];
+					for(p in props){
+						out.push(p.split("~")[0]);
+					}
+					node.buttons[1].data = out;
+				}
 			}
 		}
 		if (ui.window(nodeCanvasWindowHandle, NodeEditor.x, NodeEditor.y, NodeEditor.width, NodeEditor.height)) {
@@ -147,6 +155,13 @@ class NodeEditor {
 						pushNodeToSelectedGroup(VariableNode.boolean);
 					if (ui.button("Vector2"))
 						pushNodeToSelectedGroup(VariableNode.vector2);
+					if (ui.button("GetProp")){
+						var def = Reflect.copy(VariableNode.getProp);
+						var ext = "_vhx";
+						def.buttons[0].data = [selectedNode.name+ext];
+						pushNodeToSelectedGroup(def);
+					}
+						
 				}
 				if (ui.panel(Id.handle(), "Std")) {
 					if (ui.button("Print"))

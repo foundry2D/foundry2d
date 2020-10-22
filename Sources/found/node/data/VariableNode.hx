@@ -175,4 +175,40 @@ class VariableNode {
 		],
 		buttons: []
 	}
+	public static var getProp:TNode = {
+		id: 0,
+		name:_tr("Get Property"),
+		type: "GetPropNode",
+		x: 200,
+		y: 200,
+		color: -16067936,
+		inputs: [
+		],
+		outputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name:_tr("Prop"),
+				type: "VALUE",
+				color: -10183681,
+				default_value: null
+			}
+		],
+		buttons: [
+			{
+				name:_tr("classname"),
+				type: "ENUM",
+				data: [],
+				output:0,
+				default_value: 0
+			},
+			{
+				name:_tr("propertyName"),
+				type: "ENUM",
+				data: [],
+				output: 0,
+				default_value: 0
+			}
+		]
+	}
 }

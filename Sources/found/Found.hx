@@ -42,6 +42,10 @@ class Found {
   
   public static var BUFFERWIDTH(default, default):Int = WIDTH;
   public static var BUFFERHEIGHT(default, default):Int = HEIGHT;
+
+	public static var sha = utilities.BuildMacros.sha().substr(1, 7);
+	public static var date = utilities.BuildMacros.date().split(" ")[0];
+	
   #else 
   public static var BUFFERWIDTH(default, null):Int = WIDTH;
   public static var BUFFERHEIGHT(default, null):Int = HEIGHT;

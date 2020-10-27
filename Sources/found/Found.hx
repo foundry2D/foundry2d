@@ -6,6 +6,7 @@ import kha.Assets;
 import kha.System;
 import kha.Color;
 import kha.Image;
+import kha.Display;
 
 #if (kha_html5 &&js)
 import js.html.CanvasElement;
@@ -28,8 +29,8 @@ enum OS {
 class Found {
   private static var _app:App;
   
-  public static var WIDTH(default, null):Int = 1280;
-  public static var HEIGHT(default, null):Int = 720;
+  public static var WIDTH(default, null):Int;
+  public static var HEIGHT(default, null):Int;
 
   public static var GRID:Int = 64;
 
@@ -112,6 +113,8 @@ class Found {
 	}
 
   public static function setup(config:FoundConfig){
+    WIDTH = Display.primary.width;
+    HEIGHT = Display.primary.height;
     if (config.width == null) config.width = WIDTH;
     if (config.height == null) config.height = HEIGHT;
     if (config.bufferwidth == null) config.bufferwidth = WIDTH;
@@ -127,10 +130,6 @@ class Found {
 
     if (config.smooth == null) config.smooth = true;
     smooth = config.smooth;
-
-    #if (kha_html5)
-    html();
-    #end
 
     System.start({
 			title:config.title,

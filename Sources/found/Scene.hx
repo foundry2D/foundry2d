@@ -228,7 +228,7 @@ class Scene {
 
   @:access(found.App)
   public function render(canvas:Canvas){
-    if(!Scene.ready && raw._entities.length != _entities.length)
+    if(!Scene.ready)
       return;// This scene is not ready to render
 
     var ordered = #if editor !App.editorui.isPlayMode ? _entities.copy(): #end activeEntities.copy() ;

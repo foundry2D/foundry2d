@@ -133,10 +133,11 @@ class TileEditor {
                     resizeMapdata(map.w,h);
                     changed = true;
                 }
-                
+                #if editor
                 if(ui.button("Change Tilemap Grid Size")){
                     GridSizeDialog.open(map);
                 }
+                #end
                 editorStateHandle.position = state;
                 ui.combo(editorStateHandle,editorStates,"Draw State",true);
                 if(editorStateHandle.changed){
@@ -210,6 +211,7 @@ class TileEditor {
                         changed = true;
                     }
                     ui.g.color = kha.Color.White;
+                    #if editor
                     if(found.State.active.physics_world != null){
                         if(ui.button("Edit Selected Tile Collisions") && curTile != null && !tileHandle.changed){
                             if(curTile.raw.rigidBodies == null){
@@ -233,6 +235,7 @@ class TileEditor {
                             App.editorui.inspector.selectScene();
                         }
                     }
+                    #end
                 }
                 if(changed){
                     #if editor
@@ -322,12 +325,14 @@ class TileEditor {
         ui.indent();
         ui.row([0.8,0.2]);
         var path = ui.textInput(imagePathHandle);
+        #if editor
         if(ui.button("...")){
             FileBrowserDialog.open(function(path:String){
                 if(path == "")return;
                 // curTile.data.
             });
         }
+        #end
         if(imagePathHandle.changed){
             data.imagePath = path;
         }
@@ -346,6 +351,7 @@ class TileEditor {
     }
     @:access(found.anim.Tilemap,found.anim.Tile)
     function addTilesheet(title:String) {
+        #if editor
         FileBrowserDialog.open(function(path:String){
             if(path == "")return;
             
@@ -373,6 +379,7 @@ class TileEditor {
                 #end
             });
         });
+        #end
     }
 
     @:access(found.anim.Tilemap,found.anim.Tile)
@@ -533,8 +540,8 @@ class TileEditor {
         var w = Found.fullscreen ? Found.WIDTH:gv.width;
         var h = Found.fullscreen ? Found.HEIGHT:gv.height;
         #else
-        var x = State.active.cam.x;
-        var y = State.active.cam.y;
+        var x = found.State.active.cam.position.x;
+        var y = found.State.active.cam.position.y;
         var w = Found.WIDTH;
         var h = Found.HEIGHT;
         #end

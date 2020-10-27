@@ -3,8 +3,6 @@ package found;
 import kha.Assets;
 import found.data.SceneFormat;
 import found.data.Data;
-import kha.Canvas;
-import kha.input.KeyCode;
 
 class State extends Scene {
 	public static var active:State;
@@ -29,6 +27,7 @@ class State extends Scene {
 	}
 
 	public static function addState(name:String, state:String):String {
+		if(_states == null)State.setup();
 		_states.set(name, state);
 		return state;
 	}

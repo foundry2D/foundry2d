@@ -42,6 +42,7 @@ class App {
 	}
 	@:access(found.object.Executor)
 	public static function reset() {
+		Scene.ready = false;
 		traitInits = [];
 		traitUpdates = [];
 		traitLateUpdates = [];

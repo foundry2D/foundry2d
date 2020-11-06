@@ -973,6 +973,34 @@ class FoundryNode {
 		],
 		color: -4962746
 	};
+	public static var getRandomObjectNode:TNode = {
+		id: 0,
+		name:_tr("Get Random Object"),
+		type: "GetRandomObjectNode",
+		x: 200,
+		y: 200,
+		inputs: [],
+		outputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name:_tr("Random Object from list"),
+				type: "OBJECT",
+				color: -4934476,
+				default_value: null
+			}
+		],
+		buttons: [
+			{
+				name:_tr("listOfObjects"),
+				type: "ARRAY",
+				data: [],
+				output: 0,
+				default_value: []
+			}
+		],
+		color: -4962746
+	};
 	public static var spawnObjectNode:TNode = {
 		id: 0,
 		name:_tr("Spawn Object"),

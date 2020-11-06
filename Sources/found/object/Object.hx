@@ -345,6 +345,15 @@ class Object {
 		else
 			deactivate();		
 	}
+	@:access(found.State)
+	public function delete() {
+		State.active._entities.remove(this);
+		State.active.inactiveEntities.remove(this);
+		for(t in traits){
+			removeTrait(t);
+		}
+		this.body = null;
+	}
 
 	public function render(canvas:Canvas){
 		if (!Scene.ready) return;

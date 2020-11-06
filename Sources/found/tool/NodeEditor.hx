@@ -97,9 +97,10 @@ class NodeEditor {
 			var updatedObjectList = State.active.getObjectNames();
 			var updatedSpriteList = State.active.getObjectNames("sprite_object");
 			for (node in NodeEditor.selectedNode.nodes.nodesSelected) {
-				if (node.type == "GetObjectNode") {
+				if (node.type == "GetObjectNode" || node.type == "GetRandomObjectNode") {
 					node.buttons[0].data = updatedObjectList;
-				} else if (node.type == "FlipSpriteNode") {
+				}
+				else if (node.type == "FlipSpriteNode") {
 					node.buttons[0].data = updatedSpriteList;
 				}
 				else if(node.type == "GetPropNode"){
@@ -261,6 +262,8 @@ class NodeEditor {
 						pushNodeToSelectedGroup(FoundryNode.destroyObjectNode);
 					if (ui.button("Destroy Object Outside View"))
 						pushNodeToSelectedGroup(FoundryNode.destroyObjectOutsideViewNode);
+					if (ui.button("Get Random Object from list"))
+						pushNodeToSelectedGroup(FoundryNode.getRandomObjectNode);
 				}
 				if (ui.panel(Id.handle(), "Sprite")) {
 					if (ui.button("Flip Sprite"))

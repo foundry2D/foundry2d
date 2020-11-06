@@ -4,7 +4,6 @@ package found.object;
 import kha.Canvas;
 import kha.math.Vector2;
 import found.data.SceneFormat.TCameraData;
-import found.math.Util;
 
 class Camera extends Object {
 	public var viewX(get, null):Float;
@@ -17,7 +16,6 @@ class Camera extends Object {
 	public var offsetY:Float = 25;
 
 	var target:Null<Object> = null;
-
 	public function new(data:TCameraData) {
 		super(data);
 		if (data.offsetX != null)
@@ -50,17 +48,9 @@ class Camera extends Object {
 	public override function render(canvas:Canvas) {
 		if (!Scene.ready)
 			return;
-		if (target != null #if editor && App.editorui.isPlayMode#end ){
-			if (offsetX < Math.abs(Math.abs(this.viewX) - target.center.x)) {
-				this.position.x = Util.lerp(this.position.x, target.center.x - 0.5 * Found.WIDTH, camSpeedX * Timer.delta);
-			}
-			if (offsetY < Math.abs(Math.abs(this.viewY) - target.center.y)) {
-				this.position.y = Util.lerp(this.position.y, target.center.y - 0.5 * Found.HEIGHT, camSpeedY * Timer.delta);
-			}
-		}
 		#if debug
 		canvas.g2.color = kha.Color.Red;
-		canvas.g2.drawRect(0.5 * Found.WIDTH - this.position.x, 0.5 * Found.HEIGHT - this.position.y, offsetX, offsetX);
+		canvas.g2.drawRect(0.5 * Found.WIDTH - this.viewX, 0.5 * Found.HEIGHT - this.viewY, offsetX, offsetX);
 		canvas.g2.color = kha.Color.White;
 		#end
 	}

@@ -58,7 +58,7 @@ class Object {
 	function set_raw(data:TObj) {
 		this.raw = data;
 		//@TODO: Evaluate if we really need to do this in release mode; if not add an #if editor
-		if(State.active != null && State.active.physics_world != null && data.rigidBody != null){
+		if(Scene.ready && State.active != null && State.active.physics_world != null && data.rigidBody != null){
             makeBody(State.active,data);
 		}
 		return this.raw;

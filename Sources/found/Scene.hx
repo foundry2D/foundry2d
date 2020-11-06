@@ -355,10 +355,7 @@ class Scene {
   public function remove(entity:Object){
     entity.active = false;
     if(entity.spawned) {
-      _entities.remove(entity);
-      inactiveEntities.remove(entity);
-      entity.body = null;
-      entity = null;
+      entity.delete();
     }
   }
 

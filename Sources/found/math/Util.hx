@@ -1,5 +1,6 @@
 package found.math;
 
+import haxe.Int32;
 import haxe.macro.Expr;
 
 /**
@@ -7,6 +8,10 @@ import haxe.macro.Expr;
 */
 
 class Util {
+	inline static var RAND_MAX = (1 << 31)-1; 
+	public static function random(seed:Int){
+		return (seed * 1103515245 + 12345) & RAND_MAX;
+	}
 	public static function randomInt(value:Int):Int {
 		return Math.floor(Math.random() * value);
 	}

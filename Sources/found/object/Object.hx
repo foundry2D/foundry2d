@@ -321,13 +321,21 @@ class Object {
 	}
 
 	var traits:Array<Trait> = [];
-
+	var awakeTrait:Trait =  new Trait();
 	@:access(found.Scene)
 	public function new(p_raw:TObj){
 		if(_translations == null) _translations = new Executor<MoveData>("_positions");
 		if(_rotates == null) _rotates = new Executor<RotateData>("_rotations");
 		if(_scaler == null) _scaler = new Executor<Vector2>("_scales");
 		
+		awakeTrait.notifyOnAwake(function(){
+			if(this.body!= null){
+				this.body.x = this.position.x;
+				this.body.y = this.position.y;
+			}
+		});
+		addTrait(awakeTrait);
+
 		uid = ++uidCounter;
 
 		if(p_raw.type == "object")

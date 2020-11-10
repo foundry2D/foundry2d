@@ -46,9 +46,7 @@ class Sprite extends Object {
 			this.raw = Reflect.copy(data.raw);
 			if (this.width  == 0 && data.image != null) this.width  = data.image.width;
 			if (this.height == 0 && data.image != null) this.height = data.image.height;
-			#if debug
-			this.name = this.raw.name;
-			#end
+			
 			if(Reflect.hasField(sprite,"scale") && sprite.scale != null){
 				this.resize(function(data:Vector2){
 					data.x = sprite.scale.x;

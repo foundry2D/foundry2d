@@ -49,7 +49,10 @@ typedef CollisionDef ={
 
 class Object {
 	#if debug
-	public var name:String;
+	public var name(get,null):String;
+	function get_name(){
+		return this.raw != null ? this.raw.name : "Invalid";
+	}
 	#end
 	#if editor
 	public var dataChanged:Bool = false;

@@ -1,5 +1,6 @@
 package found.trait.internal;
 
+import haxe.ds.Either;
 import kha.math.Vector2;
 import kha.Assets;
 import found.Trait;
@@ -114,7 +115,17 @@ class CanvasScript extends Trait {
 
 			for (e in events) {
 				var all = found.Event.get(e);
-				if (all != null) for (entry in all) entry.onEvent();
+				if (all != null){
+					for (entry in all){
+						switch(entry.onEvent){
+							case Either.Left(v):
+								v();
+							case Either.Right(v):
+								v([entry.name,entry.mask]);
+						}
+					}
+				}
+					
 			}
 		});
 	}

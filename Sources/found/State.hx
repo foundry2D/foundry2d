@@ -46,6 +46,12 @@ class State extends Scene {
 			loadState(raw);
 			onDone();
 		};
+		#if debug
+		if(file == null){
+			active = lastState;
+			error('State with name $name does not exist in State list. Use AddState to add it.');
+		}
+		#end
 		Data.getSceneRaw(file,loaded);
 		
 		

@@ -30,39 +30,20 @@
             {
                 "name":"default",
                 "type":"sprite_object",
-                "position":{"x":0.0,"y":0.0},
+                "position":{"x":100.0,"y":100.0},
                 "rotation":{"x":0.0,"y":0.0,"z":0.0},
-                "width":384,
-                "height":192,
+                "width":493,
+                "height":512,
                 "center":{"x":0,"y":0},
                 "scale":{"x":1.0,"y":1.0},
                 "layer": 0,
                 "depth":0,
                 "active":true,
-                "imagePath":"platformerPack_character",
+                "imagePath":"foundry_icon",
                 "anims": [],
                 "traits":
                 [
-                    {
-                        "type":"Script",
-                        "classname":"found.trait.internal.LoadingScript"
-                    }
                 ]
-            },
-            {
-                "name":"bg",
-                "type":"sprite_object",
-                "position":{"x":0.0,"y":0.0},
-                "rotation":{"x":0.0,"y":0.0,"z":0.0},
-                "width":1024,
-                "height":1024,
-                "center":{"x":0,"y":0},
-                "scale":{"x":1.0,"y":1.0},
-                "layer": 0,
-                "depth":0,
-                "active":true,
-                "imagePath":"backgroundEmpty",
-                "anims": []
             }
         ]
     }

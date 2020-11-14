@@ -25,9 +25,9 @@ class Creator {
                 };
             case "sprite_object":
                 var sprite:TSpriteData = createType(name,"object");
-                sprite.width = 250.0;
-                sprite.height = 250.0;
-                sprite.imagePath = "basic";
+                sprite.width = 493.0;
+                sprite.height = 512.0;
+                sprite.imagePath = "foundry_icon";
                 sprite.shape = 0;//Rect
                 sprite.points = [new Vector2(),new Vector2(sprite.width,0),new Vector2(sprite.width,sprite.height),new Vector2(0,sprite.height)];
                 sprite.anims = [];

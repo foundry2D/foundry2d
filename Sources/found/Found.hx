@@ -135,6 +135,9 @@ class Found {
     if (config.smooth == null) config.smooth = true;
     smooth = config.smooth;
 
+    #if kha_html5
+    html();
+    #end
     System.start({
 			title:config.title,
 			width:config.width,

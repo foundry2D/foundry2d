@@ -1,6 +1,7 @@
 package found.tool;
 
 // Kha
+import zui.Themes;
 import kha.Color;
 // Zui
 import zui.Id;
@@ -75,7 +76,7 @@ class NodeEditor {
 	public function redraw() {
 		nodeCanvasWindowHandle.redraws = nodeMenuWindowHandle.redraws = nodeMenuTabHandle.redraws = 2;
 	}
-	
+	@:access(zui.Zui)
 	public function render(ui:zui.Zui) {
 		if (!visible)
 			return;
@@ -116,7 +117,13 @@ class NodeEditor {
 		if (ui.window(nodeCanvasWindowHandle, NodeEditor.x, NodeEditor.y, NodeEditor.width, NodeEditor.height)) {
 			ui.g.color = kha.Color.White;
 			ui.g.drawImage(grid, nodePanX, nodePanY);
+			var t = ui.t;
+			ui.t = Themes.dark;
+			var oldS = ui.ops.scaleFactor;
+			ui.setScale(ui.ops.scaleFactor * 1.5);
 			renderNodes(ui);
+			ui.t = t;
+			ui.setScale(oldS);
 		}
 		renderNodesMenu(ui);
 	}
@@ -129,8 +136,8 @@ class NodeEditor {
 	public function renderNodesMenu(ui:Zui) {
 		if (selectedNode == null)
 			return;
-
-		if (ui.window(nodeMenuWindowHandle, NodeEditor.x, NodeEditor.y, 150, Std.int(NodeEditor.height * 0.75), true)) {
+		var numTabs = 3;
+		if (ui.window(nodeMenuWindowHandle, NodeEditor.x, NodeEditor.y, Std.int(ui.ELEMENT_W() * 0.5 * numTabs) , Std.int(NodeEditor.height * 0.75), true)) {
 			if (ui.tab(nodeMenuTabHandle, "Std")) {
 				if (ui.panel(Id.handle(), "Logic")) {
 					if (ui.button("Gate"))

@@ -147,6 +147,17 @@ class Found {
 			Assets.loadEverything(function(){
 				Scheduler.addTimeTask(update, 0, 1 / _fps);
         resize(System.windowWidth(),System.windowHeight());
+        var tBlob = config.defaultThemeFile != null ? kha.Assets.blobs.get(config.defaultThemeFile) :kha.Assets.blobs.get("_themes_json");
+			
+        if (tBlob != null) {
+            zui.Canvas.themes = haxe.Json.parse(tBlob.toString());
+        }
+        else {
+          warn("\"_themes.json\" is empty! Using default theme instead.");
+        }
+        if (zui.Canvas.themes.length == 0) {
+          zui.Canvas.themes.push(zui.Themes.dark);
+        }
         _app = Type.createInstance(config.app, []);
         kha.Window.get(0).notifyOnResize(resize);
 				System.notifyOnFrames(function(framebuffer){
@@ -155,7 +166,7 @@ class Found {
         #if tile_editor
         tileeditor = new found.tool.TileEditor();
         #end
-        popupZuiInstance = new zui.Zui({font: kha.Assets.fonts.font_default});
+        popupZuiInstance = new zui.Zui({font: kha.Assets.fonts.font_default,theme: zui.Canvas.themes[0]});
 			});
 		});
   }
@@ -198,6 +209,7 @@ class Found {
 
 typedef FoundConfig = {
   app:Class<App>,
+  ?defaultThemeFile:String,
   ?timer:Timer,
   ?title:String,
   ?width:Int,

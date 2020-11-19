@@ -33,23 +33,11 @@ class CanvasScript extends Trait {
 	 * @param canvasName Name of the canvas
 	 * @param font font file (Optional)
 	 */
-	public function new(canvasName: String, font: String = "font_default.ttf",b_canvas:kha.Blob=null,?noWarn:Bool=false) {
+	public function new(canvasName: String, font: String = "font_default.ttf",b_canvas:kha.Blob=null) {
         super();
         
         customDraw = new Map<String,kha.graphics2.Graphics->TElement->Void>();
         var done = function(blob: kha.Blob) {
-            var tBlob = kha.Assets.blobs.get("_themes.json");
-        
-            if (tBlob != null) {
-                Canvas.themes = haxe.Json.parse(tBlob.toString());
-            }
-            else if(!noWarn){
-				warn("\"_themes.json\" is empty! Using default theme instead.");
-            }
-
-            if (Canvas.themes.length == 0) {
-                Canvas.themes.push(zui.Themes.dark);
-            }
 
             var onFontDone =  function(f: kha.Font) {
                 var c: TCanvas = haxe.Json.parse(blob.toString());

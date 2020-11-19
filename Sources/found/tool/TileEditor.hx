@@ -55,7 +55,7 @@ class TileEditor {
 
     public function new(visible = true) {
         this.visible = visible;
-        ui = new zui.Zui({font: kha.Assets.fonts.font_default,autoNotifyInput: false});
+        ui = new zui.Zui({font: kha.Assets.fonts.font_default,autoNotifyInput: false,theme: zui.Canvas.themes[0]});
         width = Std.int(Found.WIDTH*0.175);
         height = Std.int(Found.HEIGHT*0.8);
 

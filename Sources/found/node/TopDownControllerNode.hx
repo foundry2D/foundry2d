@@ -1,14 +1,15 @@
 package found.node;
 
+import kha.input.KeyCode;
 import found.Input.Keyboard;
 import hxmath.math.Vector2;
 
 class TopDownControllerNode extends LogicNode {
 	public var inputType:String;
-	public var defaultUpKeyCode:String;
-	public var defaultDownKeyCode:String;
-	public var defaultLeftKeyCode:String;
-	public var defaultRightKeyCode:String;
+	public var defaultUpKeyCode:KeyCode;
+	public var defaultDownKeyCode:KeyCode;
+	public var defaultLeftKeyCode:KeyCode;
+	public var defaultRightKeyCode:KeyCode;
 
 	public function new(tree:LogicTree) {
 		super(tree);
@@ -31,16 +32,16 @@ class TopDownControllerNode extends LogicNode {
 			var movementInput:Vector2 = new Vector2(0, 0);
 
 			if (inputType == "Use default input") {
-				if (keyboard.down(defaultUpKeyCode)) {
+				if (keyboard.down(Input.Keyboard.keyCode(defaultUpKeyCode))) {
 					movementInput.y += -1;
 				}
-				if (keyboard.down(defaultDownKeyCode)) {
+				if (keyboard.down(Input.Keyboard.keyCode(defaultDownKeyCode))) {
 					movementInput.y += 1;
 				}
-				if (keyboard.down(defaultLeftKeyCode)) {
+				if (keyboard.down(Input.Keyboard.keyCode(defaultLeftKeyCode))) {
 					movementInput.x += -1;
 				}
-				if (keyboard.down(defaultRightKeyCode)) {
+				if (keyboard.down(Input.Keyboard.keyCode(defaultRightKeyCode))) {
 					movementInput.x += 1;
 				}
 			} else {

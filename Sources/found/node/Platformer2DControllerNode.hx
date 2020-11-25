@@ -1,13 +1,14 @@
 package found.node;
 
+import kha.input.KeyCode;
 import found.Input.Keyboard;
 import hxmath.math.Vector2;
 
 class Platformer2DControllerNode extends LogicNode {
 	public var inputType:String;
-	public var defaultLeftKeyCode:String;
-	public var defaultRightKeyCode:String;
-	public var defaultJumpKeyCode:String;
+	public var defaultLeftKeyCode:KeyCode;
+	public var defaultRightKeyCode:KeyCode;
+	public var defaultJumpKeyCode:KeyCode;
 
 	public function new(tree:LogicTree) {
 		super(tree);
@@ -24,10 +25,10 @@ class Platformer2DControllerNode extends LogicNode {
 			var movementInput:Vector2 = new Vector2(0, 0);
 
 			if (inputType == "Use default input") {
-				if (keyboard.down(defaultLeftKeyCode)) {
+				if (keyboard.down(Input.Keyboard.keyCode(defaultLeftKeyCode))) {
 					movementInput.x += -1;
 				}
-				if (keyboard.down(defaultRightKeyCode)) {
+				if (keyboard.down(Input.Keyboard.keyCode(defaultRightKeyCode))) {
 					movementInput.x += 1;
 				}
 			} else {
@@ -36,7 +37,7 @@ class Platformer2DControllerNode extends LogicNode {
 
 			tree.object.body.velocity.x = movementInput.x * speed;
 
-			if (keyboard.started(defaultJumpKeyCode)) {
+			if (keyboard.started(Input.Keyboard.keyCode(defaultJumpKeyCode))) {
 				tree.object.body.velocity.y = -jumpForce;
 			}
 		}

@@ -1,5 +1,6 @@
 package found.node.data;
 
+import kha.input.KeyCode;
 import zui.Nodes.TNode;
 import kha.math.FastVector2;
 
@@ -282,10 +283,9 @@ class FoundryNode {
 			},
 			{
 				name:_tr("keyCode"),
-				type: "ENUM",
-				data: Input.Keyboard.getKeyCodeStringValues(),
+				type: "KEY",
 				output: 0,
-				default_value: 0
+				default_value: KeyCode.A
 			}
 		],
 		color: -4962746
@@ -1333,31 +1333,27 @@ class FoundryNode {
 			},
 			{
 				name:_tr("defaultUpKeyCode"),
-				type: "ENUM",
-				data: Input.Keyboard.getKeyCodeStringValues(),
+				type: "KEY",
 				output: 0,
-				default_value: Input.Keyboard.getKeyCodeStringValues().indexOf("up")
+				default_value: KeyCode.Up
 			},
 			{
 				name:_tr("defaultDownKeyCode"),
-				type: "ENUM",
-				data: Input.Keyboard.getKeyCodeStringValues(),
+				type: "KEY",
 				output: 0,
-				default_value: Input.Keyboard.getKeyCodeStringValues().indexOf("down")
+				default_value: KeyCode.Down
 			},
 			{
 				name:_tr("defaultLeftKeyCode"),
-				type: "ENUM",
-				data: Input.Keyboard.getKeyCodeStringValues(),
+				type: "KEY",
 				output: 0,
-				default_value: Input.Keyboard.getKeyCodeStringValues().indexOf("left")
+				default_value: KeyCode.Left
 			},
 			{
 				name:_tr("defaultRightKeyCode"),
-				type: "ENUM",
-				data: Input.Keyboard.getKeyCodeStringValues(),
+				type: "KEY",
 				output: 0,
-				default_value: Input.Keyboard.getKeyCodeStringValues().indexOf("right")
+				default_value: KeyCode.Right
 			}
 		],
 		color: -4962746
@@ -1405,24 +1401,21 @@ class FoundryNode {
 			},
 			{
 				name:_tr("defaultLeftKeyCode"),
-				type: "ENUM",
-				data: Input.Keyboard.getKeyCodeStringValues(),
+				type: "KEY",
 				output: 0,
-				default_value: Input.Keyboard.getKeyCodeStringValues().indexOf("left")
+				default_value: KeyCode.Left
 			},
 			{
 				name:_tr("defaultRightKeyCode"),
-				type: "ENUM",
-				data: Input.Keyboard.getKeyCodeStringValues(),
+				type: "KEY",
 				output: 0,
-				default_value: Input.Keyboard.getKeyCodeStringValues().indexOf("right")
+				default_value: KeyCode.Right
 			},
 			{
 				name:_tr("defaultJumpKeyCode"),
-				type: "ENUM",
-				data: Input.Keyboard.getKeyCodeStringValues(),
+				type: "KEY",
 				output: 0,
-				default_value: Input.Keyboard.getKeyCodeStringValues().indexOf("space")
+				default_value: KeyCode.Space
 			}
 		],
 		color: -4962746

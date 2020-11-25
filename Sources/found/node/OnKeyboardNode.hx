@@ -1,10 +1,11 @@
 package found.node;
 
+import kha.input.KeyCode;
 import found.Input.Keyboard;
 
 class OnKeyboardNode extends LogicNode {
 	public var keyboardEventType:String;
-	public var keyCode:String;
+	public var keyCode:KeyCode;
 
 	static var keyboardEventTypes:Array<String> = ["Pressed", "Down", "Released"];
 	var isDown:Bool = false;
@@ -17,18 +18,24 @@ class OnKeyboardNode extends LogicNode {
 
 		tree.notifyOnUpdate(update);
 	}
-
+	var lastKey:KeyCode;
+	var keyName:String;
 	function update(dt:Float) {
 		var keyboard:Keyboard = Input.getKeyboard();
 		var keyboardEventOccured:Bool = false;
 
+		if(lastKey != keyCode){
+			keyName = Input.Keyboard.keyCode(keyCode);
+			lastKey = keyCode;
+		}
+		
 		switch (keyboardEventType) {
 			case "Pressed":
-				keyboardEventOccured = keyboard.started(keyCode);
+				keyboardEventOccured = keyboard.started(keyName);
 			case "Down":
-				keyboardEventOccured = keyboard.down(keyCode);
+				keyboardEventOccured = keyboard.down(keyName);
 			case "Released":
-				keyboardEventOccured = keyboard.released(keyCode);
+				keyboardEventOccured = keyboard.released(keyName);
 		}
 
 		isDown = keyboardEventOccured;

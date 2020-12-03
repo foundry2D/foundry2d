@@ -1,11 +1,13 @@
 package found.trait.internal;
 
+import kha.math.Vector2;
 import found.object.Camera;
 import found.math.Util;
 
 @:access(found.object.Camera)
 class CameraMovement extends found.Trait {
     var camera:Camera;
+    public var considerRotation:Bool = false;
     public function new(){
         super();
         this.notifyOnInit(function(){
@@ -15,12 +17,24 @@ class CameraMovement extends found.Trait {
     }
     function update(dt:Float){
 		if (camera.target != null){
-			if (camera.offsetX < Math.abs(Math.abs(camera.viewX) - camera.target.center.x)) {
-				camera.position.x = Util.lerp(camera.position.x, camera.target.center.x - 0.5 * Found.WIDTH, camera.camSpeedX * Timer.delta);
+            var pos = camera.target.center;
+            var center = camera.origin;
+            var lpos = new Vector2(camera.position.x,camera.position.y);
+			if (camera.offsetX < Math.abs(Math.abs(camera.position.x - center.x) - pos.x)) {
+				lpos.x = Util.lerp(camera.position.x, pos.x - center.x, camera.camSpeedX * Timer.delta);
 			}
-			if (camera.offsetY < Math.abs(Math.abs(camera.viewY) - camera.target.center.y)) {
-				camera.position.y = Util.lerp(camera.position.y, camera.target.center.y - 0.5 * Found.HEIGHT, camera.camSpeedY * Timer.delta);
-			}
-		}
+			if (camera.offsetY < Math.abs(Math.abs(camera.position.y - center.y) - pos.y)) {
+				lpos.y = Util.lerp(camera.position.y, pos.y - center.y, camera.camSpeedY * Timer.delta);
+            }
+            camera.move(lpos.sub(camera.position),considerRotation);
+            
+        }
+        
+        if(Input.getKeyboard().down("w") && camera.zoom <= 2.0){
+            camera.zoom += 0.1;
+        }
+        else if(Input.getKeyboard().down("s") && camera.zoom >= 0.1){
+            camera.zoom -= 0.1;
+        }
 	}
 }

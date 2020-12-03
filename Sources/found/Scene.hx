@@ -1,5 +1,6 @@
 package found;
 
+import found.math.Util;
 import kha.math.FastMatrix3;
 import kha.simd.Float32x4;
 import found.node.Logic;
@@ -226,7 +227,7 @@ class Scene {
     #end
   }
 
-  @:access(found.App)
+  @:access(found.App,found.object.Object,found.Trait)
   public function render(canvas:Canvas){
     if(!Scene.ready)
       return;// This scene is not ready to render
@@ -251,19 +252,29 @@ class Scene {
           canvas.g2.popTransformation();
         lastz = entity.layer;
         var layer:TLayer = raw.layers != null && raw.layers.length > 0 ? raw.layers[lastz]: {name: "No layers",zIndex: 0, speed:1.0};
-        canvas.g2.pushTransformation(FastMatrix3.translation(-cam.position.x * layer.speed,-cam.position.y * layer.speed));
+        canvas.g2.pushTransformation(cam.getTransformation(layer.speed));//FastMatrix3.translation(-cam.position.x * layer.speed,-cam.position.y * layer.speed));
 
       }
+
+      var pos = entity.position.mult(cam.zoom);
+      canvas.g2.pushTranslation(pos.x,pos.y);
+			if(entity.rotation.z>0){
+				canvas.g2.pushTransformation(
+					canvas.g2.transformation.multmat(FastMatrix3.translation(entity.width *0.5,entity.height *0.5)).multmat(
+						FastMatrix3.rotation(Util.degToRad(entity.rotation.z))).multmat(
+							FastMatrix3.translation(-entity.width *0.5,-entity.height *0.5)));
+      }
       entity.render(canvas);
-    }
-    
-    if (App.traitRenders2D.length > 0) {
-			for (f in App.traitRenders2D) { App.traitRenders2D.length > 0 ? f(canvas.g2) : break; }
+      for(t in entity.traits){
+        if(t._render2D != null){
+          for (f in t._render2D) { t._render2D.length > 0 ? f(canvas.g2) : break; }
+        }
+      }
+
+      if(entity.rotation.z>0)canvas.g2.popTransformation();
+      canvas.g2.popTransformation();
     }
 
-    if(ordered.length > 0)
-      canvas.g2.popTransformation();
-    
     #if debug
     if(physics_world != null && Found.collisionsDraw){
       physics_world.for_each(function(f:echo.Body){
@@ -273,7 +284,7 @@ class Scene {
           var bds = shape.bounds();
           switch(shape.type){
             case RECT:
-              canvas.g2.fillRect(bds.min_x-cam.position.x,bds.min_y-cam.position.y,bds.width,bds.height);
+              canvas.g2.fillRect(bds.min_x,bds.min_y,bds.width,bds.height);
             case CIRCLE:
               var radius = bds.height * 0.5;
               GraphicsExtension.fillCircle(canvas.g2,bds.min_x-cam.position.x+radius,bds.min_y-cam.position.y+radius,radius);
@@ -287,6 +298,9 @@ class Scene {
       });
     }
     #end
+    
+    if(ordered.length > 0)
+      canvas.g2.popTransformation();
 
   }
 

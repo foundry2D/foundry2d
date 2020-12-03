@@ -14,12 +14,10 @@ https://github.com/foundry2D/foundry2d
 */
 
 
-import kha.math.FastMatrix3;
 import kha.Canvas;
 import kha.Color;
 import kha.math.Vector2;
 import found.object.Object;
-import found.math.Util;
 import found.data.SpriteData;
 import found.data.SceneFormat;
 
@@ -94,16 +92,7 @@ class Sprite extends Object {
 			var w = width;
 			var h = height;
 			canvas.g2.color = Color.White;
-			canvas.g2.pushTranslation(position.x,position.y);
-			if(rotation.z>0){
-				canvas.g2.pushTransformation(
-					canvas.g2.transformation.multmat(FastMatrix3.translation(w *0.5,h *0.5)).multmat(
-						FastMatrix3.rotation(Util.degToRad(rotation.z))).multmat(
-							FastMatrix3.translation(-w *0.5,-h *0.5)));
-			}
 			canvas.g2.drawScaledSubImage(data.image,tx , ty, frame.tw, frame.th, (flip.x > 0.0 ? w:0), (flip.y > 0.0 ? h:0), (flip.x > 0.0 ? -w:w), (flip.y > 0.0 ? -h:h));
-			canvas.g2.popTransformation();
-			if(rotation.z>0)canvas.g2.popTransformation();
 		}
 	}
 	

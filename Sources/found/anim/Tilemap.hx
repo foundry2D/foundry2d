@@ -134,6 +134,7 @@ class Tilemap extends Object{
     @:access(found.tool.TileEditor)
     #end
     override public function render(canvas:Canvas) {
+        super.render(canvas);
         var x = 0;
         var y = 0;
         while(x < w){
@@ -143,7 +144,7 @@ class Tilemap extends Object{
                 if(tileId != -1){
                     var tile = tiles[tileId];
                     if(tile != null){
-                        var pos:Vector2 = new Vector2(x+position.x,y+position.y);
+                        var pos:Vector2 = new Vector2(x,y);
                         tile.render(canvas,pos);
                     }
                 }
@@ -164,7 +165,7 @@ class Tilemap extends Object{
     #if tile_editor
     function drawCountour(canvas:Canvas){
         var g = canvas.g2;
-        g.drawRect(position.x,position.y,w,h,3.0);
+        g.drawRect(0,0,w,h,3.0);
 
     }
     #end

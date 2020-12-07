@@ -83,7 +83,7 @@ class Tile {
 		data.curAnim = animation;
 	}
 	
-	public function render(canvas: Canvas,position:Vector2,?color:kha.Color=null,?scale:kha.math.Vector2): Void {
+	public function render(canvas: Canvas,position:Vector2,?color:kha.Color=null,?scale:kha.math.Vector2,?shouldZoom:Bool = true): Void {
 		if(data == null)return;
 		setAnimation(animIndex);
 		if(data.animatable)
@@ -93,7 +93,8 @@ class Tile {
 			canvas.g2.color = color != null ? color:kha.Color.White;
 			if(scale != null)
 				canvas.g2.transformation = FastMatrix3.scale(scale.x,scale.y);
-			canvas.g2.pushTranslation(position.x,position.y);
+			var pos = shouldZoom ? new Vector2(position.x,position.y).mult(State.active.cam.zoom) : position;
+			canvas.g2.pushTranslation(pos.x,pos.y);
 			// canvas.g2.rotate(Util.degToRad(rotation), position.x + width/ 2,position.y + height/ 2);
 			var grid = map.tw;
 			var width = Util.snap(data.image.width,grid);

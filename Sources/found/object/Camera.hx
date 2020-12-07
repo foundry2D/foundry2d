@@ -88,6 +88,7 @@ class Camera extends Object {
 	public override function render(canvas:Canvas) {
 		if (!Scene.ready)
 			return;
+		super.render(canvas);
 		#if debug
 		canvas.g2.color = kha.Color.Red;
 		var center = origin;

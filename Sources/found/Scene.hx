@@ -252,8 +252,7 @@ class Scene {
           canvas.g2.popTransformation();
         lastz = entity.layer;
         var layer:TLayer = raw.layers != null && raw.layers.length > 0 ? raw.layers[lastz]: {name: "No layers",zIndex: 0, speed:1.0};
-        canvas.g2.pushTransformation(cam.getTransformation(layer.speed));//FastMatrix3.translation(-cam.position.x * layer.speed,-cam.position.y * layer.speed));
-
+        canvas.g2.pushTransformation(cam.getTransformation(layer.speed));
       }
 
       var pos = entity.position.mult(cam.zoom);
@@ -274,7 +273,14 @@ class Scene {
       if(entity.rotation.z>0)canvas.g2.popTransformation();
       canvas.g2.popTransformation();
     }
-
+    var m = Input.getMouse();
+    if(m.down()){
+      var pos = cam.screenToWorld(new kha.math.Vector2(m.x,m.y)).mult(cam.zoom);
+      canvas.g2.pushTranslation(pos.x,pos.y);
+      canvas.g2.color = kha.Color.fromBytes(255,255,0,64);
+      canvas.g2.fillRect(0,0,100,100);
+      canvas.g2.popTransformation();
+    }
     #if debug
     if(physics_world != null && Found.collisionsDraw){
       physics_world.for_each(function(f:echo.Body){

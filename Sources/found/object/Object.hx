@@ -1,5 +1,6 @@
 package found.object;
 
+import found.trait.internal.Arrows;
 import found.math.Util;
 import haxe.ds.Vector;
 import kha.simd.Float32x4;
@@ -368,6 +369,13 @@ class Object {
 
 	public function render(canvas:Canvas){
 		if (!Scene.ready) return;
+		#if editor
+		if(found.App.editorui.inspector.index == uid && this.getTrait(Arrows) == null){
+			var inst = found.trait.internal.Arrows.instance;
+			inst.visible = true;
+			this.addTrait(inst);
+		}
+		#end
 	}
 
 	public function isVisible(offset:Int,cam:Float32x4): Bool {
@@ -468,6 +476,10 @@ class Object {
 	 */
 	@:access(found.Trait)
 	public function removeTrait(t:Trait) {
+		// @TODO(JSN): when we remove a Trait from an object we remove it from the App also. 
+		// We should reavaluate the impact of this since it can bring about edge cases
+		// Like when we programmed the Arrows Trait the fact that the render2d was removed 
+		//and not readded when we added the Trait back on any object may be an issue.  
 		if (t._init != null) {
 			for (f in t._init) App.removeInit(f);
 			t._init = null;

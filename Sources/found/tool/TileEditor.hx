@@ -87,7 +87,11 @@ class TileEditor {
     var limit = 10048;
     @:access(zui.Zui,found.anim.Tilemap,found.anim.Tile)
     public function render(canvas:kha.Canvas): Void {
-        if(!visible || selectedTilemapIdIndex < 0 || mouse == null)return;
+        if(!visible || selectedTilemapIdIndex < 0 || mouse == null){
+            if(Input.getMouse().hidden)
+                Input.getMouse().show();
+            return;
+        }
         ui.begin(canvas.g2);
         
         ui.enabled = !zui.Popup.show;
@@ -101,7 +105,6 @@ class TileEditor {
         var newSelection = selectedTilemapIdIndex;
         var vec:kha.math.Vector2 =  new Vector2();
         if (ui.window(editorWindowHandle,x,y, width, height, true)) {
-            // zui.Popup.showCustom(Found.popupZuiInstance, objectCreationPopupDraw, -1, -1, 600, 500);
             endHeight = ui._y;
 			if (ui.panel(Id.handle({selected: true}), "Tilemap editor")) {
                 var changed = false;
@@ -247,33 +250,24 @@ class TileEditor {
             }
             endHeight = Math.abs(endHeight-ui._y);
         }
-        canDrawTile = ui.dragHandle != editorWindowHandle && !zui.Popup.show && isInScreen() && curTile != null;
+        canDrawTile = ui.dragHandle != editorWindowHandle && !zui.Popup.show && isInTilemap() && curTile != null;
         ui.end();
         
         if(canDrawTile){
             //Draw mouse Icon
-            kha.input.Mouse.get(0).hideSystemCursor();
+            Input.getMouse().hide();
             canvas.g2.begin(false,0x00000000);
             canvas.g2.color = kha.Color.White;
             canvas.g2.drawScaledImage(kha.Assets.images.basic,mouse.x,mouse.y,10,10);
             
-            //Scale tile w/h
-            //Scale image w/h
-            var scaled = scaleToScreen(1.0,1.0);
-            var px:Float = mouse.x;//Math.abs(mouse.x) < Found.GRID*0.75 ? mouse.x-curTile._w*2: mouse.x-curTile._w;
-            var py:Float = mouse.y;//Math.abs(mouse.y) < Found.GRID*0.75 ? mouse.y-curTile._h*2:mouse.y-curTile._h;
-            vec.x = px;
-            vec.y = py;
-            // px = Math.floor(px);
-            // px = Util.snap(px,Found.GRID);
-            // py = Math.floor(py);
-            // py = Util.snap(py,Found.GRID);
-
-            curTile.render(canvas,vec,kha.Color.fromBytes(255,255,255,128),new Vector2(scaled.width,scaled.height));
+            vec.x = mouse.x;
+            vec.y = mouse.y;
+            var cam = found.State.active.cam;
+            curTile.render(canvas,vec,kha.Color.fromBytes(255,255,255,128),new Vector2(cam.zoom,cam.zoom),false);
             canvas.g2.end();
         }
         else{
-            kha.input.Mouse.get(0).showSystemCursor();
+            Input.getMouse().show();
         }
 
         if(selectedTilemapIdIndex != newSelection){
@@ -413,25 +407,13 @@ class TileEditor {
         var py:Float = 0.0;
         var addX = map.position.x > 0 ? -map.position.x : Math.abs(map.position.x); 
         var addY = map.position.y > 0 ? -map.position.y : Math.abs(map.position.y);  
-        #if editor
-        if(!Found.fullscreen){
-            px = mouse.x;
-            py = mouse.y;
-            
-            var pos:kha.math.FastVector2 = new kha.math.FastVector2(px,py);  
-            pos = utilities.Conversion.ScreenToWorld(pos);
-            px = pos.x + addX +found.State.active.cam.position.x;
-            py = pos.y + addY +found.State.active.cam.position.y;
-        }
-        else{
-        #end
-        px = Math.abs(mouse.x) < Found.GRID*0.75 ? mouse.x-curTile._w*2: mouse.x-curTile._w;
-        py = Math.abs(mouse.y) < Found.GRID*0.75 ? mouse.y-curTile._h*2:mouse.y-curTile._h;
-        px = Math.floor(px+addX+found.State.active.cam.position.x);
+        var pos = found.State.active.cam.screenToWorld(new Vector2(mouse.x,mouse.y));
+        px = Math.abs(pos.x) < Found.GRID*0.75 ? pos.x-curTile._w*2: pos.x-curTile._w;
+        py = Math.abs(pos.y) < Found.GRID*0.75 ? pos.y-curTile._h*2:pos.y-curTile._h;
+        px = Math.floor(px + addX);
         px = Util.snap(px,Found.GRID);
-        py = Math.floor(py+addY+found.State.active.cam.position.y);
+        py = Math.floor(py + addY);
         py = Util.snap(py,Found.GRID);
-        #if editor } #end
         return new Vec2(px,py);
     }
 
@@ -451,9 +433,7 @@ class TileEditor {
 
         var index  = map.pos2Id(cast(pos));
         
-        //@TODO: Why do we need to do these checks here: && pos.x < map.w && pos.y < map.h 
-        //shouldnt pos2ID do it for us ?
-        if(index > -1 && curTile.tileId != null && pos.x < map.w && pos.y < map.h){
+        if(index > -1 && curTile.tileId != null){
             var lastId = map.data[index];
             #if editor
             var changed =false;
@@ -532,40 +512,21 @@ class TileEditor {
 
     var endHeight = 0.0;
     @:access(zui.Zui)
-    function isInScreen(){
-        #if editor
-        var gv = App.editorui.gameView;
-        var x = Found.fullscreen ? 0: gv.x;//@TODO: Maybe we should use the current camera or tilemap x and y
-        var y = Found.fullscreen ? 0:gv.y;
-        var w = Found.fullscreen ? Found.WIDTH:gv.width;
-        var h = Found.fullscreen ? Found.HEIGHT:gv.height;
-        #else
-        var x = found.State.active.cam.position.x;
-        var y = found.State.active.cam.position.y;
-        var w = Found.WIDTH;
-        var h = Found.HEIGHT;
-        #end
-        var out = mouse.x > x &&
-                mouse.x < x+w &&
-                mouse.y > y &&
-                mouse.y < y+h &&
+    function isInTilemap(){
+        var pos = found.State.active.cam.screenToWorld(new Vector2(mouse.x,mouse.y));
+        var x = map.position.x;
+        var y = map.position.y;
+        var w = map.width;
+        var h = map.height;
+        var out = pos.x > x &&
+                pos.x < x+w &&
+                pos.y > y &&
+                pos.y < y+h &&
                 (mouse.y < ui._windowY ||
                 mouse.y > ui._windowY+endHeight ||
                 mouse.x < ui._windowX ||
                 mouse.x > ui._windowX+width);
         return out;
-    }
-    //@TODO: We should probably modify how we declare and use this
-    // We only ever  use values of 1.0 so...
-    function scaleToScreen(w:Float,h:Float){
-        #if editor
-        var gv = App.editorui.gameView;
-        var outW = Found.fullscreen ? w : w*(gv.width/Found.WIDTH);
-        var outH = Found.fullscreen ? h : h*(gv.height/Found.HEIGHT);
-        return {width: outW, height: outH};
-        #else
-        return {width: w, height: h};
-        #end
     }
 
     function onMouseDownTE(button: Int, x: Int, y: Int) {

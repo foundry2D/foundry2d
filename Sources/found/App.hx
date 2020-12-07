@@ -77,37 +77,33 @@ class App {
 	
 	public function render(canvas:Canvas):Void {
 
+		Found.backbuffer.g2.begin();
+		canvas.g2.color = Found.backgroundcolor;
+		canvas.g2.fillRect(0, 0, Found.backbuffer.width, Found.backbuffer.height);
+		if (State.active != null){
+			#if editor
+			Found.backbuffer.g2.pushTransformation(FastMatrix3.translation(-State.active.cam.position.x,-State.active.cam.position.y));
+			EditorTools.drawGrid(Found.backbuffer.g2);
+			Found.backbuffer.g2.popTransformation();
+			State.active.render(Found.backbuffer);
+			#else
+			State.active.render(Found.backbuffer);
+			#end
+		}
+		Found.backbuffer.g2.end();
 		#if editor
-		if(!Found.fullscreen){
-			if(!editorui.visible) editorui.visible =true;
-			editorui.render(Found.backbuffer);
-			#if tile_editor
-			Found.tileeditor.render(Found.backbuffer);
-			frameCounter.addFrame();
-			#end
-
-			if(zui.Popup.show) {            
-				zui.Popup.render(Found.backbuffer.g2);
-			}
-
-		}else{
-			if(editorui.visible) editorui.visible =false;
-			Found.BUFFERWIDTH = Found.backbuffer.width;
-			Found.BUFFERHEIGHT = Found.backbuffer.height;
+		frameCounter.render(Found.backbuffer);
+		frameCounter.addFrame();
+		editorui.render(Found.backbuffer);
 		#end
-			Found.backbuffer.g2.begin();
-			canvas.g2.color = Found.backgroundcolor;
-			canvas.g2.fillRect(0, 0, Found.backbuffer.width, Found.backbuffer.height);
-			if (State.active != null){
-				State.active.render(Found.backbuffer);
-			}
-			Found.backbuffer.g2.end();
-			#if tile_editor
-			Found.tileeditor.render(Found.backbuffer);
-			frameCounter.render(Found.backbuffer);
-			frameCounter.addFrame();
-			#end
-		#if editor }#end
+		#if tile_editor
+		Found.tileeditor.render(Found.backbuffer);
+		#end
+		#if editor
+		if(zui.Popup.show) {            
+			zui.Popup.render(Found.backbuffer.g2);
+		}
+		#end
 		
 		canvas.g2.begin();
 		canvas.g2.imageScaleQuality = _imageQuality;

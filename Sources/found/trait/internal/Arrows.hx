@@ -47,7 +47,7 @@ class Arrows extends Trait {
         }
     }
     function render(g:Graphics){
-        if(!visible || this.object == State.active.cam)return;
+        if(!visible || this.object == State.active.cam #if editor || found.App.editorui.currentView != 0#end)return;
         height = rectSize = Found.popupZuiInstance.ELEMENT_H() * 0.5;
         width = Found.popupZuiInstance.ELEMENT_W();
         rectPos.x = 0;

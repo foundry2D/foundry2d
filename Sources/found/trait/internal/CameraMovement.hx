@@ -17,7 +17,7 @@ class CameraMovement extends found.Trait {
     }
     function update(dt:Float){
 		if (camera.target != null){
-            var pos = camera.target.center;
+            var pos = camera.target.center.mult(camera.zoom);
             var center = camera.origin;
             var lpos = new Vector2(camera.position.x,camera.position.y);
 			if (camera.offsetX < Math.abs(Math.abs(camera.position.x - center.x) - pos.x)) {

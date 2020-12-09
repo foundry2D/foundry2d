@@ -1,8 +1,7 @@
 package found.trait.internal;
 
+import kha.math.FastMatrix3;
 import haxe.ds.Either;
-import kha.math.Vector2;
-import kha.Assets;
 import found.Trait;
 import zui.Zui;
 import zui.Canvas;
@@ -48,7 +47,7 @@ class CanvasScript extends Trait {
                 else { // Load canvas assets
                     var loaded = 0;
                     for (asset in c.assets) {
-                        var file = asset.name;
+                        var file = asset.file;
                         found.data.Data.getImage(file, function(image: kha.Image) {
                             Canvas.assetMap.set(asset.id, image);
                             if (++loaded >= c.assets.length) canvas = c;
@@ -82,15 +81,22 @@ class CanvasScript extends Trait {
 			if (onReady != null) { onReady(); onReady = null; }
 			var hasPos:Bool = this.object != null;
 			
+			var identity = FastMatrix3.identity();
+			var objectTrans = identity;
+			var rotTrans = identity;
 			if(hasPos){
-				g.pushTranslation(this.object.position.x,this.object.position.y);
+				if(object.rotation.z>0){
+					rotTrans = g.popTransformation();
+				} 
+				objectTrans = g.popTransformation(); 
 			}
+			var lastTrans = g.popTransformation();
+
+			var isEmpty = g.transformation == null;
+			if(isEmpty)g.pushTransformation(lastTrans);
 
 			setCanvasDimensions(kha.System.windowWidth(), kha.System.windowHeight());
 			var events = Canvas.draw(cui, canvas, g);
-
-			if(hasPos)
-				g.popTransformation();
 
 			g.end();
             for(key in customDraw.keys()){
@@ -99,6 +105,16 @@ class CanvasScript extends Trait {
                     customDraw.get(key)(g,element);
                 }
 			}
+
+			if(!isEmpty)
+				g.pushTransformation(lastTrans);
+
+			if(hasPos){
+				g.pushTransformation(objectTrans);
+				if(object.rotation.z>0)
+					g.pushTransformation(rotTrans);
+			}
+
 			g.begin(false);
 
 			for (e in events) {

@@ -28,21 +28,25 @@ class Arrows extends Trait {
         var mpos = State.active.cam.screenToWorld(new Vector2(mouse.x,mouse.y));
 
         var hpos = pos.add(hPos);
-        if(mouse.down("left") && mpos.x > hpos.x && mpos.x < hpos.x + width && mpos.y > hpos.y && mpos.y < hpos.y + rectSize){
+        var isDown = mouse.down("left");
+        if(isDown && mpos.x > hpos.x && mpos.x < hpos.x + width && mpos.y > hpos.y && mpos.y < hpos.y + rectSize){
             #if editor
-            EditorUi.arrow = 0;
+            if(EditorUi.arrow == -1)
+                EditorUi.arrow = 0;
             #end
         }
         var vpos = pos.add(vPos);
-        if(mouse.down("left") && mpos.x > vpos.x && mpos.x < vpos.x + rectSize && mpos.y > vpos.y && mpos.y < vpos.y + width){
+        if( isDown && mpos.x > vpos.x && mpos.x < vpos.x + rectSize && mpos.y > vpos.y && mpos.y < vpos.y + width){
             #if editor
-            EditorUi.arrow = 1;
+            if(EditorUi.arrow == -1)
+                EditorUi.arrow = 1;
             #end
         }
         var rpos = pos.add(rectPos);
-        if(mouse.down("left") && mpos.x > rpos.x && mpos.x < rpos.x + rectSize && mpos.y > rpos.y && mpos.y < rpos.y + rectSize){
+        if(isDown && mpos.x > rpos.x && mpos.x < rpos.x + rectSize && mpos.y > rpos.y && mpos.y < rpos.y + rectSize){
             #if editor
-            EditorUi.arrow = 2;
+            if(EditorUi.arrow == -1)
+                EditorUi.arrow = 2;
             #end
         }
     }

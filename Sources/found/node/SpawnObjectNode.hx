@@ -24,12 +24,13 @@ class SpawnObjectNode extends LogicNode {
 
 		if (inputs[1].node != null) {
 			selectedObjectToSpawn = cast(inputs[1].get());
-			var spawnedObject:Object = found.State.active.spawn(selectedObjectToSpawn.raw);
-			spawnedObjects.push(spawnedObject);
+			found.State.active.spawn(selectedObjectToSpawn.raw,function(spawnedObject:Object){
+				spawnedObjects.push(spawnedObject);
 
-			spawnedObject.activate();
-			spawnedObject.translate(moveObjectToSpawnPoint);
-			spawnedObject.rotate(rotateObjectToSpawnRotation);
+				spawnedObject.activate();
+				spawnedObject.translate(moveObjectToSpawnPoint);
+				spawnedObject.rotate(rotateObjectToSpawnRotation);
+			});
 		}
 		#if debug
 		else {
@@ -37,7 +38,7 @@ class SpawnObjectNode extends LogicNode {
 		}
 		#end
 
-		runOutput(0);
+		runOutput(0);//@TODO: Should we only call this when we actually spawn an object ?
 	}
 
 	function moveObjectToSpawnPoint(data:MoveData) {

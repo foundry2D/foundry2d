@@ -129,24 +129,31 @@ class Scene {
   }
 
   #if editor
-  public function addEntity(e:TObj,?isEditor = false) : Object {
+  public function addEntity(e:TObj,onDone:Object->Void = null,?isEditor = false) : Void {
     if(!isEditor && this.raw._entities.length == this._entities.length)
       error("This function should only be used for EDITOR developpement");
   #else
-  function addEntity(e:TObj) : Object {
+  function addEntity(e:TObj,onDone:Object->Void = null) : Void {
   #end  
     switch(e.type){
         case "object":
-            addToStateArray(new Object(e));
+            var obj = new Object(e);
+            addToStateArray(obj);
+            if(onDone != null)
+              onDone(obj);
         case "sprite_object":
           var data:TSpriteData = SceneFormat.getData(e);
           new Sprite(data,function (s:Sprite){
               addToStateArray(s);
+              if(onDone != null)
+                onDone(s);
           });
         case "tilemap_object":
           var data:TTilemapData = SceneFormat.getData(e);
           new Tilemap(data,function(tilemap:Tilemap){
             addToStateArray(tilemap);
+            if(onDone != null)
+              onDone(tilemap);
           });
         case "camera_object":
           var data:TCameraData = SceneFormat.getData(e);
@@ -155,12 +162,13 @@ class Scene {
             cam = out;
           out.raw = data;
           addToStateArray(out);
+          if(onDone != null)
+            onDone(out);
         case "emitter_object":
         default:
           warn("Data with name"+e.name+"was not added because it's type is not implemented");
 
       }
-      return _entities[_entities.length - 1];
   }
 
   function addPhysicsWorld(opts:echo.data.Options.WorldOptions) {
@@ -360,10 +368,11 @@ class Scene {
   }
 
   @:access(found.object.Object)
-  public function spawn(objectData:TObj) : Object {    
-    var spawnedObject:Object = addEntity(objectData #if editor ,true#end);
-    spawnedObject.spawned = true;
-    return spawnedObject;
+  public function spawn(objectData:TObj,onDone:Object->Void = null) : Void {    
+    addEntity(objectData,function(obj:Object){
+      onDone(obj);
+      obj.spawned = true;
+    } #if editor ,true#end);
   }
 
   public function add(entity:Object){

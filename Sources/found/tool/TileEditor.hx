@@ -46,7 +46,7 @@ class TileEditor {
     var tileHandle = Id.handle({value: 0});
     var unusedIds:Array<Int> = [];
     var canDrawTile:Bool =false;
-    var state:Int = TileEditorState.Draw;
+    var brushState:Int = TileEditorState.Draw;
     var editorWindowHandle:Handle = Id.handle();
     var tilesheets:Array<TTileData> = [];
     var tilsheetListHandle:Handle = Id.handle();
@@ -81,6 +81,21 @@ class TileEditor {
         editorWindowHandle.redraws = 2;
     }
 
+    public function update(dt:Float) {
+        if(mouse.down("left") && mouse.moved){
+			addTile();
+		}
+        if(mouse.started("right")){
+            if(brushState == TileEditorState.Draw){
+                brushState = TileEditorState.Erase;
+            }
+            else{
+                brushState = TileEditorState.Draw;
+            }
+            redraw();
+        }
+
+    }
     var mapWidthHandle:Handle = Id.handle();
     var mapHeightHandle:Handle = Id.handle();
     var editorStateHandle:Handle = Id.handle();
@@ -102,6 +117,7 @@ class TileEditor {
             var raw:TTilemapData = cast(map.raw); 
             tilesheets = raw.images;
         }
+
         var newSelection = selectedTilemapIdIndex;
         var vec:kha.math.Vector2 =  new Vector2();
         if (ui.window(editorWindowHandle,x,y, width, height, true)) {
@@ -141,10 +157,10 @@ class TileEditor {
                     GridSizeDialog.open(map);
                 }
                 #end
-                editorStateHandle.position = state;
+                editorStateHandle.position = brushState;
                 ui.combo(editorStateHandle,editorStates,"Draw State",true);
                 if(editorStateHandle.changed){
-                    state = editorStateHandle.position;
+                    brushState = editorStateHandle.position;
                 }
 				if(curTile != null){
                     //Tilemap drawing with selection
@@ -439,7 +455,7 @@ class TileEditor {
             var changed =false;
             #end
             var rawData:TTilemapData = cast(map.raw);
-            if(state == TileEditorState.Draw){
+            if(brushState == TileEditorState.Draw){
                 map.data[index] = curTile.tileId;
                 if(rawData.map.exists(curTile.tileId)){
                     var indicies = rawData.map.get(curTile.tileId);
@@ -467,7 +483,7 @@ class TileEditor {
                 changed = true;
                 #end
             }
-            if(state == TileEditorState.Erase && lastId != -1){
+            if(brushState == TileEditorState.Erase && lastId != -1){
                 map.data[index] = -1;
                 var arr = rawData.map.get(lastId);
                 var bodies = map.tiles.get(lastId).bodies;
@@ -511,7 +527,6 @@ class TileEditor {
     }
 
     var endHeight = 0.0;
-    @:access(zui.Zui)
     function isInTilemap(){
         var pos = found.State.active.cam.screenToWorld(new Vector2(mouse.x,mouse.y));
         var x = map.position.x;
@@ -522,11 +537,15 @@ class TileEditor {
                 pos.x < x+w &&
                 pos.y > y &&
                 pos.y < y+h &&
-                (mouse.y < ui._windowY ||
-                mouse.y > ui._windowY+endHeight ||
-                mouse.x < ui._windowX ||
-                mouse.x > ui._windowX+width);
+                isInEditor();
         return out;
+    }
+    @:access(zui.Zui)
+    public function isInEditor(){
+        return  mouse.y < ui._windowY ||
+        mouse.y > ui._windowY+endHeight ||
+        mouse.x < ui._windowX ||
+        mouse.x > ui._windowX+width;
     }
 
     function onMouseDownTE(button: Int, x: Int, y: Int) {

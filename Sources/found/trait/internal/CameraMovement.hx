@@ -29,12 +29,5 @@ class CameraMovement extends found.Trait {
             camera.move(lpos.sub(camera.position),considerRotation);
             
         }
-        
-        if(Input.getKeyboard().down("w") && camera.zoom <= 2.0){
-            camera.zoom += 0.1;
-        }
-        else if(Input.getKeyboard().down("s") && camera.zoom >= 0.1){
-            camera.zoom -= 0.1;
-        }
 	}
 }

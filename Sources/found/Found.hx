@@ -36,10 +36,6 @@ class Found {
 
   public static var backbuffer:Image;
   #if editor
-  public static var scenebuffer:Image;
-  public static var renderfunc:kha.graphics2.Graphics->Void;
-  public static var fullscreen:Bool = false;
-  
   public static var BUFFERWIDTH(default, default):Int = WIDTH;
   public static var BUFFERHEIGHT(default, default):Int = HEIGHT;
 

@@ -63,7 +63,7 @@ class Tile {
 	}
 	//initialized in makeBodies of Tilemap
 	public var bodies:Array<echo.Body> = [];
-
+	public var bodyCount:Int = -1;
 	static var onStaticDone:Tilemap->Void = null;
 	@:access(found.anim.Tilemap)
 	public static function createTile(map:Tilemap,sprite:TTileData,index:Int,?isPivot=false,?done:Tilemap->Void){
@@ -81,6 +81,12 @@ class Tile {
 	}
 	public function setAnimation(animation: Int): Void {
 		data.curAnim = animation;
+	}
+	function updateBody(position:Vector2) {
+		bodyCount++;
+		if(bodyCount < bodies.length){
+			bodies[bodyCount].set_position(position.x,position.y);
+		}
 	}
 	
 	public function render(canvas: Canvas,position:Vector2,?color:kha.Color=null,?scale:kha.math.Vector2,?shouldZoom:Bool = true): Void {

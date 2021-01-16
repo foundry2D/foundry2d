@@ -82,10 +82,15 @@ class TileEditor {
     }
 
     public function update(dt:Float) {
+        if(!visible || selectedTilemapIdIndex < 0 || mouse == null){
+            if(Input.getMouse().hidden)
+                Input.getMouse().show();
+            return;
+        }
         if(mouse.down("left") && mouse.moved){
 			addTile();
 		}
-        if(mouse.started("right")){
+        if(mouse.started("right") && visible){
             if(brushState == TileEditorState.Draw){
                 brushState = TileEditorState.Erase;
             }
@@ -211,7 +216,7 @@ class TileEditor {
                         if(!map.tiles.exists(pivotTile.tileId+index)){
                             
                             var id = pivotTile.tileId+index;
-                            pivotTile.raw.usedIds.push(id)-1;
+                            pivotTile.raw.usedIds.push(id);
                             unusedIds.push(id);
                             curTile = found.anim.Tile.createTile(map,Reflect.copy(pivotTile.raw),id);
                         }
@@ -460,7 +465,9 @@ class TileEditor {
                 if(rawData.map.exists(curTile.tileId)){
                     var indicies = rawData.map.get(curTile.tileId);
                     if(indicies[indicies.length-1] == index)return;
-                    indicies.push(index);
+                    if(!indicies.contains(index)){
+                        indicies.push(index);
+                    }
                 }
                 else {
                     rawData.map.set(curTile.tileId,[index]);
@@ -476,8 +483,10 @@ class TileEditor {
                             break;
                         }
                     }
-                    if(addBody)
+                    if(addBody){
                         curTile.bodies.push(found.State.active.physics_world.add(new echo.Body(body)));
+                    }
+                        
                 }
                 #if editor
                 changed = true;
@@ -487,16 +496,24 @@ class TileEditor {
                 map.data[index] = -1;
                 var arr = rawData.map.get(lastId);
                 var bodies = map.tiles.get(lastId).bodies;
-                var body = null;
+                var body:Null<echo.Body> = null;
                 for(i in 0...arr.length){
                     if(arr[i] == index){
                         arr.splice(i,1);
-                        body = bodies.splice(i,1)[0];
+                        var pos = new Vector2();
+                        pos.x = map.x2p(map.x(index))+map.position.x;
+                        pos.y = map.y2p(map.y(index))+map.position.y;
+                        for(bod in bodies){
+                            if(bod.x == pos.x && bod.y == pos.y){
+                                bodies.remove(bod);
+                                body = bod;
+                                break;
+                            }
+                        }
                     }
                 }
-                
-                if(found.State.active.physics_world != null && body != null){
-                    found.State.active.physics_world.remove(body);
+                if(body != null){
+                    body.remove();
                     body.dispose();
                 }
                 #if editor
@@ -537,11 +554,11 @@ class TileEditor {
                 pos.x < x+w &&
                 pos.y > y &&
                 pos.y < y+h &&
-                isInEditor();
+                notInEditor() #if editor && !App.editorui.isInUi()#end;
         return out;
     }
     @:access(zui.Zui)
-    public function isInEditor(){
+    public function notInEditor(){
         return  mouse.y < ui._windowY ||
         mouse.y > ui._windowY+endHeight ||
         mouse.x < ui._windowX ||

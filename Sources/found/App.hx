@@ -79,13 +79,17 @@ class App {
 		canvas.g2.fillRect(0, 0, Found.backbuffer.width, Found.backbuffer.height);
 		if (State.active != null){
 			#if editor
-			Found.backbuffer.g2.pushTransformation(FastMatrix3.translation(-State.active.cam.position.x,-State.active.cam.position.y));
-			EditorTools.drawGrid(Found.backbuffer.g2);
-			Found.backbuffer.g2.popTransformation();
-			State.active.render(Found.backbuffer);
-			#else
-			State.active.render(Found.backbuffer);
+			if(editorui.currentView == 0 && !editorui.isHidden())
+			{
+				Found.backbuffer.g2.pushTransformation(FastMatrix3.translation(-State.active.cam.position.x,-State.active.cam.position.y));
+				EditorTools.drawGrid(Found.backbuffer.g2);
+				Found.backbuffer.g2.popTransformation();
+				State.active.render(Found.backbuffer);
+			}
+			else{
 			#end
+			State.active.render(Found.backbuffer);
+			#if editor } #end
 		}
 		Found.backbuffer.g2.end();
 		#if editor
@@ -94,7 +98,8 @@ class App {
 		editorui.render(Found.backbuffer);
 		#end
 		#if tile_editor
-		Found.tileeditor.render(Found.backbuffer);
+		#if editor if(editorui.currentView == 0 || editorui.isHidden())#end
+			Found.tileeditor.render(Found.backbuffer);
 		#end
 		#if editor
 		if(zui.Popup.show) {            

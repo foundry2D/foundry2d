@@ -179,8 +179,14 @@ class Scene {
 
   @:access(found.App,found.object.Object)
   public function update(dt:Float){
-    if(!Scene.ready #if editor ||  !App.editorui.isPlayMode #end)
+    if(!Scene.ready #if editor ||  !App.editorui.isPlayMode #end){
+      #if editor
+      for(exe in Executor.executors){
+        exe.execute();
+      }
+      #end
       return;
+    }
     
     if (App.traitAwakes.length > 0) {
       for (f in App.traitAwakes) { App.traitAwakes.length > 0 ? f() : break; }

@@ -8,7 +8,7 @@ import found.data.SpriteData;
 import found.data.SceneFormat;
 import kha.math.Vector2;
 
-
+@:access(found.anim.Tile)
 class Tilemap extends Object{
     static function deserialize(data:Any):Map<Int,Array<Int>>{
         var map = new Map<Int, Array<Int>>();
@@ -146,6 +146,7 @@ class Tilemap extends Object{
                     if(tile != null){
                         var pos:Vector2 = new Vector2(x,y);
                         tile.render(canvas,pos);
+                        tile.updateBody(pos.add(this.position));
                     }
                 }
             }
@@ -154,6 +155,9 @@ class Tilemap extends Object{
                 y+=th;
                 x = 0;
             }
+        }
+        for(tile in tiles){
+            tile.bodyCount = -1;
         }
         #if tile_editor
         if(TileEditor.selectedTilemapIdIndex != -1 && TileEditor.tilemapIds[TileEditor.selectedTilemapIdIndex] == this.uid){
@@ -165,7 +169,8 @@ class Tilemap extends Object{
     #if tile_editor
     function drawCountour(canvas:Canvas){
         var g = canvas.g2;
-        g.drawRect(0,0,w,h,3.0);
+        var stren = State.active.cam.zoom < 1.0 ? 9.0 * (1.0 - State.active.cam.zoom) : 0.0;  
+        g.drawRect(0,0,w,h,3.0+stren);
 
     }
     #end

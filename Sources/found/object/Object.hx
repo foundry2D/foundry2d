@@ -105,8 +105,8 @@ class Object {
 
 		var obj:Array<Object> = State.active.getObjects(data.objectName);
 		if(obj.length > 0){
-			if(data.tileId != null && Std.isOfType(obj,found.anim.Tilemap)){
-				var tile:Null<found.anim.Tile> = cast(obj,found.anim.Tilemap).tiles.get(data.tileId);
+			if(data.tileId != null && Std.isOfType(obj[0],found.anim.Tilemap)){
+				var tile:Null<found.anim.Tile> = cast(obj[0],found.anim.Tilemap).tiles.get(data.tileId);
 				if(tile != null){
 					for(b in tile.bodies){
 						var newCollisionListener:echo.Listener = State.active.physics_world.listen(this.body,b,{enter: data.onEnter,stay: data.onStay,exit: data.onExit});

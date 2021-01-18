@@ -1589,6 +1589,14 @@ class FoundryNode {
 				type: "OBJECT",
 				color: -4934476,
 				default_value: null
+			},
+			{
+				id: 0,
+				node_id: 0,
+				name:_tr("Tile id"),
+				type: "VALUE",
+				color: -10183681,
+				default_value: null
 			}
 		],
 		outputs: [

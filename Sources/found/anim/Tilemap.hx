@@ -197,8 +197,12 @@ class Tilemap extends Object{
                             break;
                         }
                     }
-                    if(addBody)
-                        tile.bodies.push(scene.physics_world.add(new echo.Body(body)));
+                    if(addBody){
+                        var bod = new echo.Body(body);
+                        bod.object = this;
+                        tile.bodies.push(scene.physics_world.add(bod));
+                    }
+                        
                 }
             }
         }

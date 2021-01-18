@@ -18,12 +18,14 @@ class OnCollisionNode extends LogicNode {
 	override function run(from:Int) {
 		if (inputs[1].node != null) {
 			var selectedCollidingObject:Object = cast(inputs[1].get());
+			var tileid:Null<Int> = inputs[2].get();
 
 			var collisionDef:CollisionDef = {
 				objectName: selectedCollidingObject.raw.name,
 				onEnter: onCollisionEnterEvent,
 				onStay: onCollisionStayEvent,
-				onExit: onCollisionExitEvent
+				onExit: onCollisionExitEvent,
+				tileId: tileid
 			};
 
 			collisionListeners = collisionListeners.concat(tree.object.onCollision(collisionDef));
@@ -50,6 +52,7 @@ class OnCollisionNode extends LogicNode {
 		runOutput(2);
 	}
 
+	@:access(found.anim.Tilemap)
 	override function get(from:Int):Dynamic {
 		return lastBody.object;
 	}

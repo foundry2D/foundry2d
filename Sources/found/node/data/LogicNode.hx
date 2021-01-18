@@ -16,18 +16,18 @@ class LogicNode {
 			{
 				id: 1,
 				node_id: 0,
-				name:_tr("Bool"),
+				name:_tr("Dynamic"),
 				type: "BOOLEAN",
-				color: -10822566,
-				default_value: 0.0
+				color: 0xff99FFDB,
+				default_value: null
 			},
 			{
 				id: 2,
 				node_id: 0,
-				name:_tr("Bool"),
+				name:_tr("Dynamic"),
 				type: "BOOLEAN",
-				color: -10822566,
-				default_value: 0.0
+				color: 0xff99FFDB,
+				default_value: null
 			}
 		],
 		outputs: [

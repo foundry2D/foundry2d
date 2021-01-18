@@ -104,7 +104,7 @@ class NodeEditor {
 				else if (node.type == "FlipSpriteNode") {
 					node.buttons[0].data = updatedSpriteList;
 				}
-				else if(node.type == "GetPropNode"){
+				else if(node.type == "GetPropNode" || node.type == "SetPropNode"){
 					var props = Trait.getProps(node.buttons[0].data[0]);
 					var out = [];
 					for(p in props){
@@ -165,6 +165,12 @@ class NodeEditor {
 						pushNodeToSelectedGroup(VariableNode.vector2);
 					if (ui.button("GetProp")){
 						var def = Reflect.copy(VariableNode.getProp);
+						var ext = "_vhx";
+						def.buttons[0].data = [selectedNode.name+ext];
+						pushNodeToSelectedGroup(def);
+					}
+					if (ui.button("SetProp")){
+						var def = Reflect.copy(VariableNode.setProp);
 						var ext = "_vhx";
 						def.buttons[0].data = [selectedNode.name+ext];
 						pushNodeToSelectedGroup(def);
@@ -304,12 +310,13 @@ class NodeEditor {
 					if (ui.button("Play Animation"))
 						pushNodeToSelectedGroup(FoundryNode.playAnimationNode);
 				}
-				if (ui.panel(Id.handle(), "Audio")) {
-					if (ui.button("Play Music"))
-						pushNodeToSelectedGroup(FoundryNode.playMusicNode);
-					if (ui.button("Play Sfx"))
-						pushNodeToSelectedGroup(FoundryNode.playSfxNode);
-				}
+				// Uncomment when this is done and works
+				// if (ui.panel(Id.handle(), "Audio")) {
+				// 	if (ui.button("Play Music"))
+				// 		pushNodeToSelectedGroup(FoundryNode.playMusicNode);
+				// 	if (ui.button("Play Sfx"))
+				// 		pushNodeToSelectedGroup(FoundryNode.playSfxNode);
+				// }
 			}
 			if (ui.tab(nodeMenuTabHandle, "Custom")) {
 				for (sec in gameplayNodes.keys()) {

@@ -430,8 +430,9 @@ class Scene {
   static function createTraits(traits:Array<TTrait>, object:Object) {
     if (traits == null) return;
 		for (t in traits) {
-      if(!Trait.hasTrait(t.classname) && t.props != null){
-          Trait.addProps(t.classname,t.props);
+      //@TODO:Test this out with ennemies
+      if(!Trait.hasTrait(t.classname+object.uid) && t.props != null){
+          Trait.addProps(t.classname+object.uid,t.props);
       }
       if (t.type == "VisualScript") {
         Data.getBlob(t.classname, function(blob:kha.Blob) {

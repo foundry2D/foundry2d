@@ -9,7 +9,8 @@ class GetPropNode extends LogicNode {
 		var value:Null<Any> = null;
 		for(t in tree.object.raw.traits){
 			if(t.classname == classname && t.props != null){
-				for(p in t.props){
+				var props = Trait.getProps(classname+tree.object.uid);
+				for(p in props){
 					if(StringTools.contains(p,propertyName)){
 						var prop = p.split("~");
 						var type = Std.parseInt(prop[1]);

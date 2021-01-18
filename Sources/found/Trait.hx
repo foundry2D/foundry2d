@@ -52,7 +52,7 @@ class Trait {
 			Trait.props.set(classname,Trait.getProps(classname).concat(props));
 		}
 		else {
-			Trait.props.set(classname,Reflect.copy(props));
+			Trait.props.set(classname,[for(i in 0...props.length)props[i]]);
 		}
 	}
 	public static function removeProps(classname:String,props:Array<String>){

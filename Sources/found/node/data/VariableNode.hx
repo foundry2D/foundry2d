@@ -211,4 +211,49 @@ class VariableNode {
 			}
 		]
 	}
+	public static var setProp:TNode = {
+		id: 0,
+		name:_tr("Set Property"),
+		type: "SetPropNode",
+		x: 200,
+		y: 200,
+		color: -16067936,
+		inputs: [
+			{
+				id: 0,
+				node_id: 0,
+				name:_tr("In"),
+				type: "ACTION",
+				color: 0xffaa4444,
+				default_value: ""
+			},
+			{
+				id: 0,
+				node_id: 0,
+				name:_tr("Value"),
+				type: "VALUE",
+				color: -10183681,
+				default_value: null
+			}
+		],
+		outputs: [
+			
+		],
+		buttons: [
+			{
+				name:_tr("classname"),
+				type: "ENUM",
+				data: [],
+				output:0,
+				default_value: 0
+			},
+			{
+				name:_tr("propertyName"),
+				type: "ENUM",
+				data: [],
+				output: 0,
+				default_value: 0
+			}
+		]
+	}
 }

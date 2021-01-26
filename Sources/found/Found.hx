@@ -55,7 +55,7 @@ class Found {
 
   #if debug
   public static var collisionsDraw:Bool = false;
-  public static var drawGrid:Bool = true;
+  public static var drawGrid:Bool = false;
   #end
 
   public static var sceneX:Float=0.0;

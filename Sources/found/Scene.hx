@@ -307,10 +307,10 @@ class Scene {
               canvas.g2.fillRect(bds.min_x,bds.min_y,bds.width,bds.height);
             case CIRCLE:
               var radius = bds.height * 0.5;
-              GraphicsExtension.fillCircle(canvas.g2,bds.min_x-cam.position.x+radius,bds.min_y-cam.position.y+radius,radius);
+              GraphicsExtension.fillCircle(canvas.g2,bds.min_x+radius,bds.min_y+radius,radius);
             case POLYGON:
               var poly = cast(shape,echo.shape.Polygon);
-              GraphicsExtension.fillPolygon(canvas.g2,-cam.position.x,-cam.position.y,cast(poly.vertices));
+              GraphicsExtension.fillPolygon(canvas.g2,0,0,cast(poly.vertices));
           }
           
         }

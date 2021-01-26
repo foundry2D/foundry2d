@@ -24,6 +24,7 @@ class Arrows extends Trait {
     var hPos:Vector2 = new Vector2();
     var vPos:Vector2 = new Vector2();
     function update(){
+        if(!visible || this.object == State.active.cam #if editor || found.App.editorui.currentView != 0#end)return;
         var pos = new Vector2(this.object.position.x,this.object.position.y);
         var mpos = State.active.cam.screenToWorld(new Vector2(mouse.x,mouse.y));
 
@@ -60,7 +61,7 @@ class Arrows extends Trait {
         hPos.y =  -rectSize;
         vPos.x = 0;
         vPos.y =  -rectSize - width;
-        update();
+        
         var size = rectSize * 0.33;
         g.color  = kha.Color.Yellow;
         g.fillRect(rectPos.x,rectPos.y,rectSize,rectSize);

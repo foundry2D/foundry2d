@@ -278,8 +278,8 @@ class TileEditor {
             //Draw mouse Icon
             Input.getMouse().hide();
             canvas.g2.begin(false,0x00000000);
-            canvas.g2.color = kha.Color.White;
-            canvas.g2.drawScaledImage(kha.Assets.images.basic,mouse.x,mouse.y,10,10);
+            canvas.g2.color = ui.t.ACCENT_COL;
+            canvas.g2.drawScaledSubImage(kha.Assets.images.icons,0,0,64,64,mouse.x,mouse.y,10,10);
             
             vec.x = mouse.x;
             vec.y = mouse.y;

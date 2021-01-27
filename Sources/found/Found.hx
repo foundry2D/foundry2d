@@ -110,11 +110,27 @@ class Found {
 		}
 		#end
 		return plat;
-	}
+  }
+  
+  public static dynamic function loadScreen(g:kha.graphics2.Graphics){
+    var elemH = zui.Themes.dark.ELEMENT_H;
+    g.begin();
+    var value = Assets.progress * (Found.WIDTH * 0.5);
+    g.color = zui.Themes.dark.PANEL_BG_COL;
+    g.fillRect(Found.WIDTH * 0.25,Found.HEIGHT * 0.5,Found.WIDTH * 0.5,elemH);
+    g.color = kha.Color.Orange;
+    g.fillRect(Found.WIDTH * 0.25,Found.HEIGHT * 0.5,value,elemH);
+    g.end();
+  };
 
   public static function setup(config:FoundConfig){
     WIDTH = Display.primary.width;
     HEIGHT = Display.primary.height;
+    var loadDraw = function(framebuffer:Array<Framebuffer>){
+      Found.loadScreen(framebuffer[0].g2);
+    };
+    System.notifyOnFrames(loadDraw);
+    
     if (config.width == null) config.width = WIDTH;
     if (config.height == null) config.height = HEIGHT;
     if (config.bufferwidth == null) config.bufferwidth = WIDTH;
@@ -156,6 +172,7 @@ class Found {
         }
         _app = Type.createInstance(config.app, []);
         kha.Window.get(0).notifyOnResize(resize);
+        System.removeFramesListener(loadDraw);
 				System.notifyOnFrames(function(framebuffer){
 				  render(framebuffer[0]);
 				});

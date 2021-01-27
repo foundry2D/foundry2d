@@ -96,12 +96,14 @@ class App {
 		frameCounter.render(Found.backbuffer);
 		frameCounter.addFrame();
 		editorui.render(Found.backbuffer);
+		if(editorui.currentView == 0 || !editorui.visible){//To avoid calling TileEditor when not in game view
 		#end
 		#if tile_editor
 		#if editor if(editorui.currentView == 0 || editorui.isHidden())#end
 			Found.tileeditor.render(Found.backbuffer);
 		#end
 		#if editor
+		}//end
 		if(zui.Popup.show) {            
 			zui.Popup.render(Found.backbuffer.g2);
 		}

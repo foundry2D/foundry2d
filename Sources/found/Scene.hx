@@ -287,14 +287,6 @@ class Scene {
       if(entity.rotation.z>0)canvas.g2.popTransformation();
       canvas.g2.popTransformation();
     }
-    var m = Input.getMouse();
-    if(m.down()){
-      var pos = cam.screenToWorld(new kha.math.Vector2(m.x,m.y)).mult(cam.zoom);
-      canvas.g2.pushTranslation(pos.x,pos.y);
-      canvas.g2.color = kha.Color.fromBytes(255,255,0,64);
-      canvas.g2.fillRect(0,0,100,100);
-      canvas.g2.popTransformation();
-    }
     #if debug
     if(physics_world != null && Found.collisionsDraw){
       physics_world.for_each(function(f:echo.Body){

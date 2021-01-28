@@ -1,5 +1,6 @@
 package found.data;
 
+import found.tool.Log;
 import kha.Assets;
 import kha.arrays.Float32Array;
 import kha.Sound;
@@ -84,7 +85,7 @@ class Data {
 				parsed = /*s.charAt(0) == "{" ? */DataLoader.parse(b.toString()) /*: ArmPack.decode(b.toBytes())*/;
 			}
 			catch(e:Dynamic){
-				trace(e);
+				error(e);
 			}
 			returnSceneRaw(file, parsed);
 		});
@@ -134,7 +135,7 @@ class Data {
 			},function(failed:kha.AssetError){
 				var error = failed.error;
 				var path = failed.url;
-				trace('Asset at path: $path failed to load because of $error');
+				Log.error('Asset at path: $path failed to load because of $error');
 			});
 		}
 	}
@@ -155,7 +156,7 @@ class Data {
 			kha.Image.fromEncodedBytes(bytes,extension,done,function(err:String){
 				if(failed != null){
 					var error:kha.AssetError = {url: path,error: err};
-					trace(err);
+					Log.error(err);
 					failed(error);
 				}
 			},readable);
@@ -195,7 +196,7 @@ class Data {
 				assetsLoaded++;
 			},function (e:kha.AssetError){
 				if(e.url == "")e.url = 'Null';
-				trace("Error occurred file " + e.url + " does not exist");
+				error("file " + e.url + " does not exist");
 			});
 		}
 	}
@@ -254,7 +255,7 @@ class Data {
 			});
 			#end
 		},function(error:kha.AssetError){
-			trace('Couldn\'t load $p because of $error');
+			Log.error('Couldn\'t load $p because of $error');
 		});
 	}
 

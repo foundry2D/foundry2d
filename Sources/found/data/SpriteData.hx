@@ -23,7 +23,7 @@ class SpriteData {
 	public var curAnim(default,set):Int = 0;
 	function set_curAnim(index:Int){
 		if(anims.length < index){
-			trace('Trying to set animation with index: $index but the number of animations is:'+anims.length);
+			warn('Trying to set animation with index: $index but the number of animations is:'+anims.length);
 		}else{
 			curAnim =index;
 		}
@@ -64,7 +64,7 @@ class SpriteData {
 			}				
 		}
 
-		trace('Animation with name: $animationName does not exist');
+		error('Animation with name: $animationName does not exist');
 	}
 
 	function animLoad(anim:TAnimation) {

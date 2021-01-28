@@ -41,7 +41,6 @@ class Tile {
 		this.raw = sprite;
 		map.addData(sprite,function(dataId:Int){
 			this.dataId = dataId; 
-			trace(index);
 			//Every tilesheet will have the 0 tile be created
 			if(index == 0 || isPivot){	
 				Reflect.setField(this,"tileId",index);
@@ -72,7 +71,6 @@ class Tile {
 		return new Tile(map,sprite,index,isPivot,function(tile:Tile){
 			map.tiles.set(tile.tileId,tile);
 			if(tile.raw.usedIds[tile.raw.usedIds.length-1] == index && onStaticDone != null){
-				trace('done was called $index');
 				onStaticDone(map);
 				onStaticDone = null;
 			}

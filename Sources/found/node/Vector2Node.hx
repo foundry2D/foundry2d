@@ -8,14 +8,20 @@ class Vector2Node extends LogicNode {
 	}
 
 	override function get(from:Int):Dynamic {
-		value.x = inputs[0].get();
-		value.y = inputs[1].get();
+		if(inputs[0] != null && inputs[1] != null){
+			value.x = inputs[0].get();
+			value.y = inputs[1].get();
 
-		if (from == 0) {
-			return value;
+			if (from == 0) {
+				return value;
+			}
+
+			return value.normalized();
 		}
-
-		return value.normalized();
+		else {
+			return null;
+		}
+		
 	}
 
 	override function set(value:Dynamic) {

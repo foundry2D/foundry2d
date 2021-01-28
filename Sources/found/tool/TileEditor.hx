@@ -344,7 +344,8 @@ class TileEditor {
         if(ui.button("...")){
             FileBrowserDialog.open(function(path:String){
                 if(path == "")return;
-                // curTile.data.
+                imagePathHandle.text = data.imagePath = path;
+                setTilesheet(path,data.name,index);
             });
         }
         #end
@@ -369,32 +370,42 @@ class TileEditor {
         #if editor
         FileBrowserDialog.open(function(path:String){
             if(path == "")return;
+            setTilesheet(path,title);
             
-            found.data.Data.getImage(path,function(image:kha.Image){
-                var tilesheet:TTileData = found.data.Creator.createType(title,"sprite_object");
-                var curPivot = map.pivotTiles[map.pivotTiles.length-1];
-                var originId = curPivot != null ? currentMaxTiles(curPivot)+curPivot.tileId : 0;
-                tilesheet.id = originId;
-                tilesheet.usedIds = [originId];
-                tilesheet.width = image.width;
-                tilesheet.height = image.height;
-                tilesheet.tileWidth = map.tw;
-                tilesheet.tileHeight = map.th;
-                tilesheet.imagePath = path;
-                tilesheets.push(tilesheet);
-                trace(tilesheet);
-                tileSelected = null;
-                var tile = Tile.createTile(map,tilesheet,originId,true);
-                if(curTile == null){
-                    curTile  = tile;
-                    tilsheetListHandle.nest(0).position = -1;
-                }
-                #if editor
-                map.dataChanged = true;
-                #end
-            });
         });
         #end
+    }
+    @:access(found.anim.Tilemap,found.anim.Tile)
+    function setTilesheet(path:String,title:String,index:Int = -1) {
+        found.data.Data.getImage(path,function(image:kha.Image){
+            var tilesheet:TTileData = found.data.Creator.createType(title,"sprite_object");
+            var curPivot = map.pivotTiles[map.pivotTiles.length-1];
+            var originId = curPivot != null ? currentMaxTiles(curPivot)+curPivot.tileId : 0;
+            if(index == -1){
+                tilesheets.push(tilesheet);
+            }
+            else {
+                originId = tilesheets[index].id;
+                tilesheets[index] = tilesheet;
+            }
+            tilesheet.id = originId;
+            tilesheet.usedIds = [originId];
+            tilesheet.width = image.width;
+            tilesheet.height = image.height;
+            tilesheet.tileWidth = map.tw;
+            tilesheet.tileHeight = map.th;
+            tilesheet.imagePath = path;
+            tileSelected = null;
+            var tile = Tile.createTile(map,tilesheet,originId,true);
+            
+            if(curTile == null){
+                curTile  = tile;
+                tilsheetListHandle.nest(0).position = -1;
+            }
+            #if editor
+            map.dataChanged = true;
+            #end
+        });
     }
 
     @:access(found.anim.Tilemap,found.anim.Tile)

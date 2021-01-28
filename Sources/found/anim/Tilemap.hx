@@ -183,7 +183,7 @@ class Tilemap extends Object{
             return null;
         };
         var tileId:Null<Int> = p_tileid != null ? p_tileid : addAllIds();
-        if(tileId != null){
+        if(tileId != null && data.map.exists(tileId)){
             for(index in data.map.get(tileId) ){
                 var tile = this.tiles[tileId];
                 if(tile != null && tile.raw.rigidBodies != null && tile.raw.rigidBodies.exists(tile.tileId)){

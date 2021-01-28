@@ -2,7 +2,7 @@ package found.node;
 
 import kha.input.KeyCode;
 import found.Input.Keyboard;
-import hxmath.math.Vector2;
+import kha.math.Vector2;
 
 class Platformer2DControllerNode extends LogicNode {
 	public var inputType:String;
@@ -12,7 +12,13 @@ class Platformer2DControllerNode extends LogicNode {
 
 	public function new(tree:LogicTree) {
 		super(tree);
-
+		#if debug
+		tree.notifyOnInit(function(){
+			if(tree.object.body == null){
+				warn("Platformer2DController needs a rigibody to work, on "+tree.object.name);
+			}
+		});
+		#end
 		tree.notifyOnUpdate(update);
 	}
 
@@ -32,7 +38,10 @@ class Platformer2DControllerNode extends LogicNode {
 					movementInput.x += 1;
 				}
 			} else {
-				movementInput.x = inputs[0].get().x;
+				var move:Null<Vector2> = inputs[0].get();
+				if(move != null){
+					movementInput.x = move.x;
+				}
 			}
 
 			tree.object.body.velocity.x = movementInput.x * speed;
